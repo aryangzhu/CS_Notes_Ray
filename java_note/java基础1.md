@@ -11,6 +11,7 @@ int/32
 float/32
 long/64
 double/64
+
 #### 缓存池
 new Integer(123)新建一个对象。
 Integer.valueOf(123)会使用**缓存池**中的对象,多次调用会取得同一个对象的引用。Java8中缓存池的大小为-128~127。编译器会在**缓冲池范围内的基本类型**自动装箱调用valueOf()方法，因此多个Integer实例使用自动装箱来创建并且值相同，那么就会引用相同的对象。
@@ -50,5 +51,13 @@ int age=in.nextInt();
 >boolean hasNextDouble() 检测是否还有下一个整数或者浮点数的字符序列
 
 #### 格式化
+
+```java
+System.out.println("hello word");
+System.out.printf("%d",12);
+```
+
+
+
 ### 大数
 ### 数组
