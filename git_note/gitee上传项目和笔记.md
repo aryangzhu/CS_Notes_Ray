@@ -30,5 +30,14 @@ ssh-T git@gitee.com
 ![选区_259.png](https://i.loli.net/2021/10/13/T7pUaEk93PhZ2ND.png)
 如果每次pull和push都需要username和passoword的话
 ![image.png](https://i.loli.net/2021/10/13/8VqPGHRBNUSJulf.png)
+
+
+
+#### 上传问题
+
+1.如果上传时需要合并某些文件，那么使用gnu nano 记得Ctrl键
+
+2.对项目重命名时不要做多余操作，否则会适得其反
+
 参考链接
 https://blog.csdn.net/weixin_40769885/article/details/105560732
