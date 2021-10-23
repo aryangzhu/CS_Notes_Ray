@@ -4,27 +4,33 @@
 ​    2.标签选择器 class：选择所有class属性一致的标签，跨标签 类名.{}
 ​    3.id选择器 全局唯一！#id{}
 #### 2.层次选择器
-##### 1.后代选择器：在某个元素的后面 祖爷爷 爷爷 爸爸。。。
-    	 /*后代选择器*/
-        body p {
-            background: red;
-        }
-   ##### 2.子选择器
-    	body>p {
-            background: chartreuse;
-        }
-    ##### 3.相邻兄弟选择器
-     /*相邻兄弟选择器:注意：只有一个相邻,向下*/
-    	.active+p{
-            background: chocolate;
-        }
-   ##### 4.通用选择器
-     /*通用兄弟选择器,当前选中元素的向下的所有兄弟元素*/
-        .active~p{
-            background: cyan;
-        }
+##### 1.后代选择器：
 
-```
+​	在某个元素的后面 祖爷爷 爷爷 爸爸。。。
+
+​    	 /*后代选择器*/
+​        body p {
+​            background: red;
+​        }
+
+##### 2.子选择器
+​    	body>p {
+​            background: chartreuse;
+​        }
+
+##### 3.相邻兄弟选择器
+​     /*相邻兄弟选择器:注意：只有一个相邻,向下*/
+​    	.active+p{
+​            background: chocolate;
+​        }
+
+##### 4.通用选择器
+​     `/*`通用兄弟选择器,当前选中元素的向下的所有兄弟元素*/`
+​        `.active~p{`
+​            `background: cyan;`
+​        }`
+
+```html
 <p>p0</p>
 <p class="leiliu">p1</p>
 <p>p2</p>

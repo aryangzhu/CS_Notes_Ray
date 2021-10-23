@@ -39,5 +39,14 @@ ssh-T git@gitee.com
 
 2.对项目重命名时不要做多余操作，否则会适得其反
 
+合并失败时处理方法
+
+```
+git merge --abort
+git reset --merge
+```
+
+
+
 参考链接
 https://blog.csdn.net/weixin_40769885/article/details/105560732
