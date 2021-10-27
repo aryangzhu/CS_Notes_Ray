@@ -27,7 +27,8 @@
 ​            	style.css
 ​            index.html
 
-    ###### 4.css的优势
+###### 4.css的优势
+
 ​    	１．内容和表现分离
 ​        ２．网页结构表现统一，可以实现复用
 ​        ３．样式十分的丰富
@@ -41,11 +42,11 @@
 
 			<h1 style="color: red">我是标题</h1>
 ​        ２．内部样式
-        	<style>
-        		h1{
-        		    color:green;
-        		}
-    		</style>
+​        	<style>
+​        		h1{
+​        		    color:green;
+​        		}
+​    		</style>
 ​            
 
         ３．外部样式

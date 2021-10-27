@@ -26,6 +26,18 @@ ssh-T git@gitee.com
 #### 2.上传文件
 1.新建本地仓库
 2.初始化
+
+```shell
+mkdir picture
+cd picture
+git init
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://gitee.com/aryangzhu/picture.git
+git push -u origin master
+```
+
 3.commit&push
 ![选区_259.png](https://i.loli.net/2021/10/13/T7pUaEk93PhZ2ND.png)
 如果每次pull和push都需要username和passoword的话
