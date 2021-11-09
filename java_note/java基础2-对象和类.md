@@ -10,7 +10,7 @@ Date birthday=new Date();
 birthday就是对象变量，而new Date()则是一个对象实例
 Date　deadline;//deadline　doesn't refer to any object;
 定义了一个对象变量deadline,它可以引用Date类型的对象。
-要认识到最重要的一点：对象变量并没有实际包含一个对象，它只是引用一个对象。
+要认识到最重要的一点：对象变量并没有实际包含一个对象，**它只是引用一个对象。**
 Date deadline=new Date();
 可以把Java中的对象变量看做类似于Ｃ++的指针。例如，
 Date birthday; //Java
@@ -48,6 +48,7 @@ GregorianCalender someday=new GregorianCalendar(1999,11,31);
 依赖
 聚合
 继承
+
 ## 使用预定义类
 Java语言中已经定义好的类，可以直接使用，方便我们快速开发。
 ## 用户自定义类
@@ -56,7 +57,7 @@ Java语言中已经定义好的类，可以直接使用，方便我们快速开�
 **剖析Employee类**
 **从构造器开始**
 
-```
+```java
 public Empoyee(String n,double s,int year,int month,int day){
 	name=n;
     salary=s;
@@ -202,7 +203,7 @@ int n =Employee.getNextId();
 ### 工厂方法
 静态方法还有另一种常见的用途，类似LocalDate和NumberFormat的类使用静态工厂方法(factory method)来构造对象
 
-```
+```java
 NumberFormat currencyFormat=NumberFormat.getCurrencyInstance();
 NumberFormat percentFormat=NumberFormat.getPercentInstance();
 double x=0.1;
@@ -210,7 +211,7 @@ System.out.println(currencyFormat.format(x)); //prints　$0.10
 System.out.println(percentFormat.format(x));  //prints 10%
 ```
 getCurrencyInstance()就是一个静态方法，生成了一个新的对象
-```
+```java
 public final static NumberFormat getCurrencyInstance(){
 	return getInstance(Locale.getDefault(Locale.Category.FORMAT),CURRENCYSTYLE);
 }
@@ -319,7 +320,7 @@ class Employee{
 6.调用另一个构造器
 this指示一个方法的隐式参数，还有另一个含义
 如果构造器的第一个语句形如this(...),这个构造器将调用同一个类的另一个构造器
-```
+```java
     private  String name;
     private double money;
 
@@ -347,7 +348,7 @@ this指示一个方法的隐式参数，还有另一个含义
 1.在构造器中设置值
 2.显示地声明值
 3.初始化块
-```
+```java
 class Employee{
 	private static int nextId;
     

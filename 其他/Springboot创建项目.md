@@ -1,0 +1,4 @@
+1.idea中选择新的springboot工程
+2.选择我们可能会使用到的maven依赖，帮助我们自动在pom.xml中自动引入
+3.进入项目之后进行application.properties或者yml文件的配置
+4.编写我们的主程序
