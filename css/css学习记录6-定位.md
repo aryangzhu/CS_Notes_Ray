@@ -88,7 +88,7 @@
 
 **2、absolute:元素会脱离文档流，如果设置偏移量，会影响其他元素的位置定位**
 
-![image-20211024215744108](/home/leiliu/.config/Typora/typora-user-images/image-20211024215744108.png)
+![](https://gitee.com/aryangzhu/picture/raw/master/%E9%80%89%E5%8C%BA_264.png)
 
 **父元素设置了相对定位或绝对定位，元素会相对于离自己最近的设置了相对或绝对定位的父元素进行定位（或者说离自己最近的不是static的父元素进行定位，因为元素默认是static）**
 
