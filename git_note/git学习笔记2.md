@@ -4,7 +4,7 @@
 工作区
 暂存区
 版本库
-![git分区.png](https://i.loli.net/2021/02/05/sVaoJY7pvZhbxcd.png)
+![](https://gitee.com/aryangzhu/picture/raw/master/git%E5%88%86%E5%8C%BA.png)
 **2.创建新的仓库**
 github上进行操作，可以配置.md文件和.gitignore文件
 **4.git clone以及简单的本地配置**
@@ -46,4 +46,5 @@ git branch xxx
 **9.多人协作时组长进行的操作**
 **10.多人协作时组员进行的操作**
 **11.Git tag**
+
 #### Idea下git操作

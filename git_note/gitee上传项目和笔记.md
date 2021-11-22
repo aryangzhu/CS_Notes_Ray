@@ -40,10 +40,10 @@ git push -u origin master
 
 3.commit&push
 ![选区_259.png](https://i.loli.net/2021/10/13/T7pUaEk93PhZ2ND.png)
+
 如果每次pull和push都需要username和passoword的话
+
 ![image.png](https://i.loli.net/2021/10/13/8VqPGHRBNUSJulf.png)
-
-
 
 #### 上传问题
 
