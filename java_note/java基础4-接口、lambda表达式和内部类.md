@@ -13,3 +13,8 @@ public int而face ComparableS{
 ```
 
 泛型
+
+List<TreeNode> list=new LinnkedList<>();
+
+菱形语法
+

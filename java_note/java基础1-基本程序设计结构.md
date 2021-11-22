@@ -56,13 +56,19 @@ int age=in.nextInt();
 4.不可变性天生具备线程安全的特点
 **常用API**
 
->Scanner(InputStream in) 用给定的输入流创建一个对象
->int nextInt(); 读取输入一个整数
->String nextLine(); 读取输入的一行内容
->String next();读取下一个单词(以空格为分割符)
->double nextDouble() 整数或浮点数的字符序列
->boolean hasNext() 检验输入中是否还有其他单词
->boolean hasNextDouble() 检测是否还有下一个整数或者浮点数的字符序列
+Scanner(InputStream in) 用给定的输入流创建一个对象
+
+int nextInt(); 读取输入一个整数
+
+String nextLine(); 读取输入的一行内容
+
+String next();读取下一个单词(以空格为分割符)
+
+double nextDouble() 整数或浮点数的字符序列
+
+boolean hasNext() 检验输入中是否还有其他单词
+
+boolean hasNextDouble() 检测是否还有下一个整数或者浮点数的字符序列
 
 #### 格式化
 
