@@ -32,7 +32,10 @@
 ​	//通过这个输入流,就可以把数据从硬盘,读取到Java的虚拟中来
 ​    FileInputStream fileInputStream = new FileInputStream(file);
 ##### ３．文件输出流
-​	File file=new File("src/base/how2j/io/b.txt");
+​	
+
+```java
+File file=new File("src/base/how2j/io/b.txt");
 ​    System.out.println(file.getAbsolutePath());
 ​        try {
 ​        	//从程序中读取到硬盘中
@@ -41,16 +44,18 @@
 ​        } catch (FileNotFoundException e) {
 ​            e.printStackTrace();
 ​        }
+```
 
 #### day03
 
 ##### 字节流
-​	ascii码　所有存放在计算机中都是以属性形式存放的，所以字母需要转换为数字才能够存放。ascii码表，只包含简单的英文字母，符号数字等等。
+​	Ａscii码　所有存放在计算机中都是以属性形式存放的，所以字母需要转换为数字才能够存放。ascii码表，只包含简单的英文字母，符号数字等等。
 ​	输入流
 ​    	FileInputStream
 ​    输出流
 ​    	FileOutputStream
 ​    此外可以多学习一下File的方法，例如file.mkdirs()来创建目录
+
 ##### 文件的拆分和合并
 ​	**拆分**
 ​    	如何进行拆分
@@ -133,9 +138,9 @@ try {
 ```
 在try中关闭
 	原理是因为所有的流的类都实现了AutoClosea le，任何实现了这个接口，都可以在try()中进行实例化。并且try,catch，finally结束的时候自动关闭，回收相关资源。
-    File f=new File("src/...");
-    
+
 ```java
+File f=new File("src/...");
 try(FileInputStream fis=new FileInputStream(f)){
 ...
 }
@@ -152,7 +157,10 @@ try(FileInputStream fis=new FileInputStream(f)){
 ​	学习心得：
 ​    	1.api Character.isDigit()和Character.isUpperCase()和isLowCase()方法
 ​    	2.读取中文的原因会多出几个空格，要想办法把空格处理掉
-​        if (Character.isDigit(code[i])) {
+​ 
+
+```java
+ if (Character.isDigit(code[i])) {
 ​                    if (code[i] == '9') {
 ​                        code[i] = '0';
 ​                        continue;
@@ -165,3 +173,5 @@ try(FileInputStream fis=new FileInputStream(f)){
 ​                    code[i]++;
 ​                }
 ​                int len = fileReader.read(code);
+```
+
