@@ -15,6 +15,7 @@ git confgi --global user.name "xxx"
 **5.一次完整的修改、提交和推送操作**
 git status 查看仓库状态
 ![主分支变化.png](https://i.loli.net/2021/02/05/oNldAsUHwvpZQO4.png)
+
 当前分支发生变化后当前分支后会出现“/*”
 **添加到暂存区以及撤销修改**
 
@@ -41,7 +42,7 @@ git branch -avv查看分支信息
 git status 查看git信息
 git branch xxx
 **8.本地分支推到远程仓库并且跟踪记录**
-上面这些只是是我个人比较常用的,如果更新文件以后，本第更新内容之后，需要git add提交到暂存区，git commit提交到版本库，git pull拉取最新代码，git push推到仓库
+上面这些只是是我个人比较常用的,如果更新文件以后，本第更新内容之后，需要git add提交到暂存区，git commit提交到版本库，git pull拉取最新代码，git push推到仓库。
 
 **9.多人协作时组长进行的操作**
 **10.多人协作时组员进行的操作**

@@ -1,10 +1,10 @@
 **基本思想是可以基于已有的类创建新的类，因为这样做的话(继承)就可以复用已创建的类的方法，而且可以增加一些新的方法和字段，使新类能够适应新的情况**
 **反射，反射是指在程序运行期间更多地了解类及其属性的能力，反射是一个功能强大的特性，也是成为高阶程序员的必经之路**
-#类、超类和子类
+# 类、超类和子类
 Employee只需要领薪水，而Manager完成业绩之后还可以领取奖金，所以我们需要拓展程序功能，但是又要复用原来的类。
 关键字**extends**相当于C++的**:**(冒号)
 
-# 定义子类
+## 定义子类
 
 超类和子类的概念来自于计算机科学与数学理论中集合语言的术语。
 
@@ -22,7 +22,7 @@ public class Manager extends Employee{
 超类中的方法不一定适用，需要自己修改
 比如，Manager返回薪水和工资的总和
 
-```
+```java
 public double getSalary(){
 	return salary+bonus; //won't work
 }
@@ -36,6 +36,7 @@ public double getSalary(){
 ```
 这段代码也存在问题，getSalary()方法，我们想要调用超类中的方法，但是我们自己也有一个这样的方法(而且是正在实现的)，所以就会无限次的调用自己，直到整个程序崩溃
 **super关键字**
+
 ```java
 public double getSalary(){
 	double baseSalary=super.getSalary();
@@ -45,14 +46,15 @@ public double getSalary(){
 **重点**
 有些人认为super与this引用是类似的概念，实际上，这样并不恰当。因为super不是一个对象的引用，例如，不能将值super赋给另一个对象变量，他只是一个**指示编译器调用超类方法**的特殊关键字。
 Java中使用super,而C++中使用::
+
 ## 子类构造器
-```
+```java
 public Manager(String name,double salary,int year,int month,itn day){
 	super(name,salary,year,month,day);
     bonus=0;
 }
 ```
-super构造器必须是子类构造器的第一条语句
+super构造器必须是子类构造器的第一条语句或者说**调用构造器的语句只能作为另一个构造器的第一句语句出现**。**构造器的参数可以传给当前类(this) 的其他构造器,也可以传给超类(super)的构造器**。
 如果子类的构造器没有显示地调用超类的构造器，将自动地调用超类的无参构造器，如果超类没有无参构造器，并且在子类构造器中又没有显示地调用超类的其他构造器，Java编译器就会报错
 也就是说，子类在初始化时会自动调用超类的构造器。如果我没有记错的话，应该是静态块先初始化，然后才会执行超类的构造函数。
 **this关键字的作用**
@@ -64,6 +66,7 @@ super构造器必须是子类构造器的第一条语句
 对象变量e可以引用Employee对象，也可以引用Manager对象
 **虚拟机知道e实际引用的对象类型，因此能够正确地调用相应的方法**
 一个对象变量(例如，变量e)可以指示多种实际类型的现象被称为多态，在**运行时能够自动地选择**适当的方法，称为**动态绑定**
+
 ## 继承层次
 意思就是继承不只是单层的，类似与树一样，在每一层有多个节点，而在继承体系中，某个特定的的类到其祖先的距离称为继承链。
 ## 多态
@@ -72,7 +75,7 @@ super构造器必须是子类构造器的第一条语句
 **不能将超类的引用赋给子类变量。例如,Manager m=staff[i]**,原因很清楚：不是所有员工都是经理。如果赋值成功，m可能引用了一个不是经理的Employee对象，而在后面有可能会调用m.setBonus(...),这就会发生运行时的错误。
 **注意：子类引用的数组可以转换成超类引用的数组，而不需要强制类型转换**
 
-```
+```java
 Manager[] managers=new Manager[10]; //这没什么问题
 Employee[] staff=managers;   //超类数组指向子类数组引用,多态的体现
 staff[0]=new Employee("Harry Hacker..."); //编译器居然也没有识别出问题，如果这里的引用对象进行了修改，那么原对象变量指向的引用也就发生了改变。
@@ -121,7 +124,7 @@ String没有子类我们都知道，String类型的变量也不允许指向别�
 
 ## 强制类型转换
 例如
-```
+```java
 double x=3.405;
 int nx=(int) x;
 ```
@@ -159,15 +162,16 @@ boss=(Manager)staff[1];
 }
 ```
 ## 抽象类
-自下而上的看，位于上层的类更具有一般性，可能更加抽象。从某种角度看，祖先类更加具有一般性，人们只将它作为派生其他类的基类，而不是来构造你想使用的实例。
+自下而上的看，位于上层的类更具有一般性，可能更加抽象。从某种角度看，**祖先类更加具有一般性，人们只将它作为派生其他类的基类**，而不是来构造你想使用的实例。
 tip:通用的方法应该放在超类中。
-抽象方法充当着占位方法的角色，在子类中进行实现：
+**抽象方法充当着占位方法的角色**，在子类中进行实现：
 1.子类中保留抽象方法，但是子类也得为抽象的
 2.子类实现抽象方法。
 **即使没有抽象方法，类也可以是抽象的，也就是说，能有非抽象方法**
 定义抽象类Peson和两个非抽象子类Employee和Student
+
 ```java
-Person person=new Person[2];
+Person p=new Person[2];
 person[0]=new Employee(...);
 person[1]=new Student(...);
 
@@ -180,8 +184,8 @@ p为什么能调用getDescription呢，这是因为由于不能构造抽象类Pe
 # Object:所有类的超类
 
 ## Oject类型变量
-在Java中，只有基本类型不是对象，例如数值、字符和布尔类型的值都不是对象。
-所有的数组类型，不管是对象数组还是基本类型的数组都扩展了Object类。
+在Java中，**只有基本类型不是对象，例如数值、字符和布尔类型的值都不是对象**。
+**所有的数组类型，不管是对象数组还是基本类型的数组都扩展了Object类**。
 
 ## equals方法
 Object中实现的equals方法用于确定两个对象引用是否相等。
@@ -258,19 +262,19 @@ Class getClass() 返回包含对象信息的类对象。
 boolean equals(Object otherObject) 比较两个对象是否相等，如果两个对象指向同一块存储区域，方法返回true;
 String toString() 返回表示该对象值的字符串。
 # 泛型数组列表
-C/C++中，运行之前就必须规定数组的大小，ArrayList<Object>可以理解成一个**带有类型参数**的泛型，<>指定了列表保存的元素对象的类型。泛型是由编译器来检测我们的集合对象中存放的对象是否符合我们之前的承诺，也就是说，如果定义了List<某种类型对象>，那么编译器就会帮助我们检查我们集合中添加的对象是否符合规范，如果不符合那么就会报错。 
+C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以理解成一个**带有类型参数**的泛型，<>指定了列表保存的元素对象的类型。泛型是由编译器来检测我们的集合对象中存放的对象是否符合我们之前的承诺，也就是说，如果定义了List<某种类型对象>，那么编译器就会帮助我们检查我们集合中添加的对象是否符合规范，如果不符合那么就会报错。 
 
 ## 声明数组列表
 
 编译器会检查这个变量、参数或方法的泛型类型，然后将这个类型放在<>中。
 **常用API**
-java.util.ArrayList<E>
-ArrayList<E>() 构造一个空数组列表
-ArrayList<E>(int initialCapacity) 构造一个定长的数组
-boolean add(E obj) 数组列表末尾添加一个元素，永远返回true
-int size() 返回存储在数组列表中的元素个数
-void ensureCapacity(int capacity) 不进行扩容的情况下确保给定的capacity个元素能够被分配在数组中
-void trimToSize() 将数组列表的存储容量削减到当前大小
+java.util.ArrayList\<E>
+	ArrayList\<E>() 构造一个空数组列表
+	ArrayList\<E>(int initialCapacity) 构造一个定长的数组
+	boolean add(E obj) 数组列表末尾添加一个元素，永远返回true
+	int size() 返回存储在数组列表中的元素个数
+	void ensureCapacity(int capacity) 不进行扩容的情况下确保给定的capacity个元素能够被分配在数组中
+	void trimToSize() 将数组列表的存储容量削减到当前大小
 
 ## 访问数组列表元素
 自动扩容有利有弊，数组列表自动扩容的便利也增加了访问元素语法的复杂程度,其原因是ArrayList并不是Java程序设计语言的一部分；它只是由某个人编写并在标准库中提供的一个实用工具类。
@@ -290,11 +294,11 @@ list.toArray(a);
 int n=staff.size()/2;
 staff.add(n,e);
 **常用API**
-java.util.ArrayList<E>
-E set(int index,E obj) 将值obj放置在数组列表的指定索引位置，返回之前的索引
-E get(int index)　得到指定索引为值的内容
-void add(itn index,E obj)　后移元素从而将obj插入到指定索引位置
-E remove(int index)　删除指定索引位置的元素，并将后面的所有元素前移
+java.util.ArrayList\<E>
+	E set(int index,E obj) 将值obj放置在数组列表的指定索引位置，返回之前的索引
+	E get(int index)　得到指定索引为值的内容
+	void add(itn index,E obj)　后移元素从而将obj插入到指定索引位置
+	E remove(int index)　删除指定索引位置的元素，并将后面的所有元素前移
 
 ## 类型化与原始数组的兼容性
 处于兼容性的考虑，编译器检查到**没有发现违反规则**的现象之后，就将所有的类型化数组列表转换为原始的ArrayList对象。在程序运行时，所有的数组列表都是一样的，即虚拟机中没有类型参数。
@@ -312,36 +316,36 @@ list.add(Integer.ValueOf(3));
 另外，如果在一个表达式中混合使用Integer和Double类型,Integer值就会拆箱，提升为double,在装箱为Double。同时,我们需要清楚装箱和拆箱是编译器要做的工作,而不是虚拟机。
 **常用API**
 java.lang.Integer
-int intValue()
-将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法)
-static String toString()
-返回一个新的String对象，表示指定的数值i的十进制表示
-static String toString(int i,int radix)
-返回数值i基于radix参数指定进制的表示
-static int parseInt(String s)
-static int parseInt(String s,int radix)
-返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
-static Integer valueOf(String s)
-static Integer valueOf(String s,int radix)
-返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
+	int intValue()
+	将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法)
+	static String toString()
+	返回一个新的String对象，表示指定的数值i的十进制表示
+	static String toString(int i,int radix)
+	返回数值i基于radix参数指定进制的表示
+	static int parseInt(String s)
+	static int parseInt(String s,int radix)
+	返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
+	static Integer valueOf(String s)
+	static Integer valueOf(String s,int radix)
+	返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
 
 # 参数数量和可变的方法
 # 枚举类
 public enum Size{SMALL,MEDIUM,LARGE,EXTA_LARGE}
-声明的时候用我们的enum
+**声明的时候用的enum**
 实际上，这个声明定义的类型是一个类，它刚好有4个实例,不可能构造新的对象。枚举的构造器总是私有的，如果使用其他修饰符那么就会出现语法错误。
 枚举类型下有一个静态的values方法，它将返回一个包含全部枚举值的数组。
 Size[] values=Size.values();
 **常用API**
-java.lang.Enum<E>
-static Enum valueOf(Class enumClass,String name)
-返回给定类中有指定名字的枚举常量
-String toString()
-返回枚举常量名
-int ordinal()
-返回枚举常量在enum声明中的位置,位置从0开始计数。
-int compareTo(E other)
-如果枚举常量出现在other之前，返回一个负整数;如果this==other，则返回0;否则,返回一个正整数。枚举常量的出现次序在enum声明中给出。
+java.lang.Enum\<E>
+	static Enum valueOf(Class enumClass,String name)
+	返回给定类中有指定名字的枚举常量
+	String toString()
+	返回枚举常量名
+	int ordinal()
+	返回枚举常量在enum声明中的位置,位置从0开始计数。
+	int compareTo(E other)
+	如果枚举常量出现在other之前，返回一个负整数;如果this==other，则返回0;否则,返回一个正整数。枚举常量的出现次序在enum声明中给出。
 
 # 反射
 **反射库(reflection library)提供了一个丰富且精巧的工具集，可以用来编写能够动态操作Java代码的程序。
@@ -369,16 +373,17 @@ Class cl=Class.forName(className);
 Object obj=cl.getConstructor().newInstance();
 **常用API**
 java.lang.Class
-static Class forName(String className)
-返回一个Class对象，表示名为className的类
-Constructor getConstructor(class..parameter Types)
-生成一个对象,描述有指定参数类型的构造器。
+	static Class forName(String className)
+	返回一个Class对象，表示名为className的类
+	Constructor getConstructor(class..parameter Types)
+	生成一个对象,描述有指定参数类型的构造器。
 java.lang.reflect.Constructor
-Ojbect newInstance(Object..params)
-将params传递到构造器，来构造这个构造器声明类的一个新实例
+	Ojbect newInstance(Object..params)
+	将params传递到构造器，来构造这个构造器声明类的一个新实例
 java.lang.Throwable
-void printStackTrace()
-将Throwable对象和堆栈轨迹打印到标准流程错误
+	void printStackTrace()
+	将Throwable对象和堆栈轨迹打印到标准流程错误
+
 ## 声明异常入门
 ## 资源
 Class类中提供了查找资源文件的，但是得遵循以下步骤:
@@ -400,17 +405,16 @@ Constructor类和Method类有报告参数类型的方法，Method类还有一个
 Class类中的getFileds、getMethods和getConstructors方法将分别返回这个类支持的公共字段、方法和构造器的数组。
 **常用API**
 java.lang.Class
-Field[] getFilelds()
-Field[] getDeclaredFields()
-getFields方法将返回一个包含当前类和超类的公共字段。getDeclaredField方法也返回包含当前类的field的数组。
-Method[] getMethods()
-Method[] getDeclaredMethods(()
-返回包含Method对象的数组:getMethods将返回所有的公共方法，包括继承的公共方法。
-Constructor[] getConstructors()
-Constructor[] geteclaredConstructors()
-返回包含Constructor对象的数组
-String getPackageName()
-得到报名。
+	Field[] getFilelds()
+	Field[] getDeclaredFields()
+	getFields方法将返回一个包含当前类和超类的公共字段。getDeclaredField方法也返回包含当前类的field的数组。
+	Method[] getMethods()
+	Method[] getDeclaredMethods(()
+	返回包含Method对象的数组:getMethods将返回所有的公共方法，包括继承的公共方法。
+	Constructor[] getConstructors()
+	Constructor[] geteclaredConstructors()
+	返回包含Constructor对象的数组
+	String getPackageName() 得到包名。
 
 ## 使用反射编写泛型数组代码
 **在运行时获得任意对象数据字段字段的名字和类型**
@@ -433,29 +437,29 @@ double salary=(Double)m2.getSalary();
 
 # 继承设计的技巧
 
-1.将公共操作放在超类中。
+### 1.将公共操作放在超类中。
 
-2.不要使用受保护的字段
+### 2.不要使用受保护的字段
 
-> 1.子类是无限的，任何一个人都可以编写子类来访问protected实例字段
->
-> 2.同一个包下也能够访问protected实例字段。
+​	1.子类是无限的，任何一个人都可以编写子类来访问protected实例字段
+
+​	2.同一个包下也能够访问protected实例字段。
 
 这也解释了为什么在那么多的代码中没有见过用protected修饰字段
 
-3.思考继承有没有被滥用
+### 3.思考继承有没有被滥用
 
 书上的例子是钟点工有个时薪的属性，我们在设计时会考虑继承Employee,然后添加一个时薪字段。然而，如果我们需要打印工资和薪水的时候，那么就得对二者做以区分，如果再计算税率，那么就更加复杂，还不如直接用employee类，再单独处理时薪(我的理解是这样式儿的)。
 
-4.除非继承的方法有意义，否则不要继承。
+### 4.除非继承的方法有意义，否则不要继承。
 
 例子更加直观，如果想实现Holiday，正常思路去继承GregorianCalendar
 
 在设计的时候GregorianCalendar中已经有个公共的add(用来将假日转换成非假日)的方法了，无法确保假日集合的封闭性，也就是说任何人能够访通过这个操作来进行修改，显然这是不太安全的。
 
-5.在覆盖方法时，不要更改预期的行为。
+### 5.在覆盖方法时，不要更改预期的行为。
 
-6.使用多态，而不要使用类型信息。
+### 6.使用多态，而不要使用类型信息。
 
 ```java
 if(s is of type 1){

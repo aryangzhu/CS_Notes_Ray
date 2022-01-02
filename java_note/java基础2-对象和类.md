@@ -24,9 +24,9 @@ Date * birthday; //C++
 Date*指针只有使用new调用才会初始化。就这一点而言，Ｃ++和Java的语法几乎是一样的。
 **Java类库中的localDate类**
 不要使用构造器来构造LocalDate类的对象，实际上，应当使用静态工厂方法(factory method)，他会代表你调用构造器。
-localDate newYearsEve=LocalDate.of(1999,12,31);
 
 ```java
+localDate newYearsEve=LocalDate.of(1999,12,31);
 int year=newYearEve.getYear(); //1999
 int month=newYearEve.getMonthValue(); //12
 int day=newYearEve.getDayOfMonth(); //31
@@ -121,7 +121,7 @@ public void raiseMoney(double byParent){
 }
 ```
 __number007__.raiseMoney(5);
-raiseMoney方法有两个参数。第一个参数称为**隐式(implicit)参数，是出现在方法名之前的Employee类型的对象**。第二个参数是位于方法名后面括号中的数值，这是一个显式(explicit)参数。(有人把隐式参数称为方法调用的目标或者接收者。)
+raiseMoney方法有两个参数。第一个参数称为**隐式(implicit)参数，是出现在方法名之前的Employee类型的对象**实例。第二个参数是位于方法名后面括号中的数值，这是一个显式(explicit)参数。(有人把隐式参数称为方法调用的目标或者接收者。)
 上面的方法可以改写成如下方式
 
 ```java
@@ -168,7 +168,7 @@ class Employee{
 4.对于private来说，**它的访问权限仅限于类的内部，是一种封装的体现**，例如，大多数的成员变量都是修饰为private,他们不希望被其他任何外部的类访问。
 
 ### final实例字段
-可以将实例字段定义为final,这样的字段必须在构造对象时初始化。也就是说，必须确保每一个构造器执行之后，这个字段的值已经设置，并且以后不能再修改这个字段。
+可以将**实例字段定义为final,这样的字段必须在构造对象时初始化**。也就是说，必须确保每一个构造器执行之后，这个字段的值已经设置，并且以后不能再修改这个字段。
 
 ```java
 class Employee{
@@ -180,10 +180,11 @@ class Employee{
 private final StringBuilder evaluations;
 它在Employee类的构造初始化为
 evaluations=new StringBuilder();
-final关键字只是表示存储在evaluations变量中的对象引用不会再指向另一个不同的StringBuilder对象。不过这个对象可以更改:
+**final关键字只是表示存储在evaluations变量中的对象引用不会再指向另一个不同的StringBuilder对象**。不过这个对象可以更改:
 public void giveGoldStar(){
 	evaluations.append(LocalDate.now()+":Gold star!\n");
 }
+
 ## 静态字段和静态方法
 ### 静态字段
 如果将一个字段定义为static,每个类只有一个这样的字段。什么意思呢，就是说，**对于非静态的实例字段，每个对象在堆中都有自己的一个副本**。但是对于静态字段来说，这个类的所有实例将共享一个nextId字段。即使没有Employee对象，静态字段nextId也存在。它属于类而不属于任何单个的对象。
@@ -209,6 +210,7 @@ public class System{
 
 **静态方法**
 静态方法是不在对象上执行的方法。例如,Math类的pow的方法既是一个
+
 ```java
 public static int getNextId(){
 	return nextId; //return static field 返回的是静态字段
@@ -217,8 +219,9 @@ public static int getNextId(){
 可以提供类名来调用这个方法
 int n =Employee.getNextId();
 下面两种情况可以使用静态方法
-1.方法不需要访问对象状态，因为它需要的所有参数都通过显式参数提供(例如：Math.pow)
-2.方法只需要访问类的静态字段(例如，Employee.getNextId)
+1.方法不需要访问对象状态，因为它需要的所有参数都通过显式参数提供(例如：Math.pow())
+2.方法只需要访问类的静态字段(例如，Employee.getNextId())
+
 ### 工厂方法
 静态方法还有另一种常见的用途，类似LocalDate和NumberFormat的类使用静态工厂方法(factory method)来构造对象
 
@@ -238,8 +241,8 @@ public final static NumberFormat getCurrencyInstance(){
 上面是getInstance的源码，可以看到定义的是final static 
 为什么不使用构造器？？？
 
->无法命名构造器，这里我们希望返回两个实例，一个是货币实例，一个是百分比实例，所以我们需要不同的对象定义，显然和构造器只能和类同步是相违背的
->使用构造器时，无法改变所构造的对象的实例，而工厂方法实际上将返回DecimalForamt类的对象，这是NumberFormat的一个子类
+​	无法命名构造器，**这里我们希望返回两个实例，一个是货币实例，一个是百分比实例，所以我们需要不同的对象定义**，显然和构造器只能和类同步是相违背的
+使用构造器时，无法改变所构造的对象的实例，而工厂方法实际上将返回DecimalForamt类的对象，这是NumberFormat的一个子类
 
 **main方法**
 这里有两个小技巧
@@ -255,6 +258,7 @@ class Employee{
 	java Employee
 2.如果Empoyee只是程序的一部分，那么
 	java Application
+
 ## 方法参数
 Java中的参数传递都是按值调用，也就是说，方法得到的是所有参数值的一个副本。
 
@@ -319,9 +323,11 @@ java允许重载任何方法，而不只是构造器方法。因此，要完整�
 如果没有在构造器中显示地为字赋初始值，那么就会被自动地赋为默认值：数值为0、布尔值为false、对象引用为null。
 **注意：**
 这是局部变量和字段的一个重要区别
+
 #### 3.无参数的构造器
 如果类中至少提供了一个构造器，但是没有提供无参数的构造器，那么构造对象时如果不提供参数就是不合法的
 当没有其他构造函数的时候，你才会得到一个默认的无参构造函数
+
 #### 4.显式字段初始化
 通过重载类的构造方法，可以采用多种形式设置类的实例字段的初始状态
 
@@ -341,7 +347,7 @@ class Employee{
     private static int assignId(){
     	int r=nextId;
         nextId++;
-        return r;xian
+        return r;
     }
 }
 ```
@@ -411,22 +417,23 @@ class Employee{
 2.a.所有的数据字段初始化为其默认值;
 b.按照在类中声明的顺序，执行**字段初始化方法**和**初始化块**
 3.执行构造函数主体代码
-常用ApI
-java.util.Random
-Random() 构造一个新的随机数
-int nextInt(int n) 返回一个0～n-1之间的随机数
+##### 常用API
+**java.util.Random**
+	Random() 构造一个新的随机数
+	int nextInt(int n) 返回一个0～n-1之间的随机数
 
 ## 包
 ### 类的导入
 #### 静态导入
-可以允许导入静态方法和静态字段，而不只是类
+**可以允许导入静态方法和静态字段，而不只是类**
 import static java.lang.System.*;
 就可以使用System类的静态方法和静态字段，而不必加类名前缀
 out.println("Goobye,world!!");
 exit(0);
-如果没有在源文件中放置package语句，这个源文件中类就属于无名包。
+**如果没有在源文件中放置package语句，这个源文件中类就属于无名包**。
 将源文件放到完整包名匹配的子目录中，因为java中的类是强依赖包。例如,com.horstmann.corejava包中所有源文件应该也放置在子目录com/horstman/corejava中(.java文件)。编译器将类文件也放在相同的目录结构中。(.class文件)
 java命令 src包下的类路径
+
 #### 类路径
 类存储在文件系统的子目录中。**类的路径必须与包名匹配**
 1.把类文件放到一个目录中，例如/home/user/classdir。需要注意，这个目录是包树状结构的基目录。如果希望增加com.horstman.corejava.Employee类，那么Employee类文件就必须位于子目录/home/user/classdir/com/horstman/corejava中
@@ -444,6 +451,7 @@ java -classpath /home/user/classdir:.:/home/user/archives/archive.jar
 /home/user/classdir/com/horstmann/corejava/Employee.class 对应上面第一步
 com/horstmann/corejava/Employee.class(从当前目录开始)
 com/horstmann/corejava/Employee.class(/home/user/archives/archive.jar中)
+
 ## JAR文件
 java归档文件，可以含有类文件，也可以包含诸如图像和声音等其他类型的文件。此外，JAR文件是压缩的，它使用了我们熟悉的zip压缩格式。、
 
