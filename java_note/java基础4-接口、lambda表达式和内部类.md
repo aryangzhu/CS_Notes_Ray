@@ -1,4 +1,4 @@
-接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
+  接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
 
 # 接口
 
@@ -300,3 +300,170 @@ copy.raiseSalary(10);
 1.protected限制是同一个包下的类可以访问超类的字段，所以，Date类型的hireDay肯定无法直接由Employee来clone()，引用对象需要单独复制。
 
 2.Cloneable是一个标记接口，不包含任何方法，但是可以使用instanceof关键字。
+
+# lamda表达式
+
+## 为什么引入lamba表达式
+
+lamba表达式是一个可传递的代码块
+
+例如之前的TimerPrinter，可以构造一个实例提交到Timer对象。
+
+再或者想要自己定制一个比较器，可以向数组传递一个Comparator对象
+
+上面两者的共同特征是将一个代码块传递到到某个对象(定时器，Arrays的sort方法)
+
+## lamba表达式的语法
+
+用排序来说明，first.length()-second.length()使我们的主要任务。
+
+```java
+(String first,String second)
+	->first.length()-second.length()
+```
+
+为什么被称为lamba，来源也很有趣
+
+**表达形式**:参数、箭头(->)以及一个表达式
+
+### 几种常见的用法
+
+1.在{}中编写程序,如果需要运行的程序无法通过一个表达式完成，则应该放在{}中
+
+```java
+(String first,String second)->{
+	if(first.length()>second.length()) return 1;
+    else if (first.lenght()<second.length()) return -1;
+    else return 0;
+}
+```
+
+2.如果表达式没有参数，也要保留空括号，就像无参数的函数一样
+
+```java
+()->{for(int i=100;i>=0;i--){
+		System.out.println(i);
+	}
+}
+```
+
+3.如果可以推导出参数的值，那么就可以忽略
+
+```java
+Comparator<String> comp=(first,second)->first.length()-second.length();
+```
+
+这里编译器能够推导出来first和second都是String字符串类型的。
+
+4.如果只有一个参数，而且这个参数是可以推导出来的，那么可以省略小括号。
+
+```java
+Action listener=event->{
+    System.out.println("At the tone,the time is..."+
+                       Instant.ofEpochMilli(event.getWhen()));
+}
+```
+
+### 函数式接口
+
+Java中有许多接口中都有封装代码块，和lamba表达式兼容，接口中必须有且仅有一个抽象方法，并且在使用时可转换为lamba表达式的接口被称为函数式接口(Comparator和ActionListener)。
+
+例如，之前的Arrays.sort方法
+
+```java
+Arrays.sort(friends,new LengthComparator());
+```
+
+Comparator接口转化为lamba表达式
+
+```java
+Arrays.sort(friends,( first, second)->first.length()-second.length()); //由于sort(Stirng str,Comparator<String>)会进行判断，所以前面的小括号中就不用写first和second的类
+```
+
+在sort底层，将接受一个实现了Comparator\<String>的类的对象，并在这个对象上调用compare方法执行lamba表达式主体。
+
+再来看看ActionListener接口
+
+```java
+class TimePrinter implements AcitonListerner{
+	public void acitionPerformed(ActionEvent event){
+		System.out.println("At the tone,the time is..."+Instance.ofEpochMilli(event.getWhen()));
+		Toolkit.getDefaultToolkit().beep();
+	}
+}
+
+ Timeprinter listener=new Timeprinter();
+ Timer timer = new Timer(1000 ,listener);
+```
+
+我们将其转化为lamba表达式
+
+```java
+var Timer =new Timer(1000,event->{
+    	System.out.println("At the tone,the time is..."+Instance.ofEpochMilli(event.getWhen()));
+		Toolkit.getDefaultToolkit().beep();
+});
+```
+
+**lambda表达式最大的用途就是函数式接口,而且lambda表达式是一个函数而不是一个对象**
+
+####  Java API在java.util.function包中定义的通用的函数式接口
+
+##### Predicate接口
+
+```java
+public interface Predicate{
+	boolean test(T t);
+}
+```
+
+ArrayList类有一个removeIf方法，它的参数就是一个Predicate。这个接口专门用来传递lambda表达式。例如删除数组列表中的所有空值。
+
+```java
+list.removeIf(e->e==null);
+```
+
+## 方法引用
+
+来看之前的一个例子
+
+Timer timer=new Timer(1000,event->System.out.println(event));
+
+直接将println()传递到Timer构造器
+
+Timer timer=new Timer(1000,System.out::println);
+
+表达式System.out::println是一个**方法引用(method reference)**,它指示编译器生成一个函数式接口的实例，并且覆盖掉接口中的方法，在上面的代码中，会生成一个ActionListener的实例，并且覆盖掉actionPerformed(ActionEvent e)方法，调用System.out.println(e);
+
+**方法引用也不是一个对象**
+
+### 使用::运算符的三种情况
+
+#### 1.object::instanceMethod
+
+对象::实例方法，相当于向方法传递参数的lambda表达式，对于System.out:println,对象是System.out,等价于x->System.out.println(x)
+
+#### 2.Class::instanceMethod
+
+类:实例方法，::之前的参数是隐式参数。例如，String::compareToIgnoreCase等同于(x,y)->x.compareToIgnoreCase(y)
+
+#### 3.Class:StaticMethod
+
+所有参数都传递到静态方法，例如Math::pow等价于(x,y)->Math.pow(x,y)
+
+## 引用构造
+
+## 变量的作用域
+
+通过代码更加直观
+
+
+
+## 处理lambda表达式
+
+## 再谈Comparator
+
+
+
+# 内部类
+
