@@ -4,14 +4,14 @@
 #### 1.引入方式
 ##### 1.内部引入
 
-```
+```js
 <script>
 	alert('hello world');
 </script>
 ```
 ##### 2.外部引入
 
-```
+```js
 <script src="js/qj.js">
 </script>
 
@@ -26,11 +26,10 @@ console.log("...");
 
 #### 3.数据类型
 数值、文本、图形、音频、视频
-##### number
 
+##### Number
 
-
-js不区分小数和整数，Number
+  js不区分小数和整数，Number
  123 //整数
  123.1  //浮点数
  1.123e3 //科学计数法

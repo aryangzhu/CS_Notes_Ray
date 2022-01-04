@@ -1,9 +1,11 @@
 ### 1.函数定义及变量作用域
-1.Java定义函数
+#### 定义方式
+
+Java定义函数
 public 返回值类型 方法名(){
 	return 返回值；
 }
-定义方式一
+##### 定义方式一
 绝对值函数
 function abs(x){
 	if(x>=0){
@@ -12,7 +14,7 @@ function abs(x){
     return -x;
     }
 }
-定义方式二
+##### 定义方式二
 var abs=function(x){
 	
 }
@@ -25,7 +27,7 @@ abs(x)调用方式
 参数问题：JavaScript可以穿任意个参数也可以不传参数
 参数进来是否存在的问题？
 假设不存在参数，如何规避？
-```
+```js
  var abs=function (x) {
             //手动抛出异常
             if (typeof x!=='number'){
@@ -55,21 +57,23 @@ function aaa(a,b,....rest){
     console.log("b=>"+b);
     console.log(rest);
 }
+
 ### 2.变量的作用域
 'use strict'
 在Javascript中，var定义变量实际是有作用域的
 假设在函数体中，则在函数体外不可以使用～（闭包）
 
-```
+```js
  function aaa(){
             var x=1;
             x=x+1;
         }
         x = x+2;
 ```
-报错：Uncaught ReferenceError: x is not defined
+**报错**：Uncaught ReferenceError: x is not defined
 **如果两个函数使用了相同的变量名，在内部的话不影响使用，但是内部的函数不起作用**
-```
+
+```js
  function qj() {
             var x=1;
 
@@ -88,7 +92,7 @@ function aaa(a,b,....rest){
 
 #### 提升变量的作用域
 
-```
+```js
 function qj(){	
 	var x="x"+y;
     console.log(x);
@@ -101,7 +105,7 @@ function qj(){
 
 **全局函数**
 
-```
+```js
 //全局变量
 x=1;
 function f(){
@@ -110,15 +114,16 @@ function f(){
 f();
 console.log(x);
 ```
-**全局对象 window**
-```
+##### 全局对象 window
+
+```js
 var x='xxx';
 alert(x);
 window.alert(window.x);//默认所有的全局变量，都会自动绑定在window下
 ```
 
 alert()函数本身也是一个window的变量；
-```
+```js
 var x='xxx';
 window.alert(x);
 
@@ -136,9 +141,10 @@ window.alert(456);
 ```
 JavaScript实际上只有一个全局作用域，任何变量(函数也可以视为变量),假设没在函数作用域范围内找到，就会向外查找，如果在全局作用域内都没有找到，报错ReferenceError
 
-**规范**
+##### 规范
 由于我们所有的全局变量都会绑定到我们的window上，如果不同的js文件，使用了相同的全局变量，冲突->如何能减少冲突？
-```
+
+```js
 //唯一全局变量
 var KuangApp={};
 
@@ -148,10 +154,12 @@ KuangApp.add=function(a,b){
 	return a+b;
 }
 ```
-把自己的代码全部放入自己定义的唯一命名空间中，降低全局命名冲突的问题
+**把自己的代码全部放入自己定义的唯一命名空间中，降低全局命名冲突的问题**
 jQuery
-**局部作用域 let**
-```
+
+##### 局部作用域 let
+
+```js
 function aaa(){
 	for(var i=0;i<100;i++){
     	console.log(i);
@@ -160,16 +168,18 @@ function aaa(){
 }
 ```
 ES6 let关键字，解决局部作用域解决冲突问题
-```
+```js
 	for(let i=0;i<100;i++){
 	使用了let关键字，作用域外使用的话就会报错
 ```
-**常量const**
+##### 常量const
 使用var定义的话可以对这个变量的值进行修改，而使用了const关键字之后无法对这个值进行修改
-###3.方法
-定义方法
+
+### 3.方法
+#### 定义方法
 方法就是把函数放在对象里，对象只有两个东西，属性和方法
-```
+
+```js
  var kuangshen={
             name:"leiliu",
             birth:2000,
@@ -183,7 +193,8 @@ ES6 let关键字，解决局部作用域解决冲突问题
 
 this代表什么？
 this是无法指向的，是默认指向调用它的那个对象
-```
+
+```js
 var kuangshen={
             name:"leiliu",
             birth:2000,
@@ -197,8 +208,9 @@ var getAge=function () {
 kuangshen.age() //OK
 但是 getAge() //NaN 默认指向window，但是window下没有age这个属性
 
-**apply**
+##### apply
 用来控制this指向
-```
+
+```js
    console.log(getAge.apply(kuangshen,[]));
 ```

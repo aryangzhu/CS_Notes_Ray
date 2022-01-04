@@ -18,9 +18,9 @@ typeof undefined
 undefined
 
 ### 1.Date
-基本使用
+#### 基本使用
 
-```
+```js
   var now=new Date(); //Mon Mar 08 2021 14:51:20 GMT+0800 (中国标准时间)
         console.log(now);
         now.getFullYear();//年
@@ -34,8 +34,9 @@ undefined
         now.getTime();//时间戳 1615186280742
         console.log(new Date(1615186280742)); //时间戳转换为时间格式
 ```
-转换
-```
+#### 转换
+
+```js
 now.toLocaleString()
 "2021/3/8 下午2:56:22"
 now.toGMTString()
@@ -46,7 +47,7 @@ now.toLocaleDateString()
 ### 2.JSON
 json是什么
 轻量级数据交换格式
-特点：
+#### 特点：
 1.层次结构
 2.易于解析和编写
 格式：
@@ -54,7 +55,7 @@ json是什么
 数组都用[]
 所有键值对都是使用key:value
 
-```
+```js
 var user={
             name:"leiliu",
             age:3,
