@@ -129,10 +129,11 @@ String没有子类我们都知道，String类型的变量也不允许指向别�
 double x=3.405;
 int nx=(int) x;
 ```
-简单来说，就是将一个类的对象引用转换为另一个对象引用。要完成对象引用的转换，转换语法与数值表达式的强制类型转换类似，需要用()放在转换对象之前
+简单来说，就是将**一个类的对象引用转换为另一个对象引用**。要完成对象引用的转换，转换语法与数值表达式的强制类型转换类似，需要用()放在转换对象之前
 Manager boss=(Manager)staff[0];
-使用强制类型转换的原因是：要在暂时忽视对象的实际类型之后使用对象的全部功能。
+**使用强制类型转换的原因是：要在暂时忽视对象的实际类型之后使用对象的全部功能**。
 代码改写
+
 ```java
 Manager boss=new Manager(5000);
 
@@ -157,7 +158,7 @@ ClassCastException异常
 1.只能在继承层次内进行强制类型转换。
 2.将超类强制转换为子类时建议使用instance of进行检查
 
-```
+```java
 if(staff[1] instanceof Manager){
 boss=(Manager)staff[1];
 }
@@ -182,6 +183,7 @@ for(...){
 ```
 p为什么能调用getDescription呢，这是因为由于不能构造抽象类Person的对象，所以变量p永远不会引用person对象，而是引用诸如Employee或Student这样的具体子类的对象，而这些对象中都定义了getDescription方法。
 ## 受保护访问
+
 # Object:所有类的超类
 
 ## Oject类型变量
@@ -258,10 +260,13 @@ static int hashCode(xxx[] a)
 随处可见toString()方法的主要原因是:只要对象与一个字符串通过字符串"+"连接起来。Java编译器就会自动地调用toString方法来获得这个对象的字符串描述。
 tip:在代码编写的过程中我们常常需要打印数组，但是原始的数组toString()的话会打印许I@a46e30这种前缀(这是由于历史原因造成的)，所以我们可以使用Arrays.toString(int[] nums),toString()在我们的日常调试中经常会用都，熟练应用百利而无一害。
 **常用API**
-java.lang.Object
-Class getClass() 返回包含对象信息的类对象。
-boolean equals(Object otherObject) 比较两个对象是否相等，如果两个对象指向同一块存储区域，方法返回true;
-String toString() 返回表示该对象值的字符串。
+
+### java.lang.Object
+
+​	Class getClass() 返回包含对象信息的类对象。
+​	boolean equals(Object otherObject) 比较两个对象是否相等，如果两个对象指向同一块存储区域，方法返回true;
+​	String toString() 返回表示该对象值的字符串。
+
 # 泛型数组列表
 C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以理解成一个**带有类型参数**的泛型，<>指定了列表保存的元素对象的类型。泛型是由编译器来检测我们的集合对象中存放的对象是否符合我们之前的承诺，也就是说，如果定义了List<某种类型对象>，那么编译器就会帮助我们检查我们集合中添加的对象是否符合规范，如果不符合那么就会报错。 
 
@@ -269,13 +274,13 @@ C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以
 
 编译器会检查这个变量、参数或方法的泛型类型，然后将这个类型放在<>中。
 **常用API**
-java.util.ArrayList\<E>
-	ArrayList\<E>() 构造一个空数组列表
-	ArrayList\<E>(int initialCapacity) 构造一个定长的数组
-	boolean add(E obj) 数组列表末尾添加一个元素，永远返回true
-	int size() 返回存储在数组列表中的元素个数
-	void ensureCapacity(int capacity) 不进行扩容的情况下确保给定的capacity个元素能够被分配在数组中
-	void trimToSize() 将数组列表的存储容量削减到当前大小
+### java.util.ArrayList\<E>
+​	ArrayList\<E>() 构造一个空数组列表
+​	ArrayList\<E>(int initialCapacity) 构造一个定长的数组
+​	boolean add(E obj) 数组列表末尾添加一个元素，永远返回true
+​	int size() 返回存储在数组列表中的元素个数
+​	void ensureCapacity(int capacity) 不进行扩容的情况下确保给定的capacity个元素能够被分配在数组中
+​	void trimToSize() 将数组列表的存储容量削减到当前大小
 
 ## 访问数组列表元素
 自动扩容有利有弊，数组列表自动扩容的便利也增加了访问元素语法的复杂程度,其原因是ArrayList并不是Java程序设计语言的一部分；它只是由某个人编写并在标准库中提供的一个实用工具类。
@@ -295,11 +300,11 @@ list.toArray(a);
 int n=staff.size()/2;
 staff.add(n,e);
 **常用API**
-java.util.ArrayList\<E>
-	E set(int index,E obj) 将值obj放置在数组列表的指定索引位置，返回之前的索引
-	E get(int index)　得到指定索引为值的内容
-	void add(itn index,E obj)　后移元素从而将obj插入到指定索引位置
-	E remove(int index)　删除指定索引位置的元素，并将后面的所有元素前移
+### java.util.ArrayList\<E>
+​	E set(int index,E obj) 将值obj放置在数组列表的指定索引位置，返回之前的索引
+​	E get(int index)　得到指定索引为值的内容
+​	void add(itn index,E obj)　后移元素从而将obj插入到指定索引位置
+​	E remove(int index)　删除指定索引位置的元素，并将后面的所有元素前移
 
 ## 类型化与原始数组的兼容性
 处于兼容性的考虑，编译器检查到**没有发现违反规则**的现象之后，就将所有的类型化数组列表转换为原始的ArrayList对象。在程序运行时，所有的数组列表都是一样的，即虚拟机中没有类型参数。

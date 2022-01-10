@@ -239,11 +239,11 @@ class LengthComparator implements Compararot<String>{
 ```
 
 ```java
-var comp=new LengthCompareTo();
+var comp=new LengthComparetor();
 if(comp.compare(words[i],words[j]>0)...
 ```
 
-将这个与words[i].comapreTo(words[j])进行比较，可以看粗，这个compare实在比较器上调用。
+将这个与words[i].comapreTo(words[j])进行比较，可以看出，这个compare是在比较器上调用。
 
 要对一个数组进行排序，要为Arrays.sort()方法传入一个LengthComparator对象。
 
@@ -252,7 +252,7 @@ String friends=new String("Peter","Mary","Paul");
 Arrays.sort(friends,new LengthComparator());
 ````
 
-**理解了这个我们学习lamda表达式才能更加容易**
+**理解了这个例子我们学习lamda表达式才能更加容易**
 
 ## 对象克隆
 
@@ -297,7 +297,7 @@ copy.raiseSalary(10);
 
 **注意：**
 
-1.protected限制是同一个包下的类可以访问超类的字段，所以，Date类型的hireDay肯定无法直接由Employee来clone()，引用对象需要单独复制。
+1.**protected限制是同一个包下的类可以访问超类的字段**，所以，Date类型的hireDay肯定无法直接由Employee来clone()，引用对象需要单独复制。
 
 2.Cloneable是一个标记接口，不包含任何方法，但是可以使用instanceof关键字。
 
@@ -366,7 +366,7 @@ Action listener=event->{
 
 ### 函数式接口
 
-Java中有许多接口中都有封装代码块，和lamba表达式兼容，接口中必须有且仅有一个抽象方法，并且在使用时可转换为lamba表达式的接口被称为函数式接口(Comparator和ActionListener)。
+Java中有许多接口中都有封装代码块，和lamba表达式兼容，接口中必须有且仅有一个**抽象方法**，并且在使用时可转换为lamba表达式的接口被称为函数式接口(Comparator和ActionListener)。
 
 例如，之前的Arrays.sort方法
 
@@ -457,13 +457,163 @@ Timer timer=new Timer(1000,System.out::println);
 
 通过代码更加直观
 
+```java
+public static void repeatMessage(String text,int delay){
+    ActionListener listener=event->{
+        System.out.println(text);
+		Toolkit.getDefaultToolkit().beep();
+    }
+    new Timer(delay,listener.start());
+}
+```
+
+方法调用reapeatMessage("Hello",1000);
+
+从上面的代码中我们可以知道text并不是lambda表达式中的值，而且lambda表达式的值有可能在repeatMessage方法返回参数许久之后才执行，如何保存text值？
+
+lambda表达式一共有三个部分
+
+1.一个代码块
+
+2.参数
+
+3.自由变量的值，就是在lambda表达式的代码块中没有出现过的值。
+
+lambda表达式的数据结构必须保存自由变量的值，在上面的例子中就是“Hello”,这里称之为lambda表达式对于自由变量的“捕获”。
+
+我们来看具体的实现细节，首先，**自由变量只能引用值而不能修改值**
+
+```java
+public static void repeatMessage(int start,int delay){
+    ActionListener listener=event->{
+        System.out.println(start--); //error can't captured
+		Toolkit.getDefaultToolkit().beep();
+    }
+}
+```
+
+这是因为在并发执行的环境下会出现安全性问题。
+
+**在lambda表达式内部引用的值如果在外部可以更改也是不合法的**
+
+```Java
+public static void repeatMessage(String text,int delay){
+    for(int i=0;i<100;i++){
+    	ActionListener listener=event->{
+       		System.out.println(i+" "+text); //error can't captured
+			Toolkit.getDefaultToolkit().beep();
+    	}
+	}
+}
+```
+
 
 
 ## 处理lambda表达式
 
+使用lambda表达式的重点是**延迟执行(deferred execution)**
+
+要延迟执行的情况可能有以下:
+
+1.在一个单独的线程中执行代码
+
+2.多次运行代码 
+
+3.在算法的适当位置使用(排序时的比较)
+
+4.发生某个事件时使用(点击了按钮)
+
+5.只在必要时才运行的代码
+
+假设有一种情况是我们需要循环执行一个操作
+
+repeat(10,()->System.out.println("Hello world!"));
+
+要执行这个lambda表达式就要有一个函数式接口，书上使用的是Runnable接口。
+
+```java
+public static void repeat(int n,Runnable action){
+    for(int i=0;i<n;i++){
+        action.run();
+    }
+}
+```
+
+我们知道Runnable是实现多线程操作时需要类实现的一个接口,既然启动了别的线程说明只有action.run()被调用时才会执行这个lambda表达式的主体。
+
+为了让例子复杂一些，我们希望告诉它在哪次迭代中需要执行这个动作,需要选择一个合适的函数式接口。
+
+```java
+public interface IntConsumer{
+    void accept(int value);
+}
+```
+
+重写一下这个repeat方法
+
+```java
+public static  void repeat(int n,intConsumer action){
+    for(int i=0;i<n;i++)action.accept(i);
+}
+```
+
+转换为lambda表达式
+
+```java
+repeat(10,i->System.out.println("CountDown"+(9-i)));
+```
+
 ## 再谈Comparator
 
+Comparator接口中包含许多**静态方法**来创建比较器。这些方法可以用lambda表达式或方法引用。
 
+静态comparing方法是一个“键提取器”函数，**它将类型T映射为一个可比较的类型**(如String)。
+
+对要比较的对象应用这个函数，然后对**返回的键完成排序**。
+
+例如，Arrays.sort(people,Comparator.comparing(Person::getName));
+
+根据名字来排序,与手动实现Comparator相比较，代码更加直观。
+
+也可以将比较器与thenComparing方法连接起来，来处理结果相同的情况，就是当前一个比较结果一致的时候在继续用别的条件进行比较。
+
+```java
+Arrays.sort(people,
+            Comparator.comparing(Person::getName)
+           .thenComparing(Person::getFirstName));
+```
+
+很多方法还有变体形式,可以为comparing和thenComparing方法提取的键指定与一个比较器，就像套娃一样，例如，根据姓名长度排序，姓名&长度
+
+```java
+Arrays.sort(people,Comparator.comparing(Person::getName,
+       (s,t)->Integer.compare(s.length().t.length())));
+```
+
+另外的comparing和thenComparing方法的变体，可以避免int、long或者double值的装箱,也就是我们前面按长度比较时需要装箱(个人猜测)。
+
+```java
+Arrays.sort(people,Comparator.comparing(p->p.getName().length()));
+```
+
+最后，来看一下这个究极复杂的代码
+
+```java
+Arrays.sort(people,comparing(Person::getMiddleName,nullFirst(naturlOrder())));
+```
+
+尝试理解一下，如果中名为空,那么getMiddleName()返回的就是null,这时我们使用nullFirst()适配器来增加条件使用比较器不会抛出异常。nullFirst()方法需要一个字符串比较器，而naturalOrder()可以为任何实现了Comparator的类建立一个比较器。注意:naturalOrder()的类型可以导出，即Compator\<String>naturalOrder()。
 
 # 内部类
 
+内部类就是定义在其他类中的类。为什么使用内部类？
+
+1.内部类可以对同一个包中的其他类隐藏。
+
+2.内部类方法可以访问定义在这个类的作用域中的类，包括原有的私有方法。
+
+## 使用内部类访问对象状态
+
+与C++相比，Java内部类的对象会有一个隐式的引用，指向实例化这个对象的外部类对象。通过这个指针，它可以访问外部类的全部状态。
+
+书上的

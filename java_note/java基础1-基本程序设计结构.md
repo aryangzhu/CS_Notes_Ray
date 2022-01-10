@@ -1,3 +1,5 @@
+写在前面，这个系列参考《java核心技术卷》，我之前学习的知识没有系统化，导致很多细节只知其然，而且很多技术对我来说难以上手，究其原因就是基础不牢(为什么之前不做笔记呢，我就是一铁憨憨)，所以这个也相当于补票。大多数内容其实就是书上的知识，不喜勿喷。
+
 ### 一个简单的Java应用程序
 
 ### 命令行运行
@@ -54,21 +56,36 @@ int age=in.nextInt();
 2.String Pool的需要
 3.安全性得到保证，网络传输过程不会被修改
 4.不可变性天生具备线程安全的特点
-**常用API**
 
-Scanner(InputStream in) 用给定的输入流创建一个对象
+#### 常用API
 
-int nextInt(); 读取输入一个整数
+##### Scanner(InputStream in) 
 
-String nextLine(); 读取输入的一行内容
+用给定的输入流创建一个对象
 
-String next();读取下一个单词(以空格为分割符)
+##### int nextInt(); 
 
-double nextDouble() 整数或浮点数的字符序列
+读取输入一个整数
 
-boolean hasNext() 检验输入中是否还有其他单词
+##### String nextLine(); 
 
-boolean hasNextDouble() 检测是否还有下一个整数或者浮点数的字符序列
+读取输入的一行内容
+
+##### String next();
+
+读取下一个单词(以空格为分割符)
+
+##### double nextDouble() 
+
+整数或浮点数的字符序列
+
+##### boolean hasNext() 
+
+检验输入中是否还有其他单词
+
+##### boolean hasNextDouble() 
+
+检测是否还有下一个整数或者浮点数的字符序列
 
 #### 格式化
 

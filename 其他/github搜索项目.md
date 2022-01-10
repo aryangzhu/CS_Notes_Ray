@@ -5,5 +5,3 @@ in:readme xxx
 in:description xxx 
 
 根据描述进行查询
-
-![选区_009.png](https://i.loli.net/2021/11/09/DaTAZJtQRIc3bid.png)
