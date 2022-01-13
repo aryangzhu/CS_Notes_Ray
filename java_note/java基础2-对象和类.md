@@ -11,9 +11,17 @@
 ### 对象
 要想使用对象，首先必须构造对象，并指定其初始状态，然后对对象应用方法。
 在Java程序语言中，要使用构造器(constructor,或称构造函数)构造新实例。**构造器是一种特殊的方法，用来构造并初始化对象**。
+
+```java
 Date birthday=new Date();
+```
+
 birthday就是对象变量，而new Date()则是一个对象实例
+
+```java
 Date　deadline;//deadline　doesn't refer to any object;
+```
+
 定义了一个对象变量deadline,它可以引用Date类型的对象。
 要认识到最重要的一点：对象变量并没有实际包含一个对象，**它只是引用一个对象。**
 Date deadline=new Date();
@@ -31,7 +39,8 @@ int year=newYearEve.getYear(); //1999
 int month=newYearEve.getMonthValue(); //12
 int day=newYearEve.getDayOfMonth(); //31
 ```
-**LocalDate常用API**
+#### LocalDate常用API
+
 static LocalDate __now()__ 构造一个表示当前日期的对象
 static LocalDate **of(int year,int month,int day)** 构造一个表示给定日期的对象
 int **getYear()** 
@@ -40,12 +49,19 @@ int **getDayOfMonth()** 得到当前日期的年、月和日
 DayofWeek **getDayOfWeek()** 得到当前日期是星期几，作为DayOfWeek类的一个实例返回。调用**getValue**来得到１-7之间的一个数，表示这是星期几，１表示星期一，７表示星期日
 LocalDate **plusDays(int n)** 
 LocalDate **minusDays(int n)** 生成当前日期之后或之前n天的日期
-**更改器方法和访问器方法**
-LocalDate aThousandDaysLater=newYearEve.plusDays(1000);
+#### 更改器方法和访问器方法
+```java
+LocalDate aThousandDaysLater=new YearEve.plusDays(1000);
+```
+
 plusDays方法会生成一个新的LocalDate对象，然后把这个新对象赋给aThousandDaysLater变量，原来的对象不做任何改动。
 在字符串上调用toUpperCase时，这个字符串仍然保持不变，会返回一个大写的字符串。
+
+```java
 GregorianCalender someday=new GregorianCalendar(1999,11,31);
 //odd feature of that class:month numbers go from 0 to 11
+```
+
 与LocalDate.plusDays方法不同，GregorianCalendar.add方法是一个__更改器方法(mutator method)__。调用这个方法之后，他不再是新年前夜
 相反，只访问对象而不修改对象的方法有时称为__访问器方法__
 
@@ -181,9 +197,14 @@ private final StringBuilder evaluations;
 它在Employee类的构造初始化为
 evaluations=new StringBuilder();
 **final关键字只是表示存储在evaluations变量中的对象引用不会再指向另一个不同的StringBuilder对象**。不过这个对象可以更改:
+
+```java
 public void giveGoldStar(){
 	evaluations.append(LocalDate.now()+":Gold star!\n");
 }
+```
+
+
 
 ## 静态字段和静态方法
 ### 静态字段
@@ -313,22 +334,24 @@ public static void swap(Employee x,Employee y){ //doesn't work
 3.方法不能让一个对象参数引用一个新的对象，在上面的案例中，swap方法交换的也只是对象的副本，不难理解
 
 ## 对象构造
-#### 1.重载
+### 1.重载
 
 重载解析：编译器挑选出调用哪个方法，它用各个方法首部中的参数类型与特定方法调用中所使用的值类型进行匹配来挑选出正确的方法，如果编译器找不到匹配的参数，就会产生编译时的错误，因为根本不存在匹配，或者没有一个比其他的更好。
 java允许重载任何方法，而不只是构造器方法。因此，要完整地描述一个方法，需要指定方法名以及参数类型。这叫做方法的签名(signature)
 
-#### 2.默认字段初始化
+### 2.默认字段初始化
 
 如果没有在构造器中显示地为字赋初始值，那么就会被自动地赋为默认值：数值为0、布尔值为false、对象引用为null。
 **注意：**
 这是局部变量和字段的一个重要区别
 
-#### 3.无参数的构造器
+### 3.无参数的构造器
+
 如果类中至少提供了一个构造器，但是没有提供无参数的构造器，那么构造对象时如果不提供参数就是不合法的
 当没有其他构造函数的时候，你才会得到一个默认的无参构造函数
 
-#### 4.显式字段初始化
+### 4.显式字段初始化
+
 通过重载类的构造方法，可以采用多种形式设置类的实例字段的初始状态
 
 ```java
@@ -351,8 +374,10 @@ class Employee{
     }
 }
 ```
-#### 5.参数名
-#### 6.调用另一个构造器
+### 5.参数名
+
+### 6.调用另一个构造器
+
 this指示一个方法的隐式参数，还有另一个含义
 如果构造器的第一个语句形如this(...),这个构造器将调用同一个类的另一个构造器
 
@@ -380,9 +405,13 @@ this指示一个方法的隐式参数，还有另一个含义
 先进入到this调用另一个构造函数中去，最后返回初始化对象
 上面的代码执行之后，首先会进行字段默认初始化，如下图
 ![选区_156.png](https://i.loli.net/2021/04/14/NYCUGRpur3IDjvV.png)
-**初始化块**
+
+### 7.初始化块
+
+初始化数据字段的方法(也就是说给字段赋值)
+
 1.在构造器中设置值
-2.显示地声明值
+2.显式地声明值
 3.初始化块
 
 ```java
@@ -412,11 +441,36 @@ class Employee{
 }
 ```
 首先运行初始化块，然后才运行构造器的主体部分。
-### 调用构造器的具体处理步骤：
-1.如果调用了另一个构造器，则会执行第二个构造函数
-2.a.所有的数据字段初始化为其默认值;
-b.按照在类中声明的顺序，执行**字段初始化方法**和**初始化块**
+
+#### 调用构造器的具体处理步骤：
+
+1.如果调用了另一个构造器，则会基于提供的参数执行第二个构造函数。
+2.如果1不成立，
+
+​	a.所有的数据字段初始化为其默认值;
+​    b.按照在类中声明的顺序，执行**字段初始化方法**和**初始化块**
 3.执行构造函数主体代码
+
+可以通过提供一个初始值，或者使用一个静态的初始化块来给静态字段赋值。
+
+```java
+private static int nextId=1;
+```
+
+如果静态字段需要复杂的初始化代码，那么可以使用静态的初始化块。
+
+将代码放在一个块中，并标记为static。
+
+```java
+//static initialzation block
+static{
+    Random generator=new Random();
+    nextId=generator.nextInt(1000);
+}
+```
+
+在类第一次加载的时候，将会进行静态字段的初始化。与实例字段一样，除非将静态字段显式地赋值，否则会默认赋值0，false或者null。**所有的静态字段初始方法以及静态初始化块都将依照类声明中出现的顺序执行**。
+
 ##### 常用API
 **java.util.Random**
 	Random() 构造一个新的随机数
@@ -424,7 +478,8 @@ b.按照在类中声明的顺序，执行**字段初始化方法**和**初始化
 
 ## 包
 ### 类的导入
-#### 静态导入
+### 静态导入
+
 **可以允许导入静态方法和静态字段，而不只是类**
 import static java.lang.System.*;
 就可以使用System类的静态方法和静态字段，而不必加类名前缀
@@ -434,7 +489,8 @@ exit(0);
 将源文件放到完整包名匹配的子目录中，因为java中的类是强依赖包。例如,com.horstmann.corejava包中所有源文件应该也放置在子目录com/horstman/corejava中(.java文件)。编译器将类文件也放在相同的目录结构中。(.class文件)
 java命令 src包下的类路径
 
-#### 类路径
+### 类路径
+
 类存储在文件系统的子目录中。**类的路径必须与包名匹配**
 1.把类文件放到一个目录中，例如/home/user/classdir。需要注意，这个目录是包树状结构的基目录。如果希望增加com.horstman.corejava.Employee类，那么Employee类文件就必须位于子目录/home/user/classdir/com/horstman/corejava中
 2.将JAR文件放在一个目录中，例如：/home/user/archives。
@@ -445,12 +501,19 @@ java命令 src包下的类路径
 C:|classdir;,;C:\archives\archive.jar
 
 ### 设置类路径
+
+```shell
 java -classpath /home/user/classdir:.:/home/user/archives/archive.jar 
+```
+
 总结：在我们设置了类路径之后，java编译器总是在当前的目录中查找对象，但是jvm虚拟机仅在类路劲中包含"."目录的时候才查看当前目录。如果没有设置类路径的话，那么默认会在当前目录下进行查找，但是如果设置了类路径但是类路径中没有"."的话那么类可以编译但无法运行。
 虚拟机搜寻com.horstmann.corejava.Employee类文件。它首先会查找Java API类。那里找不到相应的类文件，所以查看类路径。
-/home/user/classdir/com/horstmann/corejava/Employee.class 对应上面第一步
+
+```shell
+/home/user/classdir/com/horstmann/corejava/Employee.class(对应上面第一步)
 com/horstmann/corejava/Employee.class(从当前目录开始)
 com/horstmann/corejava/Employee.class(/home/user/archives/archive.jar中)
+```
 
 ## JAR文件
 java归档文件，可以含有类文件，也可以包含诸如图像和声音等其他类型的文件。此外，JAR文件是压缩的，它使用了我们熟悉的zip压缩格式。、
@@ -461,9 +524,17 @@ java归档文件，可以含有类文件，也可以包含诸如图像和声音�
 
 ### jar命令
 创建jar包
+
+```shell
 jar cvf CalculatorClasses.jar *.class icon.gif
+```
+
 可执行jar文件
+
+```shell
 jar cvfe MyProgram.jar com.mycompany.mypkg.MainAppClass files to add
+```
+
 关于命令行选项的说明
 java 命令通常-...
 jar cvf...

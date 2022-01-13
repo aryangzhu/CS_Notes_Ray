@@ -101,9 +101,9 @@ public interface Powered extends Mobeable{
 
 ## 静态和私有方法
 
-java8中允许在接口中增加静态方法，只是一般将静态方法放在伴随类中，所以我们**经常会在标准库中见到成对出现的接口和实用工具类**，
+java8中允许在接口中增加静态方法，只是一般将静态方法放在伴随类中，所以我们**经常会在标准库中见到成对出现的接口和实用工具类**。
 
-Java9中接口中方法可以是private，**private可以是静态或者实例方法，但是只能在本类中使用，用法有限，一般作其他方法的辅助方法**。
+Java9中接口中方法可以是private，**private可以是静态或者实例方法，但是只能在接口本身中使用，用法有限，一般作其他方法的辅助方法**。
 
 ## 默认方法
 
@@ -209,9 +209,9 @@ class TimePrinter implements AcitonListerner{
 timer构造器传入的参数第一个是时间间隔，第二个是监听器对象
 
 ```java
- 	    Timeprinter listener=new Timeprinter();
-        Timer timer = new Timer(1000 ,listener);
-        timer.start();
+Timeprinter listener=new Timeprinter();
+Timer timer = new Timer(1000 ,listener);
+timer.start();
 ```
 
    通过start()来启动定时器
@@ -616,4 +616,125 @@ Arrays.sort(people,comparing(Person::getMiddleName,nullFirst(naturlOrder())));
 
 与C++相比，Java内部类的对象会有一个隐式的引用，指向实例化这个对象的外部类对象。通过这个指针，它可以访问外部类的全部状态。
 
-书上的
+书上的例子是重构了TimerTest，抽象出一个TalkingClock，语音时钟，需要两个参数，发出通知的间隔和开关铃声的标志。
+
+```java
+public class TalkingClock{
+    private int interval;
+    private boolean beep;
+    
+    public TalkingClock(int interval,boolean beep){...}
+    public void start(){...}
+    
+    public class TimerPrinter implements ActionListener{
+        ....
+    }
+}
+```
+
+虽然TimerPrinter位于TalkingClock的内部，但是并不意味着每个TalkingClock对象都有TimerPrinter实例字段。TimerPrinter是在TalkingClock的方法中构造的(也就是说需要用到这个类的对象时才会构造，听起来像是废话)。
+
+actionpPerformed方法在发出铃声之前会检查beep标志。
+
+```java
+public class TimerPrinter implements ActionListener{
+    public void acitonPerformed(Action event){
+        System.out.println("At the thone the time is"+
+        Instant.ofEpochMilli(event.getWhen()));
+        if(beep){
+            Toolkit.getDefaultToolkit().beep();
+        }
+    }
+}
+```
+
+从代码中可以看出TimerPrinter中并没有beep的实例字段，但是却可以访问TalkingClock中的beep。说明内部类的对象总有一个隐式引用，可以访问外部类对象。
+
+我们将外围类称为outer,上面的代码可以等价为
+
+````java
+if(outer.beep){
+            Toolkit.getDefaultToolkit().beep();
+        }
+````
+
+外围类的引用由构造器设置。编译器会修改内部类的构造器，添加当前外围类的参数。
+
+TimerPrinter中没有构造器，所以编译器会默认生成一个无参的构造器(???书上的这段话让我很迷惑,既然无参那么clock算什么)。
+
+```java
+public TimerPrinter(TalkingClock clock){//auto generated code
+    outer=clock;
+}
+```
+
+outer并不是Java中的关键字，只是为了方便我们理解。
+
+在start方法中构造TimerPrinter之后，由于之前生成了内部类的构造器，这时会将当前与语音时钟的this引用传入TimerPrinter的构造器中。
+
+## 内部类的特殊语法规则
+
+### 1.OuterClass.this
+
+这是正规语法，例如
+
+```java
+...
+if(Talking.this.beep)...
+```
+
+### 2.outerObject.new innerClass(construction parameters)
+
+```java
+ActionListener listener=this.new TimePrinter();
+```
+
+假设IimePrinter是公共内部类，对于任意的语音始终都可以构造TimePrinter
+
+```java
+TalkingClock jabber=new TalkingClock(1000,true);
+TalkingClock.TimePrinter timer=jabber.new TimerPrinter();
+```
+
+### 3.几个注意的点
+
+#### 1.外围类的作用域之外调用内部类
+
+outerClass.innerClass
+
+#### 2.内部类中的静态字段都必须是final,并初始化为一个编译时常量
+
+编译时常量指的是程序在编译时就能确定常量的具体指，与之对应的是运行时常量，例如
+
+```java
+public final int a = 1;     //编译时常量
+public final static int d = 10;   //编译时常量 
+public final static int d = 10;   //编译时常量 
+public final static String str4 = "static str";  //编译时常量 
+public final double e = Math.random(); //运行时常量
+```
+
+运行时常量是程序运行时才能确定的值。
+
+#### 3.内部类中不允许有static方法
+
+## 内部类是否有用、必要和安全
+
+
+
+内部类是一个**编译器现象**,与虚拟机无关。编译器将会把内部类转换为常规的类文件，用$分隔外部类名与内部类名，而虚拟机则对此一无所知。
+
+例如，TalkingClock类内部的TimePrinter类将被转换成类文件TalkingClock$TimePrinter.class。
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/%E5%86%85%E9%83%A8%E7%B1%BB%E6%B5%8B%E8%AF%95.png)
+
+可以看到，**编译器中生成了一个额外的实例字段this$0**,对应外围类的引用(名字this$0是编译器合成的，在你自己编写的代码中不能引用这个字段。)同时，构造器中也有TalkingClock参数。
+
+能不能自己动手实现编译器的转换？假设我们将TimePrinter放在TalkingClock的外部，在构造TimePrinter对象的时候，传入它的对象的this指针。
+
+肯定是有问题的，因为内部类可以访问外部类的私有字段，但是如果实在类的外面的话，那么就不能访问私有字段beep。
+
+ 那么问题来了，内部类是如何得到超越自身类的访问权限的呢？
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/TalkingClock.png)
+

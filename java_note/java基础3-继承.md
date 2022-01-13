@@ -56,7 +56,7 @@ public Manager(String name,double salary,int year,int month,itn day){
 }
 ```
 super构造器必须是子类构造器的第一条语句或者说**调用构造器的语句只能作为另一个构造器的第一句语句出现**。**构造器的参数可以传给当前类(this) 的其他构造器,也可以传给超类(super)的构造器**。
-如果子类的构造器没有显示地调用超类的构造器，将自动地调用超类的无参构造器，如果超类没有无参构造器，并且在子类构造器中又没有显示地调用超类的其他构造器，Java编译器就会报错
+**如果子类的构造器没有显式地调用超类的构造器，将自动地调用超类的无参构造器**，如果超类没有无参构造器，并且在子类构造器中又没有显示地调用超类的其他构造器，Java编译器就会报错
 也就是说，子类在初始化时会自动调用超类的构造器。如果我没有记错的话，应该是静态块先初始化，然后才会执行超类的构造函数。
 **this关键字的作用**
 1.指示隐式参数的引用
@@ -66,7 +66,7 @@ super构造器必须是子类构造器的第一条语句或者说**调用构造�
 2.调用超类的构造器
 对象变量e可以引用Employee对象，也可以引用Manager对象
 **虚拟机知道e实际引用的对象类型，因此能够正确地调用相应的方法**
-一个对象变量(例如，变量e)可以指示多种实际类型的现象被称为多态，在**运行时能够自动地选择**适当的方法，称为**动态绑定**
+一个对象变量(例如，变量e)可以指示多种实际类型的现象被称为多态，在**运行时能够自动地选择**适当的方法，称为**动态绑定**。
 
 ## 继承层次
 意思就是继承不只是单层的，类似与树一样，在每一层有多个节点，而在继承体系中，某个特定的的类到其祖先的距离称为继承链。
@@ -273,8 +273,11 @@ C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以
 ## 声明数组列表
 
 编译器会检查这个变量、参数或方法的泛型类型，然后将这个类型放在<>中。
-**常用API**
-### java.util.ArrayList\<E>
+
+### 常用API
+
+#### java.util.ArrayList\<E>
+
 ​	ArrayList\<E>() 构造一个空数组列表
 ​	ArrayList\<E>(int initialCapacity) 构造一个定长的数组
 ​	boolean add(E obj) 数组列表末尾添加一个元素，永远返回true
@@ -290,17 +293,23 @@ C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以
 警告:
 1.只有当数组的size大于i时，才能使用set方法
 2.没有泛型类时，就是说如果集合<>中没有规定对象类型，那么默认的就是返回object类型
+
+```java
 Employee e=(Employee)staff.get(i);
 ArrayList list=new ArrayList<>();
 while(...){
 ...
 }
 list.toArray(a);
-如果需要在数组列表的中间插入元素，为此可以使用方法add方法并提供一个索引参数。
+//如果需要在数组列表的中间插入元素，为此可以使用方法add方法并提供一个索引参数。
 int n=staff.size()/2;
 staff.add(n,e);
-**常用API**
-### java.util.ArrayList\<E>
+```
+
+### 常用API
+
+#### java.util.ArrayList\<E>
+
 ​	E set(int index,E obj) 将值obj放置在数组列表的指定索引位置，返回之前的索引
 ​	E get(int index)　得到指定索引为值的内容
 ​	void add(itn index,E obj)　后移元素从而将obj插入到指定索引位置
@@ -314,26 +323,27 @@ staff.add(n,e);
 ```java
 ArrayList<Integer> list=new ArrayList<Integer>();
 list.add(3);
-将会自动变换成
+//将会自动变换成
 list.add(Integer.ValueOf(3));
 ```
-相反的，将一个Integer对象赋给int值时,将会自动地拆箱。也就是说,编译器将int n=list.get(i);转换为int n=list.get(i).intValue();
+相反的，将一个Integer对象赋给int值时,将会自动地拆箱。也就是说,编**译器将int n=list.get(i);转换为int n=list.get(i).intValue()**;
 **注意**自动装箱规范要求boolean、byte、char<=127,介于-128和127之间我们也称作缓冲区，short和int相同的值被包装到固定的对象中。我们可以和String类型的常量池进行一个比较，其实他们的作用是一样的。
 另外，如果在一个表达式中混合使用Integer和Double类型,Integer值就会拆箱，提升为double,在装箱为Double。同时,我们需要清楚装箱和拆箱是编译器要做的工作,而不是虚拟机。
-**常用API**
-java.lang.Integer
-	int intValue()
-	将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法)
-	static String toString()
-	返回一个新的String对象，表示指定的数值i的十进制表示
-	static String toString(int i,int radix)
-	返回数值i基于radix参数指定进制的表示
-	static int parseInt(String s)
-	static int parseInt(String s,int radix)
-	返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
-	static Integer valueOf(String s)
-	static Integer valueOf(String s,int radix)
-	返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
+
+### 常用API
+#### java.lang.Integer
+​	int intValue()
+​	将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法)
+​	static String toString()
+​	返回一个新的String对象，表示指定的数值i的十进制表示
+​	static String toString(int i,int radix)
+​	返回数值i基于radix参数指定进制的表示
+​	static int parseInt(String s)
+​	static int parseInt(String s,int radix)
+​	返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
+​	static Integer valueOf(String s)
+​	static Integer valueOf(String s,int radix)
+​	返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
 
 # 参数数量和可变的方法
 # 枚举类
@@ -366,31 +376,51 @@ Java为每个对象维护一个运行时类标识，从这个信息我们可以�
 Employee e;
 Class class=e.getClass();
 **2.还可以使用静态方法forName获得类名对应的class对象。**
+
+```java
 String className="java.util.Random";
 Class cl=Class.forName(className);
+```
+
 如果类名保存在一个字符串中，这个字符串会在运行时变化，就可以使用这个方法。
 **3.T.class**
 例如
+
+```java
 Class cl1=Random.class;
-这种方法得到的其实是泛型类，例如Employee.class得到的其实是Class<Employee>
-虚拟机为每个类只有一个Class，也就是说我们可以使用==来进行比较
+```
+
+这种方法得到的其实是**泛型类**，例如Employee.class得到的其实是Class\<Employee>
+**虚拟机为每个类管理一个唯一的Class对象**，也就是说我们可以使用==来进行比较。
+
+e instanceof Employee比较条件下，如果e是某个子类则比较成功，但是在.class比较时不成立。
+
 如果有一个Class类型的对象，可以用它来构造类的实例。调用getConstructor方法即可。
+
+```java
 Class cl=Class.forName(className);
 Object obj=cl.getConstructor().newInstance();
-**常用API**
-java.lang.Class
-	static Class forName(String className)
-	返回一个Class对象，表示名为className的类
-	Constructor getConstructor(class..parameter Types)
-	生成一个对象,描述有指定参数类型的构造器。
-java.lang.reflect.Constructor
-	Ojbect newInstance(Object..params)
-	将params传递到构造器，来构造这个构造器声明类的一个新实例
-java.lang.Throwable
-	void printStackTrace()
-	将Throwable对象和堆栈轨迹打印到标准流程错误
+```
+
+### 常用API
+#### java.lang.Class
+​	static Class forName(String className)
+​	返回一个Class对象，表示名为className的类
+​	Constructor getConstructor(class..parameter Types)
+​	生成一个对象,描述有指定参数类型的构造器。
+
+#### java.lang.reflect.Constructor
+​	Ojbect newInstance(Object..params)
+​	将params传递到构造器，来构造这个构造器声明类的一个新实例
+
+#### java.lang.Throwable
+​	void printStackTrace()
+​	将Throwable对象和堆栈轨迹打印到标准流程错误
 
 ## 声明异常入门
+
+
+
 ## 资源
 Class类中提供了查找资源文件的，但是得遵循以下步骤:
 1.获得拥有资源的类的Class对象，ResourceTest.Class
@@ -405,40 +435,92 @@ InputStream getResourceAsStream(String name)
 
 ## 利用反射分析类的能力
 在java.lang.relect包下有三个类Field、Method和Constrcutor,这里在Spring容器中运用的非常多，所以我们需要认真学。
-这三个类都有getName()的方法，用来返回字段、方法或者构造器的名称。
-Field类下比较重要的是getType方法，用来返回某个字段的类型对象，类肯定就是Class。
-Constructor类和Method类有报告参数类型的方法，Method类还有一个报告返回类型的方法，这三个类都有一个名为getModifiers的方法，它将返回一个整数，用不同的0/1位来描述修饰符。
-Class类中的getFileds、getMethods和getConstructors方法将分别返回这个类支持的公共字段、方法和构造器的数组。
-**常用API**
-java.lang.Class
-	Field[] getFilelds()
-	Field[] getDeclaredFields()
-	getFields方法将返回一个包含当前类和超类的公共字段。getDeclaredField方法也返回包含当前类的field的数组。
-	Method[] getMethods()
-	Method[] getDeclaredMethods(()
-	返回包含Method对象的数组:getMethods将返回所有的公共方法，包括继承的公共方法。
-	Constructor[] getConstructors()
-	Constructor[] geteclaredConstructors()
-	返回包含Constructor对象的数组
-	String getPackageName() 得到包名。
+这三个类都有**getName()**的方法，分别用来返回**字段、方法或者构造器的名称**。
+Field类下比较重要的是getType方法，用来返回**某个字段的类型对象，类肯定就是Class**。
+Constructor类和Method类有报告参数类型的方法，Method类还有一个**报告返回类型的方法**，这三个类都有一个名为**getModifiers的方法，它将返回一个整数，用不同的0/1位来描述修饰符**，如public和static。另外，还有**Modifier类**中isPublic、isPrivate和isFinal判断方法或者构造器是何种修饰符。
+Class类中的getFileds、getMethods和getConstructors方法**将分别返回这个类支持的公共字段、方法和构造器的数组,其中包括超类的公共成员**。
 
-## 使用反射编写泛型数组代码
+Class类中的getDeclaredFields、getDeclaredMethods和geteclaredConstructors方法将分别返回类中声明的全部字段、方法和构造器的数组。
+
+### 常用API
+#### java.lang.Class
+Field[] getFilelds()
+
+Field[] getDeclaredFields()
+	getFields方法将返回一个包含当前类和超类的公共字段。	
+
+​	getDeclaredField方法也返回包Field对象的数组，这些对象对应这个类的全部字段。
+Method[] getMethods()
+
+Method[] getDeclaredMethods(()
+
+​		返回包含Method对象的数组:getMethods将返回所有的公共方法，包括继承的公共方法。而getDeclareMethods方法只能返回当前类或者接口的全部方法。
+Constructor[] getConstructors()
+Constructor[] geteclaredConstructors()
+​	返回包含Constructor对象的数组
+String getPackageName() 得到包名。
+
+#### java.lang.reflect.Constructor
+
+Class getDeclaringClass()
+
+返回一个Class对象，表示定义了这个构造器、方法或字段的类
+
+Class getExceptionTypes()
+
+Class getModifiers()
+返回一个数，用来描述这个构造器、方法或字段的修饰符。用Modifier类中的方法来分析这个返回值。
+
+String getName()
+
+Class getParameterTypes()(在Constructor和Method classes类中)
+
+返回一个数组，用来表示方法或构造器中参数的类型
+
+Class getReturnType()(在Method类中)
+
+返回一个用于表示返回类型的Class对象
+
+#### java.lang.reflect.Modifer
+
+static String toString(int modifiers)
+
+返回一个字符串，包含对应modifiers中设置的修饰符。
+
+## 使用反射在运行时分析对象
+
 **在运行时获得任意对象数据字段字段的名字和类型**
 1.获得对应的Class对象
 2.在这个Class对象上调用getDeclaredFields。
 如果知道想要查看的字段名称和类型，那么查看就很简单。而利用反射机制，就可以知道编译时不知道的对象字段。
 
-```
+```java
 var harry=new Employee("Harry Hacker",50000,10,1,1989);
-Class cl=harry.getClass();
-Field f=cl.getDeclaredField("name");
+Class cl=harry.getClass();//代表Employee的类对象
+
+Field f=cl.getDeclaredField("name");//f是Employee下name的字段对象
+
+Object v=f.get(harry);//harry是obj,v的值应该是“Harry Hacker“
 ```
-上面的代码中我们中我们不知道是否存在name这个字段，但是我们可以使用getDeclaredField()得到一个Field对象，再用f.get(harry)方法,返回的将是obj的当前字段值。
+上面的代码中我们中我们不知道是否存在name这个字段，但是我们可以使用getDeclaredField()得到一个Field对象，再用f.get(obj)方法,返回的将是obj的当前字段值。
+
+**由于name是一个私有字段，所以get和set方法会抛出一个IllegalAccessException。只能对可以访问的字段使用get和set方法**。
+
 **注意**:Java安全机制允许查看一个对象有哪些字段，但是除非是访问权限，否则不允许进行读写。但是可以使用f.setAccessible(true)；覆盖Java的访问控制。
+
+## 使用反射编写泛型数组代码
+
+java.lang.reflect包中的Array类允许动态地创建数组。例如，Array类中的copyOf方法实现就使用了这个类。
+
 ## 调用任意方法和构造器
+
 Object invoke(Object obj,Object args)作用是用来调用包装在当前Method对象中的方法。
 第一个参数是隐式参数，其余的则提供了显式参数
+
+```java
 double salary=(Double)m2.getSalary();
+```
+
 注意我们在使用这个方法的时候必须进行强制的类型转换，最后则会进行自动拆箱。
 
 # 继承设计的技巧
@@ -447,9 +529,9 @@ double salary=(Double)m2.getSalary();
 
 ### 2.不要使用受保护的字段
 
-​	1.子类是无限的，任何一个人都可以编写子类来访问protected实例字段
+1.子类是无限的，任何一个人都可以编写子类来访问protected实例字段
 
-​	2.同一个包下也能够访问protected实例字段。
+2.同一个包下也能够访问protected实例字段。
 
 这也解释了为什么在那么多的代码中没有见过用protected修饰字段
 
@@ -475,5 +557,5 @@ acition(x1);
 }
 ```
 
-上面
+
 
