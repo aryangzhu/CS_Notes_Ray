@@ -217,7 +217,8 @@ class Employee{
     ....
 }
 ```
-**静态常量**
+### 静态常量
+
 使用的比较多，例如System.out
 
 ```java
@@ -229,7 +230,8 @@ public class System{
 ```
 上面使用了final关键字，不允许对out指向新的引用
 
-**静态方法**
+### 静态方法
+
 静态方法是不在对象上执行的方法。例如,Math类的pow的方法既是一个
 
 ```java
@@ -265,7 +267,8 @@ public final static NumberFormat getCurrencyInstance(){
 ​	无法命名构造器，**这里我们希望返回两个实例，一个是货币实例，一个是百分比实例，所以我们需要不同的对象定义**，显然和构造器只能和类同步是相违背的
 使用构造器时，无法改变所构造的对象的实例，而工厂方法实际上将返回DecimalForamt类的对象，这是NumberFormat的一个子类
 
-**main方法**
+### main方法
+
 这里有两个小技巧
 
 ```java
@@ -289,28 +292,42 @@ public static void tripleValue(double x){
 }
 ```
 执行过程
+
 1.x初始化为percent值的一个副本
+
 2.执行方法中的操作，但是percent仍然是10
+
 3.这个方法结束后，参数变量x不再使用
 ![选区_153.png](https://i.loli.net/2021/04/14/dyTMNPl8F5ImuGc.png)gouzaoqi
 **两种类型的方法参数**
-基本数据类型(数字、布尔值)
-对象引用
+1.基本数据类型(数字、布尔值)
+
+2.对象引用
+
 一个方法不能修改基本类型的参数，而对象引用作为参数就不同了，我们可以将对象的状态进行修改
 
 ```java
-public static vodi tripleSalary(Employee x){ //works
+public static void tripleSalary(Employee x){ //works
 	x.raiseSalary(200);
 }
 ```
 当调用
+
+```java
 harry=new Employee(...);
 tripleSalary(harry);
+```
+
+
+
 ![选区_154.png](https://i.loli.net/2021/04/14/PAK3rEXW4Yutw1R.png)
 执行过程：
-1.x初始化为harry的值的一个副本，这里就是一个对象引用;
+1.x初始化为harry的值的一个副本，这里就是一个对象引用,由图上可以看出指向同一个对象;
+
 2.raiseSalary方法应用于这个对象引用。x和harry同时会引用的那个Employee对象的工资提高了200%;
+
 3.方法结束后，参数变量x不再使用。当然，对象变量harry继续引用那个工资增至3倍的员工对象。
+
 **交换对象方法，交换的只是对象的引用副本**
 ![选区_155.png](https://i.loli.net/2021/04/14/m4fDR9PJ1YBKEcp.png)
 
@@ -327,11 +344,14 @@ public static void swap(Employee x,Employee y){ //doesn't work
     //now x refers to Bob,y to Alice
 }
 ```
-这个方法并没有改变存储在变量a和b中的对象引用。方法的参数被初始化为两个对象引用的副本，这个方法调用的是这两个副本。
+**这个方法并没有改变存储在变量a和b中的对象引用**。
+
+方法的参数被初始化为两个对象引用的副本，这个方法调用的是这两个副本，在方法执行完之后，x和y消失。
+
 ### 对象方法能做什么和不能做什么
-1.方法不能修改修改参数的类型
+1.方法不能修改参数的类型
 2.方法可以修改对象的状态
-3.方法不能让一个对象参数引用一个新的对象，在上面的案例中，swap方法交换的也只是对象的副本，不难理解
+3.方法不能让一个对象参数引用一个新的对象，在上面的案例中，swap方法交换的也只是对象的副本，不难理解。
 
 ## 对象构造
 ### 1.重载
@@ -477,7 +497,21 @@ static{
 	int nextInt(int n) 返回一个0～n-1之间的随机数
 
 ## 包
+
+### 包名
+
+使用包名是为了类的唯一性。为了保证包名的唯一性，要用一个因特网域名(唯一)的逆序形式来作为包名。
+
+#### 完全限定名
+
+先考虑一个域名horstman.com,再追加工程名corejava,再将Employee类放在这个包里，这个类的“完全限定名”就是com.horstman.corejava.Employee。
+
 ### 类的导入
+
+在编译器的角度上java.lang和java.lang.jar是相互独立的(也就是说嵌套的包是独立的)。
+
+一个类可以使用所属包中的所有类，以及其他包中的公共类。
+
 ### 静态导入
 
 **可以允许导入静态方法和静态字段，而不只是类**
@@ -485,13 +519,19 @@ import static java.lang.System.*;
 就可以使用System类的静态方法和静态字段，而不必加类名前缀
 out.println("Goobye,world!!");
 exit(0);
+
+### 在包中增加类
+
 **如果没有在源文件中放置package语句，这个源文件中类就属于无名包**。
 将源文件放到完整包名匹配的子目录中，因为java中的类是强依赖包。例如,com.horstmann.corejava包中所有源文件应该也放置在子目录com/horstman/corejava中(.java文件)。编译器将类文件也放在相同的目录结构中。(.class文件)
 java命令 src包下的类路径
 
 ### 类路径
 
-类存储在文件系统的子目录中。**类的路径必须与包名匹配**
+类存储在文件系统的子目录中。**类的路径必须与包名匹配**。
+
+为了使类能够被多个程序共享，需要做到下面几点：
+
 1.把类文件放到一个目录中，例如/home/user/classdir。需要注意，这个目录是包树状结构的基目录。如果希望增加com.horstman.corejava.Employee类，那么Employee类文件就必须位于子目录/home/user/classdir/com/horstman/corejava中
 2.将JAR文件放在一个目录中，例如：/home/user/archives。
 3.设置类路径(class path)。类路径是所有包含类文件的路径的集合。
@@ -516,28 +556,42 @@ com/horstmann/corejava/Employee.class(/home/user/archives/archive.jar中)
 ```
 
 ## JAR文件
-java归档文件，可以含有类文件，也可以包含诸如图像和声音等其他类型的文件。此外，JAR文件是压缩的，它使用了我们熟悉的zip压缩格式。、
+**java归档文件**，可以含有类文件和子目录，也可以包含诸如图像和声音等其他类型的文件。此外，JAR文件是压缩的，它使用了我们熟悉的zip压缩格式。
 
 ![选区_157.png](https://i.loli.net/2021/04/15/yAS6qtJMFbRlDNL.png)
 **清单文件**
-每个jar包下有一个清单文件，描述归档文件的特殊性，如上图，在META-INF下
+每个jar包下有一个清单文件，清单文件被命名为MANIFEST.MF，描述归档文件的特殊性，如上图，在META-INF下
 
 ### jar命令
-创建jar包
+#### 创建jar文件
+
+jar cvf jarFileName file1 file2...
 
 ```shell
 jar cvf CalculatorClasses.jar *.class icon.gif
 ```
 
-可执行jar文件
+#### 可执行jar文件
+
+可以使用jar命令中的e选项指定程序的入口点，即**通常需要在调用Java程序启动器时启动器是定的类**:
 
 ```shell
 jar cvfe MyProgram.jar com.mycompany.mypkg.MainAppClass files to add
 ```
 
-关于命令行选项的说明
-java 命令通常-...
-jar cvf...
+或者，可以在清单文件中指定程序的主类，包括以下形式的语句:
+
+Main-Class:com.mycompany.mypkg.MainAppClass
+
+不论使用哪一种方法，用户可以简单地通过下面的命令来启动程序:
+
+```shell
+java -jar MyProgram.jar
+```
+
+
+
+### 多版本JAR文件
 
 ## 文档注释
 

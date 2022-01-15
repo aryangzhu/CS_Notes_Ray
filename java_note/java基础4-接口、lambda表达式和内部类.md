@@ -188,6 +188,8 @@ class Student implements Person,Named{
 
 我们要知道**定时器要调用哪个方法，并要求传递的对象所属的类实现了java.awt.event包下的ActionListener接口**。
 
+顺便一提，new Timer(1000 ,listener);是构造器，而构造完成的是定时器。
+
 ```java
 public interface ActionListener{
 	void acitonPerformed(Action Event);
@@ -206,7 +208,7 @@ class TimePrinter implements AcitonListerner{
  
 ```
 
-timer构造器传入的参数第一个是时间间隔，第二个是监听器对象
+Timer构造器传入的参数第一个是时间间隔，第二个是监听器对象
 
 ```java
 Timeprinter listener=new Timeprinter();
@@ -305,7 +307,7 @@ copy.raiseSalary(10);
 
 ## 为什么引入lamba表达式
 
-lamba表达式是一个可传递的代码块
+**lamba表达式是一个可传递的代码块**
 
 例如之前的TimerPrinter，可以构造一个实例提交到Timer对象。
 
@@ -704,7 +706,7 @@ outerClass.innerClass
 
 #### 2.内部类中的静态字段都必须是final,并初始化为一个编译时常量
 
-编译时常量指的是程序在编译时就能确定常量的具体指，与之对应的是运行时常量，例如
+编译时常量指的是程序在编译时就能确定常量的具体指，与之对应的是运行时常量，运行时常量是程序运行时才能确定的值，例如
 
 ```java
 public final int a = 1;     //编译时常量
@@ -713,8 +715,6 @@ public final static int d = 10;   //编译时常量
 public final static String str4 = "static str";  //编译时常量 
 public final double e = Math.random(); //运行时常量
 ```
-
-运行时常量是程序运行时才能确定的值。
 
 #### 3.内部类中不允许有static方法
 
@@ -737,4 +737,321 @@ public final double e = Math.random(); //运行时常量
  那么问题来了，内部类是如何得到超越自身类的访问权限的呢？
 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/TalkingClock.png)
+
+编译器在外围类添加了静态方法access$000，将返回作为参数传递的那个对象的beep字段。
+
+if(beep)实际上会产生以下调用
+
+if(TalkingClock.access$000(outer))
+
+这里会有安全性问题，因为任何人都可以通过access$000方法来访问外部类的私有字段beep。黑客可以使用16进制编辑器创建一个类，再通过虚拟机指令调用那个方法。
+
+下面，我们来描述一下编译器如何构造私有内部类。
+
+假设将一个TimePrinter转换为一个私有内部类。在虚拟机中不存在私有类，因此编译器会生成一个具有包可见性(default默认)的类，其中有一个私有构造器‘
+
+```java
+private TalkingClock$TimePrinter(TalkingClock)
+```
+
+由于是私有的所以没有人可以调用这个构造器，因此，还有第二包可见的构造器:
+
+```java
+TalkingClock$TimePrinter(Talking Clock,TalkingClock$1)
+```
+
+这个构造器将会调用第一个构造器。合成TalkingClock$1类只是为了将这个构造器与其他构造器区分开。
+
+我们在start方法中，有
+
+```java
+var listener=new TimePrinter();
+```
+
+将会转换为
+
+```java
+new TalkingClock$TimePrinter(this,null);
+```
+
+## 内部局部类
+
+局部常见的就是在方法中定义，TimePrinter只在start()方法中出现了一次，所以遇到这种情况时，可以在一个方法中**局部地定义这个类**。
+
+```java
+public void start(){
+	class TimerPrinter implements ActionListener{
+    	public void acitonPerformed(Action event){
+        System.out.println("At the thone the time is"+
+        Instant.ofEpochMilli(event.getWhen()));
+        if(beep){
+            Toolkit.getDefaultToolkit().beep();
+        	}
+    	}
+	}
+    var listener=new TimePrinter();
+    ...
+}
+```
+
+声明局部类时不能有访问说明符(即public或者private)。局部类的作用域被限定在局部类所在的块中。
+
+优势:完全对外隐藏，除了start方法之外没有任何方法知道TimePrinter类的存在。
+
+## 由外部方法访问变量
+
+与其他内部类相比，局部类不但能够访问外部类的字段，还可以访问局部变量！不过，那些局部变量必须是**事实最终变量**(effectively final),就是说一旦赋值就不能更改。个人理解和final是有区别的，final是不能指向别的引用，对象本身是可以进行修改。
+
+下面的代码将原本在构造器中参数interval和beep放在start方法中。
+
+```java
+public vodi start(int interval,boolean beep){
+    class TimerPrinter implements ActionListener{
+    	public void acitonPerformed(Action event){
+        System.out.println("At the thone the time is"+
+        Instant.ofEpochMilli(event.getWhen()));
+        if(beep){
+            Toolkit.getDefaultToolkit().beep();
+        	}
+    	}
+	}
+    var listener=new TimePrinter();
+    ...
+}
+```
+
+TalkingClock类**不再需要存储实例变量beep**(这句话很重要)。局部类只是引用start中的参数。
+
+可能有的人会说，这跟普通的代码没什么区别，为什么还要再写一遍呢？
+
+注意:**这里实现的是定时语音，也就是说会隔一段时间触发一次，但是start方法执行完之后beep将会消失，这是问题的关键**。
+
+为了更容易理解，我们来看一下整个控制流程:
+
+1.调用start;
+
+2.调用内部类TimePrinter的构造器，初始化listener变量；
+
+3.将listener引用传递给Timer构造器，定时器开始计时，start方法退出，beep不复存在。
+
+4.1s后，actionPerformed方法执行if(beep)...
+
+为了能够让actionPerformed方法工作，TimePrinter类在beep参数消失之前复制为start方法的局部变量(可以看看对象和类那儿方法参数的笔记)。
+
+
+
+下面这段话可能很拗口
+
+请注意构造器的boolean参数和var$beep实例变量。当创建一个对象时，beep值就会传递给构造器，并存储在var$beep字段中(也就是说对象中会有形如var$beep的字段)。**编译器检测对局部变量的访问(就是说在编译时已经注意到了对于beep局部变量的访问)，为每一个变量建立相应的实例字段，并将局部变量复制到构造器(内部类的构造器)，从而能够初始化这些字段**(个人理解是编译器会生成一个构造器里面有这个参数，图上的结果中确实也有)。
+
+## 匿名内部类
+
+使用局部内部类时如果还想更进一步，只想创建对象，那么就不需要指定类的名字。这样的一个类被称为**匿名内部类**。
+
+```java
+public vodi start(int interval,boolean beep){
+    var listener=new ActionListener(){
+        System.out.println("At the tone the time is"+Instant.ofEpochMilli(event.getWhen());
+       	if(beep){
+            Toolkit.getDefaultToolkit().beep();
+        }
+    };
+    var timer=new Timer(interval,listener); 
+    timer.start();
+}
+```
+
+含义是创建一个类的对象，这个类实现了ActionListener接口，并且需要实现的actionPerformed方法放在{}中实现。
+
+一般语法
+
+```java
+new SuperType(construction parameters){
+    inner class methods and data
+}
+```
+
+SuperType可以是接口，也可以是一个类，如果是类，内部类就要扩展这个类。
+
+由于匿名内部类没有类名，而构造器必须与类名相同，所以匿名内部类没有构造器。实际上，**构造参数要传递给超类(superclass)构造器**。
+
+具体地，只要内部类实现了一个接口，就不能有任何构造参数。
+
+```java
+new InterfaceType(){
+	...
+}
+```
+
+一个类的新对象和构造一个扩展了这个类的匿名内部类的区别
+
+```java
+Person person=new Person("Jack");
+Person count=new Person("Marry"){...};
+```
+
+从上面的代码中很容易能够看出来，匿名内部类后面有{}
+
+注:匿名内部类不能有构造器，但可以提供一个对象初始化块
+
+```java
+var count=new Person("Marry"){
+    {initialzation}
+};
+```
+
+警告:建立一个与超类大体类似的匿名子类通常会很方便。不过，对于equals方法要特别当心。之前的equals方法使用了下面的测试
+
+```java
+if(getClass()! =other.class){
+    return false;
+}
+```
+
+对于匿名子类做这个测试会失败。
+
+## 静态内部类
+
+如果使用内部类只是为了把一个类隐藏在另外一个类的内部，并不需要内部类有外部类对象的一个引用。为此，**可以将内部类声明为static,这样就不会生成那个引用**(外围类对象)。
+
+下面来看一个典型的例子。考虑这样一个任务:计算数组中的最小值和最大值。当然，可以编写两个方法，一个方法用于计算最小值，一个方法用于计算最大值。在调用这个方法的时候，数组被遍历两遍。如果只需要遍历数组一次，并能够同时计算出数组的最大值和最小值，则可以提高效率。
+
+```java
+double min=Double.POSITIVE_INFINITY;
+double max=Double.NEGATIVE_iNFINITY;
+for(double v:value){
+    if(v<min)min=v;
+    if(v>max)max=v;
+}
+```
+
+由于需要同时返回最大值和最小值，所以可以定义一个包含两个值的类Pair。
+
+```java
+class Pair{
+    private double first;
+    private double second;
+    
+    public Pair(double f,double s){
+        first=f;
+        second=s;
+    }
+    
+    public double getFirst(){
+        return first;
+    }
+    
+    public double getSecond(){
+        return second;
+    }
+}
+```
+
+minmax方法可以反回一个Pair类型的对象。
+
+```java
+class ArrayAlg{
+    public static Pair minmax(double[] values){
+        ...
+        return new Pair(min,max);
+    }
+}
+```
+
+这个方法的调用这可以使用getFirst和getSecond方法获得答案
+
+```java
+Pair p=ArrayAlg.minmax(d);
+System.out.println("min="+p.getFirst());
+System.out.println("max="+p.getSecond());
+```
+
+通常由于Pair这个类名的普遍性，所以容易造成类名的混淆(在一个大项目中，其他人也定义了这个类，可能里面定义了两个字符串字段)。为了解决这个冲突，将Pair定义为ArrayAlg的一个公共内部类(公共的意思就是用public来进行修饰)，就可以通过Arrayalg.Pair访问它了。
+
+```java
+ArrayAlg.Pair p=ArrayAlg.minmax(d);
+```
+
+不过，与之前的例子所使用的内部类不同，在Pair对象中不需要任何其他对象的引用，为此，可以将这个内部类声明为static，从而不生成那个引用:
+
+```java
+class ArrayAlg{
+    public static class Pair{
+        ...
+    }
+    ...
+}
+```
+
+在上面的实例中，必须使用静态内部类，因为内部类对象实在静态方法中构造的。
+
+如果没有将Pair声明为static,那么编译器将会报错，指出没有可用的隐式ArrayAlg类型对象来初始化内部类对象。
+
+### 注意
+
+1.凡是不需要访问外围类对象的内部类就应该是静态内部类。
+
+2.之前我们提到过内部类不允许有静态方法，静态内部类可以有静态字段和方法。
+
+3.在接口中声明的内部类自动是public和static。
+
+# 服务加载器
+
+通常提供一个服务时，程序希望服务设计者能有一些自由，能够确定如何实现服务的特性。另外还希望有多个实现以供选择。**利用ServiceLoader类可以很容易地加载符合一个公共接口的服务**。
+
+假设有一个接口，其中包含服务的各个实例应当提供的方法。
+
+```java
+package serviceLoader;
+
+public interface Cipher{
+	byte[] encrypt(byte[] source,byte[] key);
+    byte[] decrypt(byte[] source,byte[] key);
+    int strlength();
+}
+```
+
+服务提供者可以提供一个或者多个实现这个服务的类，例如，
+
+```java
+package serviceLoader.impl;
+public calss CaesarCipher implements Cipher{
+    ...
+}
+```
+
+实现类可以放在任意的包中，而不一定是服务接口所在的包。**每个实现类必须有一个无参数构造器**(类会调用超类的无参构造器，而接口必须有无参构造器)。
+
+现在，将类名增加至META-INF/services目录下的一个UTF-8编码文本文件中，**文件名必须与完全限定类名一致**。
+
+程序可以如下初始化一个服务加载器:
+
+```java 
+public static ServiceLoader<Cipher> cipher=ServiceLoader.load(Cipher.class);
+```
+
+这个初始化只在程序中完成一次。
+
+服务加载器的iterator方法会返回一个迭代器来处理所提供服务的所有实现(实现类)。最容易的是通过一个增强的for循环来进行遍历，在循环中选择一个适当的。
+
+```java
+public static Cipher getCipher(int minStrength){
+    for(Cipher cipher:cipherLoader){ //implicitly calls cipherLoader.iterator()
+        if(cipher.strength()>=minStrength){
+            return cipher;
+        }
+    }
+}
+```
+
+也可以使用stream流来查找所要的服务。**stream方法会生成ServiceLoader.Provider实例的一个流**。
+
+```java
+public static Optional<Cipher> getCipher2(int minStrength){
+    return cipherLoader.stream()
+        .filter(descr->descr.type()==serviceLoader.impl.CaesarCipher.class)
+        .findFirst()
+        .map(ServiceLoader.Provider::get);
+}
+```
 
