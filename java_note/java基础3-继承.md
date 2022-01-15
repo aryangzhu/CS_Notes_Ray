@@ -324,7 +324,7 @@ staff.add(n,e);
 ## 类型化与原始数组的兼容性
 处于兼容性的考虑，编译器检查到**没有发现违反规则**的现象之后，就将所有的类型化数组列表转换为原始的ArrayList对象。在程序运行时，所有的数组列表都是一样的，即虚拟机中没有类型参数。
 # 对象包装器和自动装箱
-基本类型对应包装器类型，包装器是不可改变的，即一旦构造了包装器，就不允许更改包装在其中的值。
+有时，需要将int这样的基本类型转换为对象。所有基本类型都有对应包装器类型，包装器是**不可改变的，即一旦构造了包装器，就不允许更改包装在其中的值**。
 
 ```java
 ArrayList<Integer> list=new ArrayList<Integer>();
@@ -333,8 +333,8 @@ list.add(3);
 list.add(Integer.ValueOf(3));
 ```
 相反的，将一个Integer对象赋给int值时,将会自动地拆箱。也就是说,编**译器将int n=list.get(i);转换为int n=list.get(i).intValue()**;
-**注意**自动装箱规范要求boolean、byte、char<=127,介于-128和127之间我们也称作缓冲区，short和int相同的值被包装到固定的对象中。我们可以和String类型的常量池进行一个比较，其实他们的作用是一样的。
-另外，如果在一个表达式中混合使用Integer和Double类型,Integer值就会拆箱，提升为double,在装箱为Double。同时,我们需要清楚装箱和拆箱是编译器要做的工作,而不是虚拟机。
+**注意**自动装箱规范要求boolean、byte、char<=127,介于-128和127之间,我们也称作缓冲区，short和int相同的值被包装到固定的对象中。我们可以和String类型的常量池进行一个比较，其实他们的作用是一样的。
+另外，如果在一个表达式中混合使用Integer和Double类型,Integer值就会拆箱，提升为double,在装箱为Double。同时,我们需要清楚**装箱和拆箱是编译器要做的工作**,而不是虚拟机。
 
 ### 常用API
 #### java.lang.Integer
@@ -376,11 +376,17 @@ java.lang.Enum\<E>
 利用Method对象，**这个对象很像C++中的函数指针**
 总结来说反射是一种功能强大且复杂的机制。
 
-## class类
-Java为每个对象维护一个运行时类标识，从这个信息我们可以得知对象所属的类，虚拟机利用这个信息调用正确的方法。
-**1.Object下有一个getClass()方法，返回的是一个Class类型的对象。**
+## Class类
+Java运行时系统为每个对象维护**一个运行时类标识**，这个信息会跟踪对象所属的类，虚拟机利用运行时类型信息选择要执行的正确方法。
+
+Java中有一个特殊的类访问这些信息，要保存这些信息的类名为Class，这个名字可能让然有些困惑。
+
+**1.Object下有一个getClass()方法，返回的是一个Class类型的对象实例。**
 Employee e;
 Class class=e.getClass();
+
+就像Employee对象描述一个特定员工的属性一样，Class对象会描述一个特定类的属性。可能最常用的Class方法就是getName,这个方法将返回类的名字。
+
 **2.还可以使用静态方法forName获得类名对应的class对象。**
 
 ```java
@@ -446,9 +452,42 @@ Field类下比较重要的是getType方法，用来返回**某个字段的类型
 Constructor类和Method类有报告参数类型的方法，Method类还有一个**报告返回类型的方法**，这三个类都有一个名为**getModifiers的方法，它将返回一个整数，用不同的0/1位来描述修饰符**，如public和static。另外，还有**Modifier类**中isPublic、isPrivate和isFinal判断方法或者构造器是何种修饰符。
 Class类中的getFileds、getMethods和getConstructors方法**将分别返回这个类支持的公共字段、方法和构造器的数组,其中包括超类的公共成员**。
 
-Class类中的getDeclaredFields、getDeclaredMethods和geteclaredConstructors方法将分别返回类中声明的全部字段、方法和构造器的数组。
+Class类中的getDeclaredFields、getDeclaredMethods和geteclaredConstructors方法将分别返回类中**声明的全部字段、方法和构造器的数组**。
+
+例如
+
+```java
+    public static void printMethods(Class cl) {
+        Method[] methods = cl.getDeclaredMethods();
+
+        for (Method m : methods) {
+            Class retType = m.getReturnType();//方法返回类型
+            String name = m.getName(); //方法名
+
+            System.out.print("    ");
+            String modifiers = Modifier.toString(m.getModifiers());//获取修饰符
+            if (modifiers.length() > 0) {
+                System.out.print(modifiers + " ");
+            }
+            System.out.print(retType.getName() + " " + name+"(");
+
+            //获取方法参数
+            Class[] paramTypes = m.getParameterTypes();
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (i > 0) {
+                    System.out.print(", ");
+                }
+                System.out.print(paramTypes[i].getName());
+            }
+            System.out.println(");");
+        }
+    }
+```
+
+
 
 ### 常用API
+
 #### java.lang.Class
 Field[] getFilelds()
 
@@ -520,14 +559,24 @@ java.lang.reflect包中的Array类允许动态地创建数组。例如，Array�
 
 ## 调用任意方法和构造器
 
-Object invoke(Object obj,Object args)作用是用来调用包装在当前Method对象中的方法。
-第一个参数是隐式参数，其余的则提供了显式参数
+回想一下，可以用Field类的get方法查看一个对象的字段。与之类似，**Method**类中的    Object **invoke**(Object obj,Object args)作用是**用来调用包装在当前Method对象中的方法**。
+第一个参数是隐式参数，其余的则提供了显式参数,**对于静态方法来说，第一个参数可以忽略**。
+
+例如，用m1来表示Employee类的getName()方法，下面显示了如何调用这个方法:
+
+```java
+String n=(String)m1.invoke(harry);
+```
+
+如果返回的是基本类型，invoke方法将会返回包装器类型。
+
+注意我们在使用这个方法的时候必须进行强制的类型转换，最后则会进行自动拆箱。
 
 ```java
 double salary=(Double)m2.getSalary();
 ```
 
-注意我们在使用这个方法的时候必须进行强制的类型转换，最后则会进行自动拆箱。
+建议在绝对有必要的时候才在你自己的程序中使用Method对象。
 
 # 继承设计的技巧
 

@@ -429,15 +429,35 @@ list.removeIf(e->e==null);
 
 来看之前的一个例子
 
+```java
 Timer timer=new Timer(1000,event->System.out.println(event));
+```
 
 直接将println()传递到Timer构造器
 
+```java
 Timer timer=new Timer(1000,System.out::println);
+```
 
-表达式System.out::println是一个**方法引用(method reference)**,它指示编译器生成一个函数式接口的实例，并且覆盖掉接口中的方法，在上面的代码中，会生成一个ActionListener的实例，并且覆盖掉actionPerformed(ActionEvent e)方法，调用System.out.println(e);
+表达式System.out::println是一个**方法引用(method reference)**,**它指示编译器生成一个函数式接口的实例，并且覆盖掉接口中的方法**，在上面的代码中，会**生成一个ActionListener的实例，并且覆盖掉actionPerformed(ActionEvent e)方法**，调用System.out.println(e);
 
-**方法引用也不是一个对象**
+**方法引用也不是一个对象**,但是为一个类型为函数式接口的变量赋值时会生成一个对象。
+
+PrintStream类(System.out就是PrintStream类的一个实例)中有10个重载的println方法。编译器需要根据上下文确定使用哪一个方法。在上面的例子中，方法引用System.out.println必须转换为一个包含以下方法的AcitonListener实例:
+
+void actionPerformed(ActionEvent e)
+
+这样会从10个重载的printl方法中选出println(Object x)方法，因为Object与ActionEvent最匹配。调用actionPerformed方法时，就会打印出这个事件对象。
+
+假设，将同样的方法引用赋至一个不同的函数式接口:
+
+Runable task=System.out::println();
+
+这个Runable函数式接口有一个无参数的抽象方法:
+
+void run()
+
+这里会选择无参数的prinlnt()方法，调用task.run()方法会向System.out打印一个空行。
 
 ### 使用::运算符的三种情况
 
@@ -447,7 +467,7 @@ Timer timer=new Timer(1000,System.out::println);
 
 #### 2.Class::instanceMethod
 
-类:实例方法，::之前的参数是隐式参数。例如，String::compareToIgnoreCase等同于(x,y)->x.compareToIgnoreCase(y)
+类::实例方法，::之前的参数会成为方法的隐式参数。例如，String::compareToIgnoreCase等同于(x,y)->x.compareToIgnoreCase(y)
 
 #### 3.Class:StaticMethod
 
@@ -479,7 +499,7 @@ lambda表达式一共有三个部分
 
 2.参数
 
-3.自由变量的值，就是在lambda表达式的代码块中没有出现过的值。
+3.**自由变量的值**，就是在lambda表达式的代码块中没有出现过的值。
 
 lambda表达式的数据结构必须保存自由变量的值，在上面的例子中就是“Hello”,这里称之为lambda表达式对于自由变量的“捕获”。
 
@@ -1044,7 +1064,7 @@ public static Cipher getCipher(int minStrength){
 }
 ```
 
-也可以使用stream流来查找所要的服务。**stream方法会生成ServiceLoader.Provider实例的一个流**。
+也可以使用stream流(数据集合)来查找所要的服务。**stream方法会生成ServiceLoader.Provider实例的一个流**。
 
 ```java
 public static Optional<Cipher> getCipher2(int minStrength){
@@ -1054,4 +1074,193 @@ public static Optional<Cipher> getCipher2(int minStrength){
         .map(ServiceLoader.Provider::get);
 }
 ```
+
+最后，如果想要得到任何服务实例，只是需要调用findFirst。
+
+Optional\<Cipher> cipher=cipherLoader.findFirst();
+
+### 常用API
+
+#### java.util.ServiceLoader\<S>
+
+static \<S> ServiceLoader\<S> load(Class\<S> service)
+
+创建一个服务加载器来加载实现给定服务接口的类。
+
+Iterator\<S> iterator()
+
+生成一个以“懒”方式加载服务类的迭代器。也就是说，**迭代器推进时才会加载类**。
+
+Stream\<ServiceLoader.Provider\<S>> stream()
+
+返回提供者描述的一个流，从而可以采用懒方式加载所要的类的提供者。
+
+Optional\<S> findFirst()
+
+查找第一个可用的服务提供者(如果有)。
+
+#### java.util.ServiceLoader.Provider\<S>
+
+Class\<? extends S> type()
+
+获得这个提供者的类型。
+
+S get()
+
+获得这个提供者的实例。
+
+# 代理
+
+利用代理(proxy)在运行时**创建了一组给定接口的新类**。只有在编译时无法确定需要实现哪个接口才需要使用代理。
+
+## 何时使用代理
+
+假设我们需要创建一个类的对象，这个类可能实现了一个或者多个接口，但是在编译时不知道这些接口是什么。回想一下之前，如果是想要构造具体的类的话，那么我们可以里用newInstance或者反射来创建一个类的对象实例(通过找到构造器)。但是，**不能实例化接口**。需要在运行的程序中定义一个新类。
+
+为了解决这个问题，有些程序会生成代码，将这些代码放在一个文件中，调用编译器，然后再加载得到类文件。但是，这样做的速度很慢，而且需要**将编译器连同程序一起部署**。
+
+而代理机制是更好的解决方案，代理类可以在运行的时候创建全新的类。这样的代理类能够实现你指定的接口。具体的，代理类包含以下方法:
+
+1.指定接口所需要的全部方法
+
+2.Object类中的全部方法，例如，toString、equlas等。
+
+说实话，上面的这些话我看了半天还是不太理解，从网上的关于代理模式的博文中我有了更加直观的了解。
+
+https://xie.infoq.cn/article/9a9387805a496e1485dc8430f
+
+**代理类和委托类有相同的方法**，代理类为委托类做了消息的预处理、过滤或者调用委托类的方法以及事后的处理。
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/%E9%80%89%E5%8C%BA_025.png)
+
+有几点我们需要注意:
+
+1.用户只在乎接口功能，而不关心是谁实现的。
+
+2.接口的真正实现者是RealSubject，但是它不与用户直接接触，而是通过代理。
+
+3.代理就是上图中的Proxy，由于它实现了Subject,所以它可以和用户直接接触。
+
+4.用户调用Proxy时，Proxy内部调用了RealSubject的方法,是对RealSubject的方法的增强。
+
+不能在运行时为这些方法提供新代码，必须提供一个**调用处理器**(invocation handler)。调用处理器是实现了InvocationHandler接口的类的对象。这个接口只有一个方法:
+
+Object invoke(Object proxy,Method method,Object[] args)
+
+无论何时调用代理对象的方法(proxy)，调用处理器的invoke方法都会被调用，并向其传递Method对象和原调用的参数。之后调用处理器必须确定如何处理这个调用。
+
+## 创建代理对象
+
+创建代理对象需要使用Proxy类的**newProxyInstance**(之前见过的类似的工厂方法)。**这个方法有三个参数**:
+
+1.**一个类加载器**(class loader)。作为Java安全模型的一部分，可以对平台和应用类、从因特网上下载的类等使用的加载器。
+
+2.一个Class对象数组，**每个元素对应需要实现的各个接口**。
+
+3.一个调用处理器(invocation handler)。
+
+还有两个需要解决的问题。如何定义处理器？
+
+另外，对于得到的代理对象能够做些什么？
+
+这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:
+
+1.将方法调用路由到远程服务器(说实话不明白什么意思)。
+
+2.为了调试，跟踪方法调用。
+
+下面的例子中，我们使用代理和调用处理器跟踪方法调用。**我们定义了一个TraceHandler包装器类存储包装的对象**(将委托类包装在里面，查看委托类方法的调用情况)。其中的invoke方法会打印所调用方法的名称和参数，随后使用包装的对象作为隐式参数调用这个方法。
+
+```java
+class TraceHandler implements InvocationHandler{
+    private Object target;
+    
+    public TraceHandler(Object obj){
+        target=t;
+    }
+    
+    public void invoke(Object proxy,,Method m,Object[] args) throws Throwable{
+        //print name and parameters
+        ...
+        //invoke actual method
+        return m.invoke(target,args[]);
+    }
+}
+```
+
+接下来我们需要构造可以跟踪方法调用的代理对象
+
+```java
+Object value="...";
+
+TraceHandler handler=new TraceHandler(value);
+
+Class[] interfaces=new Class[]{Comparable.class};
+
+Object proxy=Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+                              new Class[]{Comparable.class},handler);
+```
+
+
+
+只要在proxy上调用了某个接口的方法，就会打印这个方法的名字和参数，之后再用value调用这个方法。
+
+这是Proxy类中newProxyInstance方法的注释
+
+```
+返回将方法调用分派到指定调用处理程序的指定接口的代理类的实例。
+Proxy.newProxyInstance抛出IllegalArgumentException的原因与Proxy.getProxyClass相同。
+
+参数：
+loader – 定义代理类的类加载器
+interfaces – 代理类要实现的接口列表
+h - 将方法调用分派到的调用处理程序
+回报：
+具有代理类的指定调用处理程序的代理实例，该代理类由指定的类加载器定义并实现指定的接口
+```
+
+
+
+这是方法中的部分源码，可以看出，代理类是由类加载器定义并实现
+
+```java
+/*
+* Look up or generate the designated proxy class.
+*/
+Class<?> cl = getProxyClass0(loader, intfs);
+```
+
+书上还有一个例子，使用代理对象跟踪一个二分查找。数组中填充整数1-1000的代理，调用Arrays类的binarySearch方法在数组张查找一个随机整数。最后打印匹配元素。
+
+```java
+//填充1-1000的代理对象
+for (int i = 0; i <elements.length; i++) {
+     Integer value=i+1;
+     TraceHandler handler=new TraceHandler(value);
+     Object proxy=Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),new Class[]{Comparable.class},handler);
+     elements[i]=proxy;
+}
+
+Integer key=new Random().nextInt(elements.length)+1;
+
+int result= Arrays.binarySearch(elements,key);
+
+if(result>0){
+   	System.out.println(elements[result]);
+}
+```
+
+Integer类实现了Comparable接口。代理对象属于运行时定义的一个类，它也实现了Comparable接口。不过，它的compareTo调用了代理对象处理器的invoke方法。
+
+## 代理类的特性
+
+代理类总是在程序的运行过程中动态创建的。一旦被创建之后，他们就变成了常规类，与虚拟机中的任何其他类没有区别。
+
+所有代理类都扩展了Proxy类。一个代理类只要一个实例字段-即调用处理器，它Proxy超类中定义。
+
+### 常用API
+
+#### java.lang.refelt.InvocationHandler
+
+#### java.lang.refelt.Proxy
 

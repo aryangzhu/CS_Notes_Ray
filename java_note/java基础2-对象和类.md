@@ -184,7 +184,7 @@ class Employee{
 4.对于private来说，**它的访问权限仅限于类的内部，是一种封装的体现**，例如，大多数的成员变量都是修饰为private,他们不希望被其他任何外部的类访问。
 
 ### final实例字段
-可以将**实例字段定义为final,这样的字段必须在构造对象时初始化**。也就是说，必须确保每一个构造器执行之后，这个字段的值已经设置，并且以后不能再修改这个字段。
+可以将**实例字段定义为final,这样的字段必须在构造对象时初始化**。也就是说，必须确保每一个构造器执行之后，这个字段的值已经设置，并且以后不能再修改这个字段。如下，将Employee类中的name字段设置为final,这个值以后不允许修改，即没有setName方法。
 
 ```java
 class Employee{
@@ -192,7 +192,10 @@ class Employee{
     ...
 }
 ```
-例如，可以将Employee类中的name字段声明为final，因为在对象构造之后，这个值不会再改变，即没有setName方法。
+final修饰符对于类型为基本类型或者**不可变类**(如果类中的所有方法都不会改变其对象，就称为不可变类)的字段尤为有用。
+
+对于可变的类，使用final修饰符反而会引起混乱，如下:
+
 private final StringBuilder evaluations;
 它在Employee类的构造初始化为
 evaluations=new StringBuilder();
@@ -208,7 +211,7 @@ public void giveGoldStar(){
 
 ## 静态字段和静态方法
 ### 静态字段
-如果将一个字段定义为static,每个类只有一个这样的字段。什么意思呢，就是说，**对于非静态的实例字段，每个对象在堆中都有自己的一个副本**。但是对于静态字段来说，这个类的所有实例将共享一个nextId字段。即使没有Employee对象，静态字段nextId也存在。它属于类而不属于任何单个的对象。
+如果将一个字段定义为static,每个类只有一个这样的字段。什么意思呢，就是说，**对于非静态的实例字段，每个对象在堆中都有自己的一个副本**。但是对于静态字段来说，这个类的所有实例将共享一个nextId字段。即使没有Employee对象，静态字段nextId也存在。它属于类而不属于任何单个的对象(静态字段也被称为类字段)。
 
 ```java
 class Employee{
@@ -232,13 +235,16 @@ public class System{
 
 ### 静态方法
 
-静态方法是不在对象上执行的方法。例如,Math类的pow的方法既是一个
+静态方法是不在对象上执行的方法。例如,Math类的pow的方法就是一个静态方法，在运行时他不需要Math类的对象(也就是说没有隐式参数)。
 
 ```java
 public static int getNextId(){
 	return nextId; //return static field 返回的是静态字段
 }
 ```
+
+**静态方法不能访问实例字段，因为它不能在对象上进行操作**。
+
 可以提供类名来调用这个方法
 int n =Employee.getNextId();
 下面两种情况可以使用静态方法
@@ -264,15 +270,15 @@ public final static NumberFormat getCurrencyInstance(){
 上面是getInstance的源码，可以看到定义的是final static 
 为什么不使用构造器？？？
 
-​	无法命名构造器，**这里我们希望返回两个实例，一个是货币实例，一个是百分比实例，所以我们需要不同的对象定义**，显然和构造器只能和类同步是相违背的
-使用构造器时，无法改变所构造的对象的实例，而工厂方法实际上将返回DecimalForamt类的对象，这是NumberFormat的一个子类
+无法命名构造器，**这里我们希望返回两个实例，一个是货币实例，一个是百分比实例，所以我们需要不同的对象定义**，显然和构造器只能和类同步是相违背的。
+使用构造器时，无法改变所构造的对象的实例，而工厂方法实际上将返回**DecimalForamt类的对象**，这是NumberFormat的一个子类
 
 ### main方法
 
 这里有两个小技巧
 
 ```java
-class Employee{
+class Employee{zengqiang
 	public static void main(String[] args){
     ...
     }
