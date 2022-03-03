@@ -891,7 +891,7 @@ new SuperType(construction parameters){
 }
 ```
 
-SuperType可以是接口，也可以是一个类，如果是类，内部类就要扩展这个类。
+**SuperType可以是接口，也可以是一个类，如果是类，内部类就要扩展这个类**。
 
 由于匿名内部类没有类名，而构造器必须与类名相同，所以匿名内部类没有构造器。实际上，**构造参数要传递给超类(superclass)构造器**。
 
@@ -1254,13 +1254,37 @@ Integer类实现了Comparable接口。代理对象属于运行时定义的一个
 
 ## 代理类的特性
 
-代理类总是在程序的运行过程中动态创建的。一旦被创建之后，他们就变成了常规类，与虚拟机中的任何其他类没有区别。
+1.代理类总是在程序的运行过程中动态创建的。**一旦被创建之后，他们就变成了常规类，与虚拟机中的任何其他类没有区别**。
 
-所有代理类都扩展了Proxy类。一个代理类只要一个实例字段-即调用处理器，它Proxy超类中定义。
+2.所有代理类都扩展了Proxy类。**一个代理类只有一个实例字段-即调用处理器，它在Proxy超类中定义**。完成代理对象任务所需要的任何额外数据都必须存储在调用处理器中。例如，代理Comparable对象时，TraceHandler就包装了任务苏需要的实际对象(Object target)。
+
+3.如果没有定义代理类的名字，Oracle虚拟机中的Proxy类将生成一个以字符串$Proxy开头的类名。
+
+4.**对于特定的类加载器和预设的一组接口来说，只能有一个代理类**。也就是说，如果使用同一个类加载器和接口数组调用了两次newProxyInstance方法，将得到同一个类的两个对象。也可以利用Class ProxyClass=Proxy.getProxyClass(null,interfaces)来获取这个类。
+
+5.**代理类总是public和final**。因为如果代理类实现的所有接口都是public,这个代理类就不属于任何特定的包；否则，所有非公共的接口都必须属于同一个包，而代理类也必须属于这个包。
+
+6.可以通过调用Proxy类的isProxyClass方法检测一个特定的Class对象是否代表一个代理类。
 
 ### 常用API
 
 #### java.lang.refelt.InvocationHandler
 
+Object invoke(Object proxy,Method method,Object[] args)
+
+定以这个方法完成一个动作(增强过程)，你希望只要在代理对象上调用一个方法就完成这个动作。
+
 #### java.lang.refelt.Proxy
+
+static Class\<?> getProxyClass(ClassLoader loader,Class<?>interfaces)
+
+返回实现指定接口的代理类
+
+static Object newProxyInstance(ClassLoader loader,Class\<?> interfaces,InvocationHandler handler)
+
+构造实现指定接口的代理类对象实例。所有方法都调用给定处理器的invoke方法。
+
+static boolean isProxyClass(Class<?> cl)
+
+如果cl是一个代理类则返回true。
 
