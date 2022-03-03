@@ -231,7 +231,7 @@ public class System{
     ...
 }
 ```
-上面使用了final关键字，不允许对out指向新的引用
+上面使用了final关键字，不允许对out指向新的引用。
 
 ### 静态方法
 
@@ -304,9 +304,9 @@ public static void tripleValue(double x){
 2.执行方法中的操作，但是percent仍然是10
 
 3.这个方法结束后，参数变量x不再使用
-![选区_153.png](https://i.loli.net/2021/04/14/dyTMNPl8F5ImuGc.png)gouzaoqi
+![选区_153.png](https://i.loli.net/2021/04/14/dyTMNPl8F5ImuGc.png)
 **两种类型的方法参数**
-1.基本数据类型(数字、布尔值)
+1.基本数据类型(数值、布尔值)
 
 2.对象引用
 
@@ -538,12 +538,26 @@ java命令 src包下的类路径
 
 为了使类能够被多个程序共享，需要做到下面几点：
 
-1.把类文件放到一个目录中，例如/home/user/classdir。需要注意，这个目录是包树状结构的基目录。如果希望增加com.horstman.corejava.Employee类，那么Employee类文件就必须位于子目录/home/user/classdir/com/horstman/corejava中
-2.将JAR文件放在一个目录中，例如：/home/user/archives。
-3.设置类路径(class path)。类路径是所有包含类文件的路径的集合。
+1.把类文件放到一个目录中，
+
+例如/home/user/classdir。需要注意，这个目录是包树状结构的基目录。如果希望增加
+
+com.horstman.corejava.Employee类，那么Employee类文件就必须位于子目
+
+录/home/user/classdir/com/horstman/corejava中
+2.将JAR文件放在一个目录中，
+
+例如：/home/user/archives。
+3.设置类路径(class path)。
+
+类路径是所有包含类文件的路径的集合。
+
 在unix环境中，类路径中的各项之间用冒号(:)分隔：
+
 /home/user/classdir:.:/home/user/archives/archive.jar
+
 而在windows环境中，则以分号(;)分隔
+
 C:|classdir;,;C:\archives\archive.jar
 
 ### 设置类路径
@@ -552,7 +566,7 @@ C:|classdir;,;C:\archives\archive.jar
 java -classpath /home/user/classdir:.:/home/user/archives/archive.jar 
 ```
 
-总结：在我们设置了类路径之后，java编译器总是在当前的目录中查找对象，但是jvm虚拟机仅在类路劲中包含"."目录的时候才查看当前目录。如果没有设置类路径的话，那么默认会在当前目录下进行查找，但是如果设置了类路径但是类路径中没有"."的话那么类可以编译但无法运行。
+总结：**在我们设置了类路径之后，java编译器总是在当前的目录中查找对象，但是jvm虚拟机仅在类路径中包含"."目录的时候才查看当前目录**。如果没有设置类路径的话，那么默认会在当前目录下进行查找，但是如果设置了类路径但是类路径中没有"."的话那么类可以编译但无法运行。
 虚拟机搜寻com.horstmann.corejava.Employee类文件。它首先会查找Java API类。那里找不到相应的类文件，所以查看类路径。
 
 ```shell
@@ -601,9 +615,9 @@ java -jar MyProgram.jar
 
 ## 文档注释
 
-使用” // “进行单行注释
+使用”//“进行单行注释
 
-使用“#“进行多行注释
+使用“*“进行多行注释
 
 ## 类设计技巧
 ### 1.一定要数据进行私有化
