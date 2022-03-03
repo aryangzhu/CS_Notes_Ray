@@ -431,9 +431,23 @@ Object obj=cl.getConstructor().newInstance();
 
 ## 声明异常入门
 
+程序运行错误时就会抛出一个异常，因为有一个**处理器**能够“捕获”并处理这个异常。
 
+异常有两种：**非检查型异常**(unchecked)和**检查型异常**(checked)。非检查性异常指的是编译器并不期望你为这些异常提供处理器，例如数组越界和空引用。而**对于检查型异常而言，编译器将会检查你是否知道这个异常并做好准备来处理后果**。
+
+不是所有的错误都是可以避免的。如果竭尽全力还是可能会发生异常，大多数Java API都会抛出一个检查型异常。如果一个方法包含一条可能抛出检查型异常的语句，则在方法上增加一个throws子句。
+
+```java
+public static void doSomethingWithClass(String name) throws ReflectOperationException{
+    Class cl=Class.forName(name);
+    do something cl
+}
+```
+
+调用这个方法的任何方法也都需要一个throws声明，这也包括main方法。
 
 ## 资源
+
 Class类中提供了查找资源文件的，但是得遵循以下步骤:
 1.获得拥有资源的类的Class对象，ResourceTest.Class
 2.有些方法需要描述资源位置的URL。
