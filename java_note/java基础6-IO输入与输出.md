@@ -110,7 +110,11 @@ C语言中只有单一类型File*包打天下,Java拥有一个家族。
 
 按照处理字节和字符分为两个单独的层次结构。一方面,InputStream和OutputStream类可以读写单个字节或者数组,这些类构成了字节的层次结构的基础。要想读写字符串和数字,就需要功能更加强大的子类。例如,DataInputStream和DataOutputStream可以以**二进制格式**读写所有的**基本Java类型**。最后,还包含了多个有用的输入/输出流,例如,ZipInputStream和ZipOutputStream可以以我们常见的**ZIP压缩格式**读写文件。
 
+![](https://gitee.com/aryangzhu/picture/raw/master/java/InputStream&OutputStream.jpg)
+
 另一方面,对于Unicode文本,可以使用抽象类Reader和Writer的子类。Reader和Writer类的基本方法与InputStream和OutputStream中的方法类似。
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/Reader&Writer.jpg)
 
 ```java
 abstract int read()
@@ -283,9 +287,41 @@ FileOutputStream(File file)
 
 #### java.io.BufferedInputStream
 
+##### BufferedInputStream(InputStream in)
 
+创建一个带缓冲区的输入流。带缓冲区的输入流在从流中读取字符时,不会每次都访问设备。当缓冲区为空时,会向缓冲区中读入一个新的数据块。
 
 #### java.io.BufferedOutputStream
 
+##### BufferedOutputStream(OutputStream out)
+
+创建一个带缓冲区的输出流。带缓冲区的输出流在收集要写出的字符时,也不会每次都访问设备。当缓冲区填满或这被冲刷时,数据就被写出。
+
 #### java.io.PushbackInputStream
+
+PushbackInputStream(InputStream in)
+
+##### PushbackInputStream(InputStream in,int size)
+
+构建一个可以预览一个字节或者具有指定尺寸的回退缓冲区的输入流。
+
+##### void unread()
+
+回推一个字节,它可以在下次调用read时再次被获取。
+
+## 文本输入与输出
+
+在保存数据时,可以选择二进制形式或者文本形式。例如,1234在二进制数表示为000004D2构成的序列(十六进制表示法),而文本格式存储为**字符串**"1234"。虽然二进制格式的I/O高速且高效,但是不适合人类阅读。
+
+在存储文本字符串时,我们必须考虑**字符编码**。Java内部使用的UTF-16编码方式,许多其他程序希望按照其他方式编码。
+
+**OutputStreamWriter类将使用选定的字符编码方式**,把Unicode码元的输出流转换为字节流。
+
+**InputStreamReader类**将包含字节的输入流转换为可以**产生Unicode码元的读入器**。
+
+```java
+var in=new InputStreamReader(new FileInputStream("data.txt"),StandardCharsets.UTF-8);
+```
+
+## 如何写出文本输出
 
