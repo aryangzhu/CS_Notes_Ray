@@ -133,3 +133,159 @@ void flush()
 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/Closeable%E6%8E%A5%E5%8F%A3.jpg)
 
+InputStream、OutputStream、Reader和Writer都实现了Closeable接口。
+
+注:java.io.Closeable接口实现了java.lang.AutoCloseable接口。因此,对于任何Closeable接口进行操作时,都可以使用try-with-resource语句(我们之前在捕获异常中有有学习过)。
+
+OutputStream和Writer还实现了Flushable接口。
+
+Readable接口只有一个方法
+
+```java
+int read(CharBuffer cb)
+```
+
+CharBuffer类拥有按顺序和随机读写访问的能力,它表示**内存中的缓冲区或者一个内存映像的文件**。
+
+Appendable接口拥有添加单个字符和字符序列的方法:
+
+```java
+Appendable append(char c)
+Appehdable append(CharSequence s)
+```
+
+CharSequence接口描述了一个**char值序列的基本属性**,String、CharBuffer、StringBuilder和StringBuffer都实现了它。
+
+### 常用API
+
+#### java.io.Closeable
+
+##### void close()
+
+关闭这个Closeable,这个方法可能会抛出IOException
+
+#### java.io.Flushable
+
+##### void flush()
+
+冲刷这个Flushable。
+
+#### java.lang.Readable
+
+##### int read(CharBuffer cb)
+
+尝试着向cb读入其可持有数量的char值。返回可读入的char值的数量,或者从这个Readable中无法再获得更多的值时返回-1。
+
+#### java.lang.Appendable
+
+Appendable append(char c)
+
+#####　Appendable append(CharSequence cs)
+
+向这个Appendable中追加给定的码元或者给定序列的码元,返回this。
+
+#### java.lang.CharSequnece
+
+##### char charAt(int index)
+
+返回给定索引处的码元。
+
+##### int length()
+
+返回在这个序列中的码元的数量。
+
+##### CharSequence subSequnce(int startIndex,int Index)
+
+返回由存储在startIndex到endIndex-1处的所有码元构成的CharSequnce。
+
+##### String toString()
+
+返回这个序列中所有码元构成的字符串。
+
+## 组合输入/输出流过滤器
+
+FileInputStream和FileOutputStream可以提供一个附着在磁盘文件上的流,你可以通过构造器来指定文件位置。
+
+```java
+FileInputStream in=new FileInputStream("meployee.dat");
+```
+
+### 两个注意的点：
+
+1.**所有在java.io中的类都将相对路径解释为用户工作目录开始**,你可以调用**System.getProperty("user.dir")**来获得这个信息。
+
+2.java中的"\\"为转义字符,所以在Windows风格的路径中应当使用"\\\\"。例如D:\\\\Windows\\\\win.ini。但是,更好的方法是使用常量字符串**java.io.File.separator**获得它。
+
+同字节流一样,FileInputStream和FileOutputStream也只能处理字节。
+
+Java中有非常灵活的机制来确保各个流能够组合在一起,FileInputStream和URL类的openStream方法返回的输入流无法读入数值类型的方法,那我们可以将他与DataInputStream组合起来使用。
+
+例如,为了从文件中读入数字,首先需要创建一个FileInputStream,然后将其**传递给DataInputStream的构造器**:
+
+```java
+FileInputStream fin=new FileInputStream("employee.dat");
+DataInputStream din=new DataInputStream(fin);
+double x=din.readDouble();
+```
+
+FilterInputStream和FilterOutputStream类,这些文件的子类用于向处理字节的输入/输出流添加额外的功能。
+
+默认情况下,输入流每执行一次read方法就要请求操作系统分发一个字节。那么,如果申请一个数据块并将其置于缓冲区肯定更加高效。如果我们想使用缓冲机制和用于文件数据输入方法,那么需要使用下面这种相当复杂的构造器序列:
+
+```java
+var din=new DataInputStream(
+    new BufferedInputStream(
+        new FileInputStreama("employee.dat")))
+```
+
+注意:我们将DataInputStream置于构造链的最外部，这是因为我们希望使用DataInputStream的方法,并且希望**它们能够使用带缓冲机制的read方法**。
+
+当我们使用输入流链的时候,需要跟踪各个中介输入流(intermediate input 
+stream)。例如,当读入输入时,你需要检查下一个将要读入的字符是否是你需要的字符。Java中提供了这样的类PushbackInputStream,我们对上面的代码加以改造:
+
+```java
+var bin=new DataInputStream(
+    pbin=new PushbackInputStream(
+    	new BufferedInputStream(
+        	new FileInputStream("employee.dat"))));
+```
+
+```java
+int b=pbin.read();
+if(b!='<')pbin.unread();
+```
+
+如果不是自己期望的字符,那么我们可以将其推回至流中。
+
+其他语言的输入/输出流类库中,缓冲机制和预览都是自动处理的。Java更加麻烦,但也更加灵活。
+
+### 常用API
+
+#### java.io.FileInputStream
+
+FileInputStream(String name)
+
+##### FileInputStream(File file)
+
+由name字符串或file对象指定路径名的文件创建一个新的输入流。
+
+#### java.io.FileOutputStream
+
+FileOutpuStream(String name)
+
+FileOutputStream(String name,boolean append)
+
+FileOutputStream(File file)
+
+##### FileOutputStream(File file,boolean append)
+
+由name字符串或file对象指定路径名穿啊关键一个新的文件输出流。如果append为true,那么已存在的文件不会被删除而会直接添加导师文件末尾;如果为false,那么则会删除素有同名文件。
+
+#### java.io.BufferedInputStream
+
+
+
+#### java.io.BufferedOutputStream
+
+#### java.io.PushbackInputStream
+
