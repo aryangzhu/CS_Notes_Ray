@@ -39,7 +39,9 @@ int year=newYearEve.getYear(); //1999
 int month=newYearEve.getMonthValue(); //12
 int day=newYearEve.getDayOfMonth(); //31
 ```
-#### LocalDate常用API
+#### LocalDate
+
+##### 常用API
 
 static LocalDate __now()__ 构造一个表示当前日期的对象
 static LocalDate **of(int year,int month,int day)** 构造一个表示给定日期的对象
@@ -49,6 +51,7 @@ int **getDayOfMonth()** 得到当前日期的年、月和日
 DayofWeek **getDayOfWeek()** 得到当前日期是星期几，作为DayOfWeek类的一个实例返回。调用**getValue**来得到１-7之间的一个数，表示这是星期几，１表示星期一，７表示星期日
 LocalDate **plusDays(int n)** 
 LocalDate **minusDays(int n)** 生成当前日期之后或之前n天的日期
+
 #### 更改器方法和访问器方法
 ```java
 LocalDate aThousandDaysLater=new YearEve.plusDays(1000);
@@ -362,7 +365,7 @@ public static void swap(Employee x,Employee y){ //doesn't work
 ## 对象构造
 ### 1.重载
 
-重载解析：编译器挑选出调用哪个方法，它用各个方法首部中的参数类型与特定方法调用中所使用的值类型进行匹配来挑选出正确的方法，如果编译器找不到匹配的参数，就会产生编译时的错误，因为根本不存在匹配，或者没有一个比其他的更好。
+重载解析：编译器挑选出调用哪个方法，它用**各个方法首部中的参数类型与特定方法调用中所使用的值类型进行匹配来挑选出正确的方法**，如果编译器找不到匹配的参数，就会产生编译时的错误，因为根本不存在匹配，或者没有一个比其他的更好。
 java允许重载任何方法，而不只是构造器方法。因此，要完整地描述一个方法，需要指定方法名以及参数类型。这叫做方法的签名(signature)
 
 ### 2.默认字段初始化
@@ -499,8 +502,8 @@ static{
 
 ##### 常用API
 **java.util.Random**
-	Random() 构造一个新的随机数
-	int nextInt(int n) 返回一个0～n-1之间的随机数
+###### Random() 构造一个新的随机数
+###### int nextInt(int n) 返回一个0～n-1之间的随机数
 
 ## 包
 
@@ -591,6 +594,34 @@ jar cvf jarFileName file1 file2...
 jar cvf CalculatorClasses.jar *.class icon.gif
 ```
 
+具体的jar命令参数可以看书来进行学习。
+
+#### 为jar文件创建清单文件
+
+每个JAR文件害包含一个**清单文件**(manifest),用于描述归档文件的特殊属性。
+
+清单文件被命名为MANIFEST.MF。它位于JAR文件的一个特殊的META-INF子目录中。
+
+```shell
+jar cfm manifest.mf com/company/mypkg/*.class
+```
+
+manifest.md需要自己创建,并且要在文件中写明这两个属性:
+
+```
+Manifest-Version: 1.0
+Main-class: yourClass
+
+```
+
+注意:这个文件必须要以换行符为结尾。
+
+想要对MANIFEST进行更新的话,那么需要执行以下命令:
+
+```java
+jar ufm MyArchive.jar manifestr.mf 
+```
+
 #### 可执行jar文件
 
 可以使用jar命令中的e选项指定程序的入口点，即**通常需要在调用Java程序启动器时启动器是定的类**:
@@ -608,8 +639,6 @@ Main-Class:com.mycompany.mypkg.MainAppClass
 ```shell
 java -jar MyProgram.jar
 ```
-
-
 
 ### 多版本JAR文件
 
@@ -630,4 +659,5 @@ java -jar MyProgram.jar
 ### 5.分解有过多职责的类
 ### 6.类名和方法名要体现它的职责
 ### 7.优先使用不可变的类
-LocalDate以及Java.time包中其他的类是不可变的
+LocalDate以及Java.time包中其他的类是不可变的。
+

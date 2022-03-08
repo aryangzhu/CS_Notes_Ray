@@ -264,7 +264,7 @@ static int hashCode(xxx[] a)
 计算数组a的散列码。
 ## toString方法
 随处可见toString()方法的主要原因是:只要对象与一个字符串通过字符串"+"连接起来。Java编译器就会自动地调用toString方法来获得这个对象的字符串描述。
-tip:在代码编写的过程中我们常常需要打印数组，但是原始的数组toString()的话会打印许I@a46e30这种前缀(这是由于历史原因造成的)，所以我们可以使用Arrays.toString(int[] nums),toString()在我们的日常调试中经常会用都，熟练应用百利而无一害。
+tip:在代码编写的过程中我们常常需要打印数组，但是原始的数组toString()的话会打印许I@a46e30这种前缀(这是由于历史原因造成的)，所以我们可以使用Arrays.toString(int[] nums),toString()在我们的日常调试中经常会用，熟练应用百利而无一害。
 **常用API**
 
 ### java.lang.Object
@@ -353,9 +353,12 @@ list.add(Integer.ValueOf(3));
 
 # 参数数量和可变的方法
 # 枚举类
+```java
 public enum Size{SMALL,MEDIUM,LARGE,EXTA_LARGE}
+```
+
 **声明的时候用的enum**
-实际上，这个声明定义的类型是一个类，它刚好有4个实例,不可能构造新的对象。枚举的构造器总是私有的，如果使用其他修饰符那么就会出现语法错误。
+实际上，**这个声明定义的类型是一个类，它刚好有4个实例**,不可能构造新的对象。枚举的构造器总是私有的，如果使用其他修饰符那么就会出现语法错误。
 枚举类型下有一个静态的values方法，它将返回一个包含全部枚举值的数组。
 Size[] values=Size.values();
 **常用API**

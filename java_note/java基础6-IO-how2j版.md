@@ -1,13 +1,14 @@
 #### day01
 
 ##### １．文件和文件夹都用File表示
-​	１．根据绝对路径来创建一个Fiel实例（注意如果是linux系统的话那么根目录从home开始）
+​	１．根据绝对路径来创建一个File实例（注意如果是linux系统的话那么根目录从home开始）
 ​    	例如        File file1=new File("/home/leiliu/IdeaProjects/file");
 ​    ２．根据相对路径来创建一个File实例（相对路径是相对于这个项目来说，从src开始）
 ​    	例如        File file2=new File("src/base/how2j/io/b.txt");
 ​	３．比较使用的构造方法是
 ​    	File(File parent, String child)
 ​		从父抽象路径名和子路径名字符串创建新的 File实例
+
 ##### ２．File下比较常用的方法
 ​	注：文件必须要存在才能使用才能获取长度属性和时间属性
 ​	１．判断当前文件是否存在　exists
@@ -28,6 +29,7 @@
 ​    比如读取文件到程序中，站在程序的角度来看，就是输入流。
 ​    输入流：InputStream
 ​    输出流：OutputStream
+
 ##### ２．文件输入流
 ​	//通过这个输入流,就可以把数据从硬盘,读取到Java的虚拟中来
 ​    FileInputStream fileInputStream = new FileInputStream(file);
@@ -137,7 +139,7 @@ try {
 }
 ```
 在try中关闭
-	原理是因为所有的流的类都实现了AutoClosea le，任何实现了这个接口，都可以在try()中进行实例化。并且try,catch，finally结束的时候自动关闭，回收相关资源。
+	原理是因为所有的流的类都实现了AutoCloseable，任何实现了这个接口，都可以在try()中进行实例化。并且try,catch，finally结束的时候自动关闭，回收相关资源。
 
 ```java
 File f=new File("src/...");

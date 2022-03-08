@@ -37,6 +37,10 @@ int/32
 
 long/64
 
+int最常用,如果想要表示较大的数字时应当使用long。byte和short类型主要应用于特定的场合,例如,底层的文件处理或者存储空间很宝贵时的大数组。
+
+在Java中,整形的范围与运行Java代码的机器无关。从而在各个平台之间能够完美移植。
+
 #### char类型和Unicode
 
 char/16
@@ -49,7 +53,7 @@ char/16
 
 2.采用大字符集的语言其编码长度有可能不同。例如,有些常用的字符采用单字节编码,而另一些需要两个或者多个字节。
 
-设计Unicode就是为了解决这些问题,刚开始进行统一工作时,人们认为两个字节的代码宽度()足以应付所有字符。Java中设计时采用的16位字符集,那时其他大部分语言只有8位。
+设计Unicode就是为了解决这些问题,刚开始进行统一工作时,人们认为两个字节的代码宽度足以应付所有字符。Java中设计时采用的16位字符集,那时其他大部分语言只有8位。
 
 但是后来由于加入了大量的中文、日文和韩语中的表意文字。Unicode字符超过了65535的限制,16位的char类型已经不能满足所有Unicode字符的需要了。
 
@@ -94,6 +98,12 @@ string=new String("234") ;
 ```
 对于这里我们需要清楚的是String的地址@533，其中char [] value的地址为@535，执行完第二行代码之后value的地址为@537。
 
+**不可变的好处**
+1.作为哈希值的存储容器非常便利(哈希值不变，只进行一次计算便可得到结果)
+2.String Pool的需要
+3.安全性得到保证，网络传输过程不会被修改
+4.不可变性天生具备线程安全的特点
+
 ### 检测字符串是否相等
 
 ### 空串与Null串
@@ -110,20 +120,18 @@ string=new String("234") ;
 
 ### 读取输入
 
-构造标准输入流对象Scanner
+想要通过控制台输入,**首先需要构造与"标准输入流"System.in相关联的Scanner对象**
+
+````java
 Scanner in =new Scanner(System.in);
+````
+
 例如，读取一个整数
 
 ```java
 System.out.println("How old are you?");
 int age=in.nextInt();
 ```
-**不可变的好处**
-1.作为哈希值的存储容器非常便利(哈希值不变，只进行一次计算便可得到结果)
-2.String Pool的需要
-3.安全性得到保证，网络传输过程不会被修改
-4.不可变性天生具备线程安全的特点
-
 #### 常用API
 
 #### java.util.Scanner
@@ -158,12 +166,112 @@ int age=in.nextInt();
 
 ### 格式化与输出
 
+可以使用System.out.print(x),这条命令**将以x的类型所允许的最大非0数位个数打印输出x**。
+
 ```java
 System.out.println("hello word");
 System.out.printf("%d",12);
 ```
 
+Java5中沿用了C语言函数库中的printf方法。例如,调用
+
+System.ou.printf("%8.2f",x);
+
+会以一个**字段宽度**打印x:包括8个字符,另外精度为小数点后2个字符。
+
+每一个以%字符开始的格式说明符都用相应的参数替换。
+
+用于printf的转换符
+
+d
+
+x
+
+o
+
+f
+
+e
+
+g
+
+a
+
+s
+
+c 
+
+h
+
+tx
+
+b
+
+%
+
+n
+
+另外,还可以指定控制格式化输出外观的各种标志。例如,逗号标志可以增加分组分隔符。例如,
+
+````java
+System.out.printf("%,.2f",10000.0/3.0);
+````
+
+用于printf的标志
+
++
+
+空格
+
+0
+
+-
+
+(
+
+,
+
+#(对于f格式)
+
+#(对于x或o格式)
+
+$
+
+<
+
+可以使用静态的String.format方法创建一个格式化的字符串,而不打印输出:
+
+```java
+String message=String.format("Hello,%s. Next year,you‘ll be %d",name,age);
+```
+
+我们来看一下printf中格式说明的语法图:
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E%E7%AC%A6%E8%AF%AD%E6%B3%95.jpg)
+
+argument index-参数索引(如果有的话后面就得加$)
+
+flag-标志
+
+width-宽度
+
+precession-精确度
+
+conversion character-转换符(如果没有和.组成的话那么就和t组成另一中形式)
+
 ### 文件输入与输出
+
+想要读取一个文件,需要构造一个Scanner对象,如下所示:
+
+```java
+Scanner in=new Scanner(Path.of("myfile.txt"),StandardCharsets.UTF_8);
+```
+
+想要写入文件,就需要构造一个PrintWriter对象。在构造器(constructor)中,需要提供文件名和字符编码:
+
+```java
+PrintWriter out=new PrintWriter("myfile.txt",StandardCharsets.UTF_8);
+```
 
 ## 控制流程
 
