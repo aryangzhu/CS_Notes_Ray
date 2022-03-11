@@ -116,7 +116,7 @@ C语言中只有单一类型File*包打天下,Java拥有一个家族。
 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/InputStream&OutputStream.jpg)
 
-另一方面,对于Unicode文本,可以使用抽象类Reader和Writer的子类。Reader和Writer类的基本方法与InputStream和OutputStream中的方法类似。
+另一方面,对于Unicode文本(说明Unicode文本是前提),可以使用抽象类Reader和Writer的子类。Reader和Writer类的基本方法与InputStream和OutputStream中的方法类似。
 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/Reader&Writer.jpg)
 
@@ -1366,5 +1366,499 @@ try(DirectoryStream<Path> entries=Files.newDirectoryStream(dir)){
         Process entries;
     }
 }
+```
+
+可以使用glob模式来过滤文件
+
+```java
+try(DirectoryStream\<Path> entries=Files.newDirectoryStream(dir,"*.java"));
+```
+
+书上有global模式的参数
+
+例如,
+
+模式 ** 就代表匹配跨目录的0个或多个字符 **.java匹配在所有子目录中的Java文件。
+
+如果想要访问某个目录下的所有子孙成员(我的理解是上面的知识讲的都是关于目录下的子目录,而这里我们访问的是所有子孙成员),需要调用walkTree方法并向其传递一个FileVisitor对象,这个对象会得到下列通知:
+
+```java
+Files.walkTree(Paths.get("/"),new SimpleFileVisitor<Path>(){
+    public FileVisitorResult preVisitDirectory(Path path,BasicFileAttrbitues attrs){ //在每一个文件处理之前
+        System.out.println(path);
+        return FileVisitResult.CONTINUE;//继续访问下一个文件
+    }
+    
+    public FileVisitResult postVisitDirectory(Path dir,IOException exc){ //在每一个文件处理之后
+        return FileVisitResult.CONTINUE; //继续访问下一个文件
+    }
+ 	
+    public FileVisitResult visitFileFailed(Path path,IOException e) throws IOException{ //访问失败
+        return FileVisitResult.SKIP_SUBTREE; //继续访问但是不再访问这个文件的兄弟文件
+    }
+    
+});
+```
+
+注意:我们需要覆盖postVisitDirectory方法和visitFileFailed方法,否则,访问会在遇到不允许打开的目录或不允许访问的文件时立即失败。
+
+如果你需要在进入后离开一个目录时执行某些操作,那么FileVisitor接口的方法就显得非常有用了。例如,在删除目录树时,需要在移除当前目录的所有文件之后,才能移除该目录。下面是**删除目录树的完整代码**:
+
+```java
+Files.walkTree(root,new SimpleFileVisitor<Path>()
+   {
+   	public FileVisitResult visitFile(Path file,BasicFileAttributes attrs) throws IOException{
+        //遇到一个文件或者一个目录时
+        Files.delete(file);//删除掉当前目录或文件
+        return FileVisitResult.CONTINUE;
+    } 
+    
+    public FileVisitResult postVisitDirectory(Path dir,IOException e)throws IOException{//处理完文件之后
+        if(e!=null){
+            throws e;
+        }
+        Files.delete(dir);//删除当前目录???
+        return FileVisitResult.CONTINUE;
+    }
+});
+```
+
+### 常用API
+
+#### java.nio.file.Files
+
+##### static DirectoryStream\<Path> newDirectoryStream(Path path,String glob)
+
+获取给定目录中可以遍历所有文件和目录的迭代器。glob模式筛选匹配的项。
+
+##### static Path walkFileTree(Path start,FileVisitor<? super Path> visiotr)
+
+遍历给定路径上的所有子孙,并将访问器应用于这些子孙之上。
+
+#### java.nio.SimpleFIleVisitor\<T>
+
+##### static FileVisitResult visitFile(T path,BasicFileAttributes attrs)
+
+在访问文件或目录时被调用,返回CONTINUE、SKIP_SUBTREE、SKIP_SIBLINGS和TERMINATE之一,默认实现是不做任何操作而继续访问。
+
+##　Zip文件系统
+
+Paths类会在默认的文件系统中查找路径,即在用户本地磁盘中的文件。你也可以有别的文件系统,其中最有用的之一就是ZIP文件系统。如果zipname是某个ZIP文件的名字,那么下面的调用
+
+```java
+FileSystem fs=FileSystems.newFileSystem(Paths.get(zipname),null);
+```
+
+**将建立一个文件系统,它包含ZIP文档中的所有文件**。如果知道文件名,那么从ZIP文档中复制出这个文件就会变得很容易:
+
+Files.copy(fs.getPath(sourceName),targetPath);
+
+其中fs.getPath与Paths.get方法类似。
+
+要列出ZIP文档的所有文件,可以遍历文件树:
+
+```java
+FileSystem fs=FileSystems.newFileSystem(Paths.get(zipname),null);
+Files.walkTree(fs.getPath("/"),new SimpleFileVisitor<Path>()
+  {
+   	public FileVisitResult visitFile(Path file,BasicFileAttributes attrs)throws IOException{
+        System.out.println(file);
+        return FileVisitResult.CONTINUE;
+    }                
+   });
+```
+
+### 常用API
+
+#### java.nio.file.FileSystems
+
+对所安装到的文件系统提供者进行迭代,并且如果loader不为null,那么就还会迭代给定的类加载器能够加载加载的文件系统,返回由第一个可以接受给定路径的文件系统提供者创建的文件系统。
+
+# 内存映射文件
+
+大多数操作系统都可以利用**虚拟内存** 实现来将**一个文件或者文件的一部分**"映射"到内存中。然后,**这个文件就可以被当做内存数组一样地访问**,这比传统的文件操作还要快的多。
+
+## 内存映射文件的性能
+
+书上的例子比较了JDK下的jre/lib目录中的37MB的rt.jar文件用不同的方式来计算校验和。
+
+在特定的机器上,内存映射比使用带缓冲的顺序输入还要稍微快一点,但是比使用RandomAccessFile快很多。
+
+首先,**从文件中获得一个通道(channel),通道是专门用于磁盘文件的一种抽象**,它使我们可以访问诸如**内存映射、文件加锁机制以及文件间快速数据传递等操作系统**的特性。
+
+```java
+FileChannel channel=FileChannel.open(path,options);
+```
+
+然后,通过调用FileChannel类的**map**方法从这个通道中获得一个**ByteBuffer**。你可以指定想要的**映射的文件区域与映射模式**,支持的模式有三种:
+
+1.FileChannel.MapMode.READ_ONLY:所产生的缓冲区是只读的,任何对该缓冲区写入的尝试都会导致ReadOnlyBufferException异常。
+
+2.FileChannel.MapMode.READ_WRITE:所产生的缓冲区是可写的,任何修改都会在某个时刻写会到文件中。
+
+注意:其他映射同一个文件的程序**可能不能立即看到这些修改**,多个程序同时进行文件映射的确切行为是依赖于操作系统的。
+
+3.FileChannel.MapMode.PRIVATE:所产生的缓冲区是可写的,但是任何修改对这个缓冲来说是私有的,不会传播到文件中。
+
+一旦有了ByteBuffer,就可以用它和它的超类的方法来读写数据了。
+
+缓冲区支持顺序和随机数据访问，它有一个可以通过get和put操作来移动的**位置**(RandomAccessFile类的文件指针)。例如,下面的方法顺序遍历缓冲区素有字节
+
+```java
+while(buffer.hasRemaing()){
+    byte b=buffe.get();
+}
+```
+
+或者,像下面一样进行随机访问
+
+```java
+for(int i=0;i<buffer.limit();i++){
+    byte b=buffer.get(i);
+}
+```
+
+可以用下面的方法来读写字节数组
+
+```java
+get(byte[] bytes);
+get(byte[] ,int offset,int length);
+```
+
+和之前学习的DataInputStream一样,ByteBuffer同样也有许多用于读取二子节格式的基本类型的方法。
+
+向缓冲区写入也是一样的。
+
+### 常用API
+
+#### java.io.FileInputStream
+
+##### FileChannel getChannel()
+
+返回用于访问这个输入流的通道。
+
+#### java.io.FileOutputStream
+
+##### FileChannel getChannel()
+
+返回用于访问这个输出流的通道。
+
+#### java.io.RandomAccessFile
+
+##### FileChannel getChannel()
+
+返回用于访问这个文件的通道。
+
+#### java.nio.channels.FileChannel
+
+##### staic FileChannel open(Path path,OpenOption...options)
+
+打开指定路径的文件通道,默认情况下,通道打开时用于读入。参数options是Standard-OpenOption枚举中的WRITE、APPEND、TRUNCATE_EXISING、GREATE值。
+
+##### MappedByteBuffer(FileChannel.MapMode mode,long position,long size)
+
+将文件的一个区域映射到内存中。参数mode是FileChannel.MapMode类中的常量READ_ONLY、READ_WRITE或PRIVATE之一。
+
+#### java.io.Buffer
+
+#### boolean hasRemaing()
+
+如果当前的缓冲区位置没有达到这个缓冲区的界限位置,则返回true。
+
+##### int limit()
+
+返回这个缓冲区的界限位置,即没有任何值可用的第一个位置。
+
+#### java.io.ByteBuffer
+
+##### byte get()
+
+从当前位置获得一个字节,并将当前位置移动到下一个字节。
+
+##### byte get(int index)
+
+从指定索引处获得一个字节。
+
+##### ByteBuffer put(byte b)
+
+向缓冲区写入一个字节,并返回缓冲区的引用。
+
+##### ByteBuffer put(int index,byte b)
+
+向指定索引处推入一个字节。返回对这个缓冲区的引用。
+
+##### ByteBuffer get(byte[] destination,int offset,int length)
+
+用缓冲区中的字节来填充字节数组,或者字节数组的某个区域,并将当前位置向前移动数个位置。
+
+ByteBuffer put(byte[] source)
+
+##### ByBuffer put(byte[] source,int offset,int length)
+
+将字节数组中的所有字节或者给定区域的字节都推入缓冲区中,并将当前位置向前移动写出的字节数个位置。
+
+Xxx getXXX(int index)
+
+##### ByteBuffer putXXX(int index,Xxx value)
+
+获得或放置一个二进制数。Xxx是Int、Long、Short、Char、Float或Double中的而一个。
+
+##### ByteOrder order()
+
+设置或获得字节顺序,order的值是ByteOrder类的常量BIG_ENDIAN或LITTTLE_ENDIAN中的一个。
+
+##### static ByteBuffer allocate(int capacity)
+
+构建具有给定容量的缓冲区。
+
+##### static ByteBuffer wrap(byte[] values)
+
+构建具有指定容量的缓冲区,该缓冲区是对给定数组的包装。
+
+#####　CharBuffer asCharBuffer()
+
+构建字符缓冲区,它是对这个缓冲区的包装。对该字符缓冲区的变更将在这个缓冲区中反映出来,但**该字符缓冲区有自己的位置、界限和标记**。
+
+#### java.nio.CharBuffer
+
+##### CharBuffer get(char[] destination,int offsets,int length)
+
+从这个缓冲区的当前位置开始,获取一个char值,或者一个范围内的所有char值,然后将位置向前移动以越过所有读入字符。最后两个方法返回this。
+
+##### CharBuffer put(CharBuffer source)
+
+从这个缓冲区的当前位置开始,放置一个char值,或者一个范围内的所有char值,然后将位置向前移动越过所有被写出的字符。当放置的值是从CharBuffer读入时,将读入所有剩余字符。所有的方法返回this。
+
+## 缓冲区的数据结构
+
+在使用内存映射时,我们创建了一个缓冲区来横跨感兴趣的文件区域。我们可以使用更多的缓冲区来读写大小适度的信息快。
+
+**缓冲区是由具有相同类型的数值构成的数组**,Buffer类是一个抽象类,它有众多的具体子类,包括ByteBuffer、CharBuffer、DoubleBuffer、IntBuffer、LongBuffer和ShortBuffer。
+
+在实践中,最常用的是ByteBuffer和CharBuffer。每个缓冲区都具有:
+
+1.一个容量,它永远不能改变。
+
+2.一个读写位置,下一个值将在此进行读写。
+
+3.一个界限(之其说过,它是第一个不可用位置,至于在容量之中为什么不可用我也很疑惑),超过它进行读写是没有意义的。
+
+4.一个可选的标记,用于重复读入或写出操作。
+
+这些值满足下面的条件:
+
+​              **0<=标记<=读写位置<=界限<=容量**
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/%E4%B8%80%E4%B8%AA%E7%BC%93%E5%86%B2%E5%8C%BA.jpg)
+
+使用缓冲区的主要目的就是"写,然后读入"循环。假设我们有一个缓冲区,在一开始,它的位置为0,界限等于容量。我们不断地调用put将值添加到这个缓冲区中,等到写入完所有的数据或者使用完缓冲区的容量之后,切换到读入操作。
+
+这时调用**flip**方法将界限设置到当前**位置**(当前的读写位置),并把位置复位为0。现在在remaing方法返回正数时(它返回的是界限-位置),不断地调用get。当缓冲区的所有值都读完之后,调用clear使缓冲区为下一次循环做好准备。clear方法将位置复位到0,并将界限复位到容量。
+
+想要**重读缓冲区**,可以使用rewind或mark/reset方法。
+
+要**获取缓冲区**,可以调用诸如ByteBuffer.allocate或ByteBuffer.wrap这样的静态方法。
+
+然后,可以用来自**某个通道的数据填充缓冲区**,或者将缓冲区的内容写出到通道中。例如:
+
+```java
+ByteBuffer buffer=ByteBuffer.allocate(RECORD_SIZE);
+channel.read(buffer);
+channel.position(newpos);
+channel.write(buffer);
+```
+
+### 常用API
+
+#### java.nio.Buffer
+
+##### Buffer clear()
+
+通过将位置复位到0,并将界限设置到容量,使这个缓冲区做好写准备。返回this。
+
+##### Buffer filp()
+
+通过将界限设置到位置,并将位置复位到0,使这个缓冲区为读入做好准备。返回this。
+
+##### Buffer rewind()
+
+通过将读写位置复位到0,并保持界限不变,使这个缓冲区为重新读入相同的值做准备。
+
+##### Buffer mark()
+
+将这个缓冲区的标记(之前有专门提过)设置到读写位置,返回this。
+
+##### Buffer reset()
+
+将这个缓冲区的位置设置到标记,从而允许被标记的部分再次被读入或写出,返回this。
+
+##### int remaing()
+
+返回剩余可读入或写出的值的数量,即**界限**与**位置**之间的差异。
+
+int position()
+
+##### void position(int newValue)
+
+返回这个缓冲区的位置。
+
+##### int capacity()
+
+返回这个缓冲区的容量。
+
+
+
+# 文件加锁机制
+
+现实中的场景:**多个同时执行的程序需要修改同一个文件**的情形,很明显,**这些程序需要以某种方式进行通信,不然这个文件很容易被损坏(由此引出了进程间的通信)**。文件锁可以解决这个问题,它可以**控制对文件或文件中某个范围的字节的访问**。
+
+​	假设你的应用程序将用户的偏好存储在一个配置文件中,当用户调用这个应用的两个实例时,这两个实例就有可能会同时希望写配置文件。在这种情况下,第一个实例应该锁定文件,当第二个实例发现文件被锁定时,**它必须决策是等待直至文件解锁,还是直接跳过这个写操作过程**。
+
+​	要锁定一个文件,可以调用FileChannel类的lock或tryLock方法:
+
+```java
+FileChannel channel=FileChannel.open(path);
+FileLock lock=channel.lock();
+```
+
+或者
+
+```java
+FileLock lock=channel.tryLock();
+```
+
+​	第一个调用会阻塞直至可获得锁,而第二个调用将立即返回,要么返回锁,要么在锁不可获得的情况下返回null。这个将保持**锁定状态**,直至通道关闭,或者在锁上调用了release方法。
+
+​	你还可以通过下面的调用锁定文件文件的一部分:
+
+```java
+FileLock lock(long start,long size,boolean shared)
+```
+
+或者
+
+```java
+FileLock trylock(long start,long size,boolean shared)
+```
+
+​	如果shared标志为false,则锁定文件的目的是读写;而如果为true,则这是一个**共享锁**,允许**多个进程从文件中读入**,并**阻止任何进程获得独占的锁**。并非所有的操作系统都支持共享锁,有的可能请求共享锁的时候得到独占的锁。**调用FileLock类isShared方法可以查询所持有的锁的类型**。
+
+​	要确保在操作完成时释放锁,最好在一个带资源的try语句中执行释放锁:
+
+```java
+try(FileLock lock=channel.lock()){
+    access the locked file or segment
+}
+```
+
+注意:**文件加锁机制是依赖于操作系统的,下面需要注意的几点**:
+
+1.某些系统中,文件加锁仅仅是**建议性**的,如果一个应用未能得到锁,它仍旧可以向**被另一个应用并发锁定的文件的写操作**。
+
+2.在某些系统中,**不能在锁定一个文件的同时将其映射在内存中**。
+
+3.文件锁是整个Java虚拟机持有的。如果两个程序是由同一个虚拟启动的(例如,Applet和应用程序启动器),那么它们不可能每一个都获得同一个文件上的锁。当调用lock和tryLock方法时,如果虚拟机已经在同一个文件上持有了另一个重叠的锁,那么就会抛出**OverlappingFileLockException**。
+
+4.在一些系统中,**关闭一个通道会释放由Java虚拟机持有的底层文件上的所有锁**。**因此,在同一个锁定文件上应避免使用多个通道**。
+
+5.在网络文件系统上锁定文件是**高度依赖于系统**的,因此应该尽量避免。
+
+### 常用API
+
+#### java.nio.channels.FileChannel
+
+##### FileLock lock()
+
+在整个文件上获得一个独占的锁,这个方法将阻塞至获得锁。
+
+##### FileLock tryLock()
+
+在整个文件上获得一个独占的锁,或者在无法获得锁的情况下返回null。
+
+##### FileLock tryLock(long position,long size,boolean shared)
+
+上面解释过
+
+#### java.nio.channels.FileLock
+
+##### void close()
+
+释放这个锁。
+
+
+
+# 正则表达式
+
+**正则表达式(regular expression)**用于指定字符串的模式,可以在任何需要定位匹配某种特定模式的字符串的情况下使用正则表达式。
+
+## 正则表达式语法
+
+1.字符类(character class)是一个括在括号中的可选择的字符集,例如,[Jj]、[0-9]、[A-Za-z]或\[^0-9]。**这里"-"表示是一个范围(所有的Unicode值落在两个边界范围之内的字符)**,而^表示补集(除了指定字符之外的所有字符)。
+
+2.如果字符类包含"-",那么它必须是第一项或最后一项;如果包含"[",那么它必须是第一项;如果要包含"^",那么它可以是除开始位置之外的任何位置。其中,你只需要转义"["和"\\"。
+
+## 匹配字符串
+
+```java
+Pattern pattern=Pattern.complile(patternString);
+Matcher matcher=pattern.match(input);
+if(matcher.matches()) ...
+```
+
+在编译这个模式时,可以设置一个或多个标志,例如:
+
+```java
+Pattern pattern=Pattern.complile(expression,Pattern.CASE_INSENSITIVE+Pattern.UNICODE_CASE);
+```
+
+
+
+## 找出多个匹配
+
+如果想要找出输入中一个或多个匹配的字符串。可以用Matcher类的find方法来查找匹配内容,如果返回true,再使用start和end方法来查找匹配的内容,或使用不带引元的group方法来获取匹配的字符串。
+
+```java
+whiLe(matcher.find()){
+    int start=matcher.start();
+    int end=matcher.end();
+    String match=input.group();
+}
+```
+
+更加优雅的是调用results方法来获取一个Stream\<Result>。MatchResult接口有group、start和end方法,就像Matcher一样。
+
+```java
+List<String> matches=pattern.matcher(input)
+    .result()
+    .map(Matcher::group)
+    .collect(Collectors.toList());
+```
+
+如果要处理文件中的数据,那么可以使用Scanner.findAll方法来获取一个Stream\<MatchResult>,这样就无须现将内容读到一个字符串中:
+
+```java
+var in=new Scanner(path,StandardCharsets.UTF_8);
+Stream<String> words=in.findAll("\\pL+")
+    .map(MathchResult::group);
+```
+
+## 用分隔符来分割
+
+Pattern.split方法可以按照匹配的分隔符断开:
+
+```java
+String input=...;
+Pattern commas=Pattern.complile("\\s*,\\s*");
+String[] tokens=commas.split(input);
+```
+
+## 替换匹配
+
+Matcher类的replaceAll方法将正则表达式出现的所有地方都用替换字符串来替换。
+
+```java
+Pattern pattern=Pattern.complile("[0-9]+");
+Matcher matcher=pattern.matcher(input);
+String output=matcher.replaceAll("#");
 ```
 

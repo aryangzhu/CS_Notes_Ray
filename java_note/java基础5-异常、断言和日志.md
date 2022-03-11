@@ -110,9 +110,9 @@ class MyAnimation{
 
 ### 需要注意的点
 
-1.如果超类中声明了检查型异常，子类覆盖超类的方法时不能声明超过父类的声明异常类型(子类可以抛出更加特定的异常或者不抛出异常)；如果超类没有声明，子类也不能声明。
+1.如果超类中声明了检查型异常，**子类覆盖超类的方法时不能声明超过父类的声明异常类型**(子类可以抛出更加特定的异常或者不抛出异常)；如果超类没有声明，子类也不能声明。
 
-2.如果一个方法抛出一个异常，而这个异常是某个特定类的实例，那么这个异常可能属于这个类，也可能属于这个类的任意一个子类。
+2.**如果一个方法抛出一个异常，而这个异常是某个特定类的实例，那么这个异常可能属于这个类，也可能属于这个类的任意一个子类**。
 
 ## 如何抛出异常
 
@@ -158,7 +158,7 @@ String readData(Scanner in)throws EOFException{
 
 ### 如何自定义异常类?
 
-1.定义的类需要派生于Exception类或者Exception类的子类(IOException等);
+1.定义的类需要**派生于Exception类或者Exception类的子类**(IOException等);
 
 2.通常做法是自定义两个构造器，一个是无参构造器；另一个则是包含详细信息的构造器(超类Throwable的toString方法会返回一个字符串，其中包含这个信息，这在调试中非常有用)。
 
@@ -255,11 +255,15 @@ try{
 
 注意:**捕获多个异常时,异常变量隐含为final变量**。例如,在以下子句体中不能为e赋不同的值:
 
+```java
 catch(FileNotFoundException | UnknownHostException e){
 
 ...
 
 }
+```
+
+
 
 ## 再次抛出异常与异常链
 
@@ -509,6 +513,7 @@ public Image loadImage(String s){
     try{
         code that threatens to throw checked exceptions
     }catch(Exception e){
+        
     }//so there
 }
 ```
@@ -531,7 +536,7 @@ public Image loadImage(String s){
 
 ## 断言的概念
 
-断言机制是允许在代码测试期间加入一些检查,而在生产代码中会自动删除这些检查。
+断言机制是**允许在代码测试期间加入一些检查**,而在生产代码中会自动删除这些检查。
 
 Java中引入了关键字assert。这个关键字有两种形式:
 
