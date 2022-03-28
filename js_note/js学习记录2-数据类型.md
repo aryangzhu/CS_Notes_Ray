@@ -61,7 +61,7 @@ arr.reverse()
 
 #### 8.concat()拼接数组并返回一个新的数组
 
-```
+```javascript
 arr=["B","C","A"]
 (3) ["B", "C", "A"]
 arr.sort()
@@ -81,7 +81,7 @@ arr.join("-")
 
 #### 10.多维数组
 
-```
+```javascript
 arr=[[1],[2,true],[null,undefined,"a"]]
 (3) [Array(1), Array(2), Array(3)]
 console.log(arr[1][2])

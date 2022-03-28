@@ -241,23 +241,34 @@ Java规范:
 
 ## hashcode方法
 由对象导出的hash值。
-字符串相同的话有相同散列值。
+**字符串相同的话有相同散列值**。
 String s="OK";
 StringBuilder sb=new StringBuilder(s);
 String t=new String("Ok");
 StringBuilder tb=new StringBuilder(t);
 
 s和t的hash值是一样的，而sb和tb的hash值却不相同，Object 类的默认hashCode方法会从对象的存储地址得出散列码。
-**常用API**
-java.lang.Object
-int hashCode 返回对象散列码
+
+### 常用API
+
+#### java.lang.Object
+
+int hashCode 
+
+返回对象散列码
 
 java.util.Objects
-static int hash(Object ...objects)返回一个散列码，有所有对象的hash值组合而成
-static int hashCode(Object a) 如果a为null返回0,否则返回a.hashCode().
+static int hash(Object ...objects)
+
+返回一个散列码，有所有对象的hash值组合而成
+static int hashCode(Object a) 
+
+如果a为null返回0,否则返回a.hashCode().
 
 java.lang.(Integer|Long...包装类)
-static int hashCode(xxxValue) 返回给定值的散列码
+static int hashCode(xxxValue) 
+
+返回给定值的散列码
 
 java.util.Arrays
 static int hashCode(xxx[] a)
@@ -265,9 +276,10 @@ static int hashCode(xxx[] a)
 ## toString方法
 随处可见toString()方法的主要原因是:只要对象与一个字符串通过字符串"+"连接起来。Java编译器就会自动地调用toString方法来获得这个对象的字符串描述。
 tip:在代码编写的过程中我们常常需要打印数组，但是原始的数组toString()的话会打印许I@a46e30这种前缀(这是由于历史原因造成的)，所以我们可以使用Arrays.toString(int[] nums),toString()在我们的日常调试中经常会用，熟练应用百利而无一害。
-**常用API**
 
-### java.lang.Object
+### 常用API
+
+#### java.lang.Object
 
 ​	Class getClass() 返回包含对象信息的类对象。
 ​	boolean equals(Object otherObject) 比较两个对象是否相等，如果两个对象指向同一块存储区域，方法返回true;
@@ -410,7 +422,7 @@ Class cl1=Random.class;
 
 e instanceof Employee比较条件下，如果e是某个子类则比较成功，但是在.class比较时不成立。
 
-如果有一个Class类型的对象，可以用它来构造类的实例。调用getConstructor方法即可。
+**如果有一个Class类型的对象，可以用它来构造类的实例**。调用getConstructor方法即可。
 
 ```java
 Class cl=Class.forName(className);
@@ -576,7 +588,7 @@ java.lang.reflect包中的Array类允许动态地创建数组。例如，Array�
 
 ## 调用任意方法和构造器
 
-回想一下，可以用Field类的get方法查看一个对象的字段。与之类似，**Method**类中的    Object **invoke**(Object obj,Object args)作用是**用来调用包装在当前Method对象中的方法**。
+回想一下，可以用Field类的get方法查看一个对象的字段。与之类似，**Method**类中的 Object **invoke**(Object obj,Object args)作用是**用来调用包装在当前Method对象中的方法**。
 第一个参数是隐式参数，其余的则提供了显式参数,**对于静态方法来说，第一个参数可以忽略**。
 
 例如，用m1来表示Employee类的getName()方法，下面显示了如何调用这个方法:
@@ -585,7 +597,7 @@ java.lang.reflect包中的Array类允许动态地创建数组。例如，Array�
 String n=(String)m1.invoke(harry);
 ```
 
-如果返回的是基本类型，invoke方法将会返回包装器类型。
+**如果返回的是基本类型，invoke方法将会返回包装器类型**。
 
 注意我们在使用这个方法的时候必须进行强制的类型转换，最后则会进行自动拆箱。
 

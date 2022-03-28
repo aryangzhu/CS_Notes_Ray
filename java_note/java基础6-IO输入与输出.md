@@ -530,7 +530,7 @@ void writeChars(String s)
 
 ## 随机访问文件
 
-**RandomAccessFile类可以在文件的任何位置查找或写入数据**。你可以打开一个随机访问文件,只用于读入或者同时用于读写,你可以通过使用字符串"r"(读)或"rw"(用于读写访问)作为构造器的第二个参数拉丝指定这个选项。
+**RandomAccessFile类可以在文件的任何位置查找或写入数据**。你可以打开一个随机访问文件,只用于读入或者同时用于读写,你可以通过使用字符串"r"(读)或"rw"(用于读写访问)作为构造器的第二个参数来指定这个选项。
 
 ```java
 RandomAccessFile in=new RandomAccessFile("employee.data","rw")
@@ -1074,7 +1074,7 @@ relativize方法会调用p.relativize(r)将产生路径q,而对q进行解析的�
 
 通过连接给定的字符串创建一个路径。
 
-#### java.nio.file.Pah
+#### java.nio.file.Path
 
 Path resolve(Path other)
 

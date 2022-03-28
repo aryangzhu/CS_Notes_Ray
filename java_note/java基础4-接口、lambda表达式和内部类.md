@@ -256,7 +256,7 @@ Arrays.sort(friends,new LengthComparator());
 
 **理解了这个例子我们学习lamda表达式才能更加容易**
 
-## 对象克隆
+## 对象克隆Cloneable
 
 Cloneable接口，用的比较少，但是这里的技术性很强。
 
@@ -864,7 +864,7 @@ TalkingClock类**不再需要存储实例变量beep**(这句话很重要)。局�
 
 ## 匿名内部类
 
-使用局部内部类时如果还想更进一步，只想创建对象，那么就不需要指定类的名字。这样的一个类被称为**匿名内部类**。
+使用局部内部类时如果还想更进一步，**只想创建对象**，那么就不需要指定类的名字。这样的一个类被称为**匿名内部类**。
 
 ```java
 public vodi start(int interval,boolean beep){
@@ -1143,7 +1143,9 @@ https://xie.infoq.cn/article/9a9387805a496e1485dc8430f
 
 不能在运行时为这些方法提供新代码，必须提供一个**调用处理器**(invocation handler)。调用处理器是实现了InvocationHandler接口的类的对象。这个接口只有一个方法:
 
+```java
 Object invoke(Object proxy,Method method,Object[] args)
+```
 
 无论何时调用代理对象的方法(proxy)，调用处理器的invoke方法都会被调用，并向其传递Method对象和原调用的参数。之后调用处理器必须确定如何处理这个调用。
 

@@ -170,7 +170,19 @@ describe语句作为show columns from的替代
 describe customers;
 ```
 
+# 第四章 检索数据
 
+
+
+## 1.select语句
+
+为了使用select检索表数据,必须至少给出两条信息-想选择什么,以及从什么地方选择。
+
+## 2.检索单个列
+
+```mysql
+select product_name from products;
+```
 
 
 
