@@ -96,7 +96,7 @@ TCP处于传输层，提供可靠的字节流服务。字节流服务是将大�
 
 通过下面能够直观地看出IP协议、TCP协议和DNS服务在**使用HTTP协议通信的过程**发挥的作用。
 
-![](https://gitee.com/aryangzhu/picture/raw/master/%E4%BD%BF%E7%94%A8http%E5%AE%8C%E6%95%B4%E9%80%onte9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png)
+![](https://gitee.com/aryangzhu/picture/raw/master/%E4%BD%BF%E7%94%A8http%E5%AE%8C%E6%95%B4%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png)
 
 #### URI和URL
 

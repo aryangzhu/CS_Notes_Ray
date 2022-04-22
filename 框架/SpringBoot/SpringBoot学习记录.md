@@ -86,3 +86,20 @@ student:{name:qinjiang,age:3}
 
 ### 数组
 
+用-值表示数组中的一个元素,比如:
+
+```yml
+pets:
+	- cat
+	- dog
+	- pig
+```
+
+行内写法
+
+```yml
+pets:[cat,dog,pig]
+```
+
+### 注入配置文件
+
