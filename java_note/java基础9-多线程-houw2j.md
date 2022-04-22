@@ -95,7 +95,7 @@ t2.start();
 ### day02
 
 **常用API**
-sleep-当前线程暂停
+sleep-当前线程休眠
 join-等待线程终止
 setPriority-设置线程优先级
 yield-临时暂停
@@ -103,8 +103,9 @@ setDaemon-守护线程
 
 ##### 当前线程暂停
 
-```java
 有一点需要注意的是当前线程sleep的时候有可能被停止，这时就会抛出InterrunptedException
+
+```java
 public static main(String[] args){
 	Thread t1=new Thread(){
     	public void run(){
@@ -181,7 +182,6 @@ public void main(String[] args){
 ```java
 	Thread t1= new Thread(){
             public void run(){
- 
                 while(!teemo.isDead()){
                     gareen.attackHero(teemo);
                 }              
@@ -600,7 +600,7 @@ public class ProducerThread extends Thread{
 public class ConsumerThread extends Thread{
 	private MyStack<Character> stack;
     
-    public ConsumerThread(MyStack<Character> stack,String name){\
+    public ConsumerThread(MyStack<Character> stack,String name){
     	super(name);
         this.stack=stack;
     }
@@ -634,7 +634,7 @@ public class ConsumerThread extends Thread{
 4.知道一个外部线程往这个任务容器中扔了一个"任务"，就会有一个线程被notify
 5.这个消费者线程取出"任务",并且执行这个任务，执行完毕后，继续等待下一次任务的到来。
 6.如果短时间内，有较多的任务加入队列，那么就会有多个线程被唤醒，去执行这些任务。
-**开发一个自定义线程**
+**开发一个自定义线程池**
 1.首先，明确线程池中的数据都有什么，size长度、链表(存放线程)
 2.需要完成什么事儿，启动消费10个线程、往线程池中扔一个任务，唤醒其他线程
 核心代码
@@ -652,7 +652,7 @@ public ThreadPool(){
     
     synchronized(tasks){
     	for(int i=0;i<threadPoolSize;i++){
-        	new TaskConsumeThread("任务消费者线程").star();
+        	new TaskConsumeThread("任务消费者线程").start();
         }
     }
 }

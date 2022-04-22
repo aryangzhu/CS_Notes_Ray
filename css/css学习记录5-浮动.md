@@ -1,14 +1,16 @@
 ### 浮动
 #### 1.标准文档流
 
->块级元素:独占一行 h1~h6 p div 列表...
+>块级元素:独占一行 h1~h6 p div 列表... 
 >行内元素:不独占一行 span a img strong
 
 注意：行内元素可以被包含在块级元素之中，反之则不可以
 
+如果div内部有多个div，那么外部div会随着内部div而撑大。
+
 #### 2.display
 
-```
+```html
     <!--block块元素
     inline 行元素
     inline-block 是块元素,但是可以内联,在一行
@@ -29,13 +31,18 @@
     </style>
 ```
 #### 3.float-常用的块级元素和行内元素排列方案
+
+float可以理解为在当前文档流中拼命向左挤，作用就是将挤占右边的空间留给其他人用。
+
 左右浮动 float
 float:left;
+
+
 
 #### 4.父级边框塌陷的问题
 ##### 1.增加父级元素的高度
 
-```
+```html
 #father{
 	border:1px #000 solid;
     height:800px
@@ -43,7 +50,7 @@ float:left;
 ```
 ##### 2.增加一个空的div标签，清除浮动
 
-```
+```html
 <div class="clear">
 </div>
 .clear{
@@ -57,7 +64,7 @@ float:left;
 
 ##### 4.父类添加一个伪类after
 
-```
+```html
 #father：after{
 	content:'';
     display:block;

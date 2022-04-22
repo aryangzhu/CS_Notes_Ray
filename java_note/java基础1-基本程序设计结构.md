@@ -124,15 +124,53 @@ int fourthBitFromRight=(n&(1<<3))>>3;
 
 ## 字符串
 
+从改变上讲,Java字符串就是由**Unicode字符序列**构成。例如,字符串"Java\u2122"由5个Unicode字符J、a、v、a和tm构成。Java没有内置的**字符串类型**,而是在标准Java类库中提供了一个预定义类,很自然地叫做String。每个用双引号括起来的字符串都是String类的一个实例:
+
+```java
+String e="";
+String greeting="Hello";
+```
+
 ### 子串
+
+String类的subString方法可以从一个较大的字符串中提取出一个子串。例如:
+
+```java
+String greeting="Hello";
+String s=greeting.subString(0,3);
+```
+
+第二个参数是不想复制的第一个位置。
 
 ### 拼接
 
+```java
+String expletive="Expltive";
+String PG13="deleted";
+String message="expletive"+PG13;
+```
+
 ### 不可变字符串
 
-String被声明为final，意味着不能够再被继承。同时内部声明为final，数组初始化之后就就不能引用其他数组(基本数据类型被final修饰之后只能进行一次赋值操作)。
+为什么叫做不可变字符串?
 
+因为不能修改字符串中的单个字符,例如不能将greeting的后两位字符修改为'p'和'!'。
+
+也就是说这个字符串永远包含这几个字符,所以你不能做修改,那么要怎么做修改呢？
+
+```java
+greeting=greetin.subString(0,3)+"p!";
 ```
+
+很明显,子串是一个新串子再与"p!"进行拼接。
+
+同时我们可以修改Sting类型变量的引用地址,将其指向新的地址。
+
+
+
+String被声明为**final**，意味着不能够再被继承。同时内部声明为final，数组初始化之后就就不能引用其他数组(基本数据类型被final修饰之后只能进行一次赋值操作)。
+
+```java
 String string ="123";
 string=new String("234") ;
 ```
@@ -146,11 +184,116 @@ string=new String("234") ;
 
 ### 检测字符串是否相等
 
+使用equals检测两个字符串是否相等。对于表达式:
+
+```java
+s.equals(t);
+```
+
+来看下面这个例子
+
+```java
+String greeting="Hello";
+if(greeting=="Hello"){
+    ...
+    //probably true
+}
+if(greeting.subString(0,3)=="Hel"){
+    //probably false；
+}
+```
+
+如果虚拟机中始终将相同的字符串共享,就可以使用==运算符检测是否相等。但实际上只有**字符串字面量**是共享的,而**+或subString()**等操作得到的字符串并不共享(也就是说会使用新的地址)。所以,千万不要使用==运算符测试字符串的相等性。
+
 ### 空串与Null串
+
+String类型的变量可以是"",也可以是null,最常用的就是检测一个字符串时候为空
+
+```java
+if(str!=null && str.length()!=0)...
+```
 
 ### 码点与代码单元
 
+码点就是编码表中对应的代码值,而码元就是代码单元也就是用UTF-16的编码表示一个Unicode的代码单元。
+
+返回代码单元数量。
+
+```java
+String greeting="Hello";
+int n=greeting.length();
+```
+
+我们知道Unicode编码中辅助字符是由两个代码单元组成的,所以当返回特殊字符时数量会多一个。
+
+返回实际长度即码点数量
+
+```java
+int cpCount=greeting.codePoint(0,greeting.length());
+```
+
+返回码元
+
+```java
+char first=greeting.charAt(0);
+```
+
+返回码点
+
+```java
+int index=greeting.offsetByCodePoints(0,i);
+int cp=greeting.codePointAt(index);
+```
+
 ### String API
+
+#### java.lang.String
+
+##### char charAt(int index)
+
+返回给定位置的代码单元。除非对底层代码单元感兴趣,否则不需要调用这个方法。
+
+##### int codePointAt(int index)
+
+返回从给定位置开始的码点。
+
+##### int offset(int startIndex,int cpCount)
+
+返回从startIndex码点开始,cpCount个码点后的码点索引。
+
+##### boolean empty()
+
+##### boolean equals(String other)
+
+##### int length()
+
+##### int codePointCount(int startIndex,int endIndex)
+
+返回startIndex和endIndex-1之间的码点个数
+
+##### String replace(CharSequence oldString,CharSequence newString)
+
+返回一个新字符串。这个字符串用newString代替原始字符串中所有的oldString。
+
+String subString(int beginIndex)
+
+##### String subString(int beginIndex,int endIndex)
+
+返回一个新字符串。
+
+String toLowerCase()
+
+##### String toUpperCase()
+
+返回一个新字符串,将大小写进行转换。
+
+String trim()
+
+删除字符串开头和结尾的空格。
+
+##### String join(CharSequence delimiter,CharSequence ...elements)
+
+返回一个新的字符串,用给定的定界符连接所有元素。
 
 ### 阅读文档
 

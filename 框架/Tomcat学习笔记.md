@@ -63,15 +63,20 @@
         在tomcat的server.xml文件中添加主机名
         
 
-   1.  `<Host name="zhongfucheng" appBase="D:web1">`
-    
-2.   `<Context path="/web1" docBase="D:web1"/>`
-    
+   1. `<Host name="zhongfucheng" appBase="D:web1">`
+
+2. `<Context path="/web1" docBase="D:web1"/>`
+
 3.   `</Host>`
 ![image.png](/img/bVcMW7f)
 ![选区_097.png](/img/bVcMW7g)
-我们平时idea中运行的项目不在tomcat安装目录下webapps中，而在/.IntelijIdea/system中存放配置文件，在启动tomcat后运行catalina.sh，读取我们的配置文件，从而完成完整项目的一次部署。
-![选区_116.png](https://i.loli.net/2021/02/21/uJoN5KblvtqOzjh.png)
-![](https://i.loli.net/2021/02/21/aMusyCqA54TGehk.png)
-也就是上面所述的虚拟目录的第二种配置方法
-参考博客https://blog.csdn.net/hgffhh/article/details/84137878
+
+4. 我们平时idea中运行的项目不在tomcat安装目录下webapps中，而
+
+   在/.IntelijIdea/system中存放配置文件，在启动tomcat后运行
+
+   catalina.sh，读取我们的配置文件，从而完成完整项目的一次部署。
+   ![选区_116.png](https://i.loli.net/2021/02/21/uJoN5KblvtqOzjh.png)
+   ![](https://i.loli.net/2021/02/21/aMusyCqA54TGehk.png)
+   也就是上面所述的虚拟目录的第二种配置方法
+   参考博客https://blog.csdn.net/hgffhh/article/details/84137878

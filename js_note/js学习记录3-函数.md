@@ -1,12 +1,15 @@
 ### 1.函数定义及变量作用域
-#### 定义方式
+#### Java定义方式
 
 Java定义函数
 public 返回值类型 方法名(){
 	return 返回值；
 }
-##### 定义方式一
+
+##### JS定义方式一
 绝对值函数
+
+```javascript
 function abs(x){
 	if(x>=0){
     return x;
@@ -14,11 +17,16 @@ function abs(x){
     return -x;
     }
 }
-##### 定义方式二
+```
+
+可以看出JS与Java相比,没有修饰符,没有返回类型,没有参数类型
+
+##### JS定义方式二
+
 var abs=function(x){
 	
 }
-function(x){....}是一个匿名函数，但是可以把结果赋值给abs,通过abs就可以调用函数！
+function(x){....}是一个匿名函数，但是**可以把结果赋值给abs**,通过abs就可以调用函数！
 方式一和方式二等价
 abs(x)调用方式
 
@@ -57,6 +65,18 @@ function aaa(a,b,....rest){
     console.log("b=>"+b);
     console.log(rest);
 }
+
+#### 事件
+
+为什么使用事件,当发生某个动作时需要做什么事情(做什么事情就由事件来指定)
+
+例如,onmouseover(on当什么时候mouse鼠标over悬浮)
+
+event:当前发生的事件;
+
+event.srcElement:事件源
+
+
 
 ### 2.变量的作用域
 'use strict'

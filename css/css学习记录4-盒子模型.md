@@ -1,11 +1,19 @@
 **网页查看元素时，f12,对值进行修改，查看效果**
 ![选区_120.png](https://i.loli.net/2021/02/23/xKMAP3wUrHjkFuE.png)
+
 #### 1.什么是盒子模型
 ![选区_119.png](https://i.loli.net/2021/02/23/cXHmESvKBxRgjtr.png)
 margin:外边距
+
 padding:内边距-可以填上下左右四个方向
 
 border:边框
+
+两个盒子模型在一起嵌套时,子盒子以父盒子为基准。
+
+注意：在谷歌浏览器中
+
+实际长度=width+左右border+padding
 
 #### 2.边框
 1.边框的粗细
@@ -16,19 +24,19 @@ border:边框
 #### 3.内外边距
 
 ```html
-   #box{
+#box{
             width: 300px;
             border: 1px solid red;
             选择auto
             margin: auto;
         }
-        form{
+form{
             background-color: darkcyan;
         }
-        input{
+input{
             border:1px solid black;
         }
-        div:nth-of-type(1){
+div:nth-of-type(1){
         	padding:上下边距 左右边距
             padding: 10px 2px;
         }

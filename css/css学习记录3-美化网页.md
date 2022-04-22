@@ -15,18 +15,20 @@
 ​    font-wieght:字体粗细
 ​    line-height:行高
 ​    text-indent:缩进-->
+
+```html
     <style>
         body {
             font-family: Vemana2000;
         }
-
-        h1 {
+		h1 {
             font-size: 50px;
-        }
-        .p1{
-            font-weight:700;
-        }
-    </style>
+    	}
+    	.p1{
+        	font-weight:700;
+    	}
+	</style>
+```
 #### 3.文本样式
 ​	1.颜色
 ​    2.文本对齐的方式
@@ -40,7 +42,7 @@ a:hover--鼠标悬浮
 a:active--鼠标按住未释放
 a;visited--已经访问过的链接
 
-```
+```html
   /*鼠标悬浮的颜色*/
         a:hover{
             color:orange;

@@ -1811,8 +1811,6 @@ if(matcher.matches()) ...
 Pattern pattern=Pattern.complile(expression,Pattern.CASE_INSENSITIVE+Pattern.UNICODE_CASE);
 ```
 
-
-
 ## 找出多个匹配
 
 如果想要找出输入中一个或多个匹配的字符串。可以用Matcher类的find方法来查找匹配内容,如果返回true,再使用start和end方法来查找匹配的内容,或使用不带引元的group方法来获取匹配的字符串。

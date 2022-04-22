@@ -48,6 +48,24 @@ public double getSalary(){
 有些人认为super与this引用是类似的概念，实际上，这样并不恰当。因为super不是一个对象的引用，例如，不能将值super赋给另一个对象变量，他只是一个**指示编译器调用超类方法**的特殊关键字。
 Java中使用super,而C++中使用::
 
+### 方法重写和方法重载的区别
+
+首先我们来看一个方法都有什么要素:
+
+权限修饰、静态/动态修饰、返回值类型、方法名、参数列表
+
+重写是在子类中去重新实现父类,所以他需要相同的**返回值类型、方法名和参数列表**，但是允许子类的权限不超过父类。
+
+重载是在一个类中，方法名相同但是参数列表不同。
+
+#### 为什么重写的子类方法的权限要大于父类方法
+
+因为加入父类是public而子类是private的话,那么后面使用多态
+
+Employee e=new Mannager();
+
+就无法准确调用它的方法。
+
 ## 子类构造器
 ```java
 public Manager(String name,double salary,int year,int month,itn day){
@@ -96,7 +114,7 @@ public Manager getBuddy(){......}
 ```
 3.如果是private方法、static方法和final方法或者构造器，那么编译器将可以准确地知道该调用哪个方法。这称之为**静态绑定**。与此对应的是，如果要调用的的方法依赖于隐式参数的实际类型，那么必须在运行时使用动态绑定。在我们的示例中，编译器会利用动态绑定生成一个调用f(String)的指令。
 4.程序运行并且采用**动态绑定**调用方法时，虚拟机必须调用与x所引用对象的实际类型所对应的方法。什么意思呢，就是说，假设D是C的子类，如果调用d.f(x)那么虚拟机首先会在d的类中找f方法，如果找不到才回去c中找f这个方法，如果c中找不到，那么就回去c的超类中找方法。
-	每次调用方法都要完成一遍这个搜索，时间开销是比较大的。因此，虚拟机预先为每个类计算了一个**方法表(method table)**,其中列出了所有方法的签名(返回类型+参数列表)和要调用的实际方法。等到真正调用的时候，虚拟机直接查这个表就行了。**如果使用的super.f(param)那么将直接在当前类的超类中去寻找。**
+每次调用方法都要完成一遍这个搜索，时间开销是比较大的。因此，虚拟机预先为每个类计算了一个**方法表(method table)**,其中列出了所有方法的签名(返回类型+参数列表)和要调用的实际方法。等到真正调用的时候，虚拟机直接查这个表就行了。**如果使用的super.f(param)那么将直接在当前类的超类中去寻找。**
 
 ```java
 public class Test{
@@ -183,6 +201,8 @@ for(...){
 ```
 p为什么能调用getDescription呢，这是因为由于不能构造抽象类Person的对象，所以变量p永远不会引用person对象，而是引用诸如Employee或Student这样的具体子类的对象，而这些对象中都定义了getDescription方法。
 ## 受保护访问
+
+子类的权限需要比父类更高,因为多态的存在，如果父类为public而子类为private那么当类型声明为父类，就无法体现多态。
 
 # Object:所有类的超类
 
@@ -350,18 +370,19 @@ list.add(Integer.ValueOf(3));
 
 ### 常用API
 #### java.lang.Integer
-​	int intValue()
-​	将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法)
-​	static String toString()
-​	返回一个新的String对象，表示指定的数值i的十进制表示
-​	static String toString(int i,int radix)
-​	返回数值i基于radix参数指定进制的表示
-​	static int parseInt(String s)
-​	static int parseInt(String s,int radix)
-​	返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
-​	static Integer valueOf(String s)
-​	static Integer valueOf(String s,int radix)
-​	返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
+##### int intValue()
+
+将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法。
+​##### static String toString()
+​返回一个新的String对象，表示指定的数值i的十进制表示
+​##### static String toString(int i,int radix)
+​返回数值i基于radix参数指定进制的表示
+​##### static int parseInt(String s)
+​##### static int parseInt(String s,int radix)
+​返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
+​##### static Integer valueOf(String s)
+​##### static Integer valueOf(String s,int radix)
+​返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
 
 # 参数数量和可变的方法
 # 枚举类
