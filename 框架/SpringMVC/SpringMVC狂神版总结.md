@@ -40,7 +40,7 @@ JSP+Servlet+JavaBean的模式
 # SpringMVC
 ## 1.概述
 
-springMVC是spring framework的一部分，是基于Java实现MVC的轻量级Web框架。
+SpringMVC是spring framework的一部分，是基于Java实现MVC的轻量级Web框架。
 ### 特点：
 1.轻量级，简单易学。
 2.高效，基于请求相应的MVC框架
@@ -74,16 +74,27 @@ SpringMVC框架以请求为驱动，围绕一个中心Servlet分派请求提供�
     http://localhost:8080服务器域名（主机名和服务端口号）
     SpringMVC部署在服务器上的web站点（web站点目录，tomcat中有学习过）
     hello表示控制器
+
 2.HandlerMapping为处理映射。DispatcherServlet调用HandlerMapping,HandlerMapping根据请求url查找Handler。
+
 3.HandlerExecution表示具体的Handler,其主要作用是根据url查找控制器，如上url被查找控制器为：hello。
+
 4.HandlerExecution将解析后的信息传递给DispatcherServlet,如解析控制器映射等。
+
 5.HandlerAdapter表示处理适配器，其按照特定的规则去执行Handler。
+
 6.Handler让具体的Controller执行。
+
 7.Controller将具体的执行信息返回给HandlerAdapter,如ModelAndView。
+
 8.HandlerAdapter将视图逻辑名或者模型传递给DispatcherServelt.
+
 9.DispatchrServlet调用视图解析器（ViewResolver）来解析HandlerAdapter传递的逻辑视图名。
+
 10.视图解析器将解析的逻辑视图名传给DispatcherServlet。
+
 11.DispatcherServlet根据视图解析器解析的视图结果，调用具体的视图。
+
 12.最终视图呈现给用户。
 
 # 4.项目创建
@@ -117,7 +128,8 @@ SpringMVC框架以请求为驱动，围绕一个中心Servlet分派请求提供�
 </build>
 ```
 
-## 3.在pom.xml中引入依赖，包括spring框架核心库，SpringMVC、Servlet,JSTL等。
+## 3.在pom.xml中引入依赖
+包括spring框架核心库，SpringMVC、Servlet,JSTL等。
 ## 4.配置web.xml
 
 ```xml
@@ -149,11 +161,17 @@ SpringMVC框架以请求为驱动，围绕一个中心Servlet分派请求提供�
 /和/*的区别：<url-pattern>/</url-pattern>不会匹配到.jsp，只针对我们编写的请求；即.jsp会出现返回jsp视图时再次进入到spring的DispatcherServlet类，导致找不到对应的controller所以报404.
 
 注意事项：
+
     1.web.xml最新版
+
     2.注册DispatcherServlet
+
     3.关联SpringMVC的配置文件
+
     4.启动级别为1
+
     5.映射路径为/
+
 
 ## 5.添加SpringMVC配置文件
 在resources下配置springmvc-servlet.xml,配置的形式与spring容器基本类似，为了支持基于注解的IOC,设置了自动扫描包的功能。

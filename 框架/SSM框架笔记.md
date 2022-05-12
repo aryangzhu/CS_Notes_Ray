@@ -7,21 +7,33 @@
 核心配置文件mybatis-config.xml,这个下面包含许多的属性，详情可以参考狂神的笔记
 生命周期和作用域
 ![选区_111.png](https://i.loli.net/2021/02/20/FEukKesylBG8Rbh.png)
-SqlSessionFactoryBuilder的作用在于创建SqlSessionFactory,完成后失去作用，SqlSessionFactoryBuilder实例的最佳作用域是方法作用域。
+SqlSessionFactoryBuilder的作用在于创建SqlSessionFactory,完成后
 
-SqlSessionFactory的作用创建SqlSession接口对象，长期存在，同时为了避免消耗资源，作为一个单例SqlSession是一个连接对象，存活在一
+失去作用，SqlSessionFactoryBuilder实例的最佳作用域是方法作用域。
+
+SqlSessionFactory的作用创建SqlSession接口对象，长期存在，同时为了
+
+避免消耗资源，作为一个单例SqlSession是一个连接对象，存活在一
 
 个业务请求中。
 ![选区_112.png](https://i.loli.net/2021/02/20/ouO3L4Ie8QNR7iT.png)
 
 ### 2.ResultMap及分页
 
-mybatis中内置有日志工厂功能，会按顺序查找。如果一个都没有找到，日志功能将禁用
+mybatis中内置有日志工厂功能，会按顺序查找。如果一个都没有找到，日志功
+
+能将禁用
+
 例如log4j
+
 1.导入log4j包
+
 2.配置文件编写
+
 3.setting设置日志实现
+
 4.在程序中使用log4j进行输出
+
 5.查看控制台输出
 
 ### 3.使用注解开发
@@ -33,7 +45,9 @@ mybatis中内置有日志工厂功能，会按顺序查找。如果一个都没�
 ### 6.缓存
 
 一级缓存默认开启，SqlSession级别
+
 二级缓存即全局缓存，基于namespace级别的缓存，一个名称空间，对应一个二级缓存
+
 ### 工作机制
 1.一个回话查询到一条数据，这条数据就会被存储在一级缓存中
 
@@ -152,7 +166,9 @@ return "test";
 重定向
 return "redirect:/index.jsp"
 数据处理
-处理提交数据--参考狂神的博客
+
+####　处理提交数据--参考狂神的博客
+
 1.@RequestParam注解
 2.提交的是一个对象
 数据显示到前端

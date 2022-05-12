@@ -39,7 +39,7 @@ server.xml配置server相关的信息，例如端口号，主机（host）
 ## 4.虚拟目录
 
 1.如果所有web站点的目录都放在webapps下，可能导致磁盘空间不够用，也不利于web站点目录（其实就是网站的物理目录，也即是真实目录）的管理（假设存在很多web站点目录）
-2.把web站点(由一组html文档、媒体文件及相关目录结构组成，注重的是信息的浏览)的目录分散到其他磁盘管理就需要配置虚拟目录（默认只有webapps下的目录才能被tomcat自动管理成一个web站点）
+2.**把web站点(由一组html文档、媒体文件及相关目录结构组成，注重的是信息的浏览)的目录分散到其他磁盘管理**就需要配置虚拟目录（默认只有webapps下的目录才能被tomcat自动管理成一个web站点）
 ３.把web应用所在的目录交给web服务器管理，这个过程称之为虚拟目录的映射。
 
 ### 配置虚拟目录方法一
@@ -121,8 +121,18 @@ catalina.sh，读取我们的配置文件，从而完成完整项目的一次部
 
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/tomcat-idea%E9%85%8D%E7%BD%AE.png)
 
+WEB-INF中有一个web.xml文件,能够进行一些配置。
+
 3.配置tomcat中web项目
 
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/idea%E9%85%8D%E7%BD%AEweb%E9%A1%B9%E7%9B%AE.png)
 
-还是图片更加直接
+还是图片更加直接,这里需要注意的是deployment下的是我们的项目,选择war包,然后Application Context中配置对应的事webapps中的项目,建议配置称为/。
+
+4.常见的问题
+
+项目启动之后会报错找不到jdbc.Driver的错误,我分别在stackoverflow和百度上进行了搜索,结果没有作用。
+
+想起了上面学习的知识,除了ideaxxx/system/webapps下会有一个虚拟目录,我个人理解首先是从这个里面的配置来找依赖,我觉得大概率是Web模块的问题。
+
+但是我一直没有找到如何配置,所以我又想到可以直接tomcat的lib中添加jar包,问题得以解决。虽然这不是最完美的实现,但是这是我目前能解决问题的最好方案,时间紧迫,不能过分追求完美。

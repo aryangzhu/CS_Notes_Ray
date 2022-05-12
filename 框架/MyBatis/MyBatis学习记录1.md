@@ -2,9 +2,8 @@
 
 参考狂神说mybatis系列教程
 mybatis和jdbc、IO一样是持久化的手段;
-持久化是为了
-
-```undefined
+```
+持久化的目的
 1.断电后保证重要数据不丢失。
 2.内存资源昂贵，需要持久化缓存到外存。
 ```
@@ -12,7 +11,7 @@ mybatis和jdbc、IO一样是持久化的手段;
 持久层--简单来说就是为了操作数据库
 mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系映射
 
-```pgsql
+```
 优点：
     1.简单易学
     2.灵活
@@ -20,9 +19,9 @@ mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系�
     4.xml，动态sql
 ```
 
-项目搭建
-1.搭建数据库
-2.pom.xml导入jar包
+## 项目搭建
+### 1.搭建数据库
+### 2.pom.xml导入jar包
 
 ```xml
     <dependency>
@@ -37,7 +36,7 @@ mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系�
     </dependency>
 ```
 
-3.resource下核心配置文件
+### 3.resource下核心配置文件
 
 ```xml
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -62,7 +61,7 @@ mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系�
 </configuration>
 ```
 
-4.编写工具类
+### 4.编写工具类
 
 ```java
     查看官方文档
@@ -84,7 +83,7 @@ mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系�
   }
 ```
 
-5.创建实体类
-6.dao层mapper接口
-7.resource文件下编写mapper.xml
-8.编写测试，结果返回。
+### 5.创建实体类
+### 6.dao层mapper接口
+### 7.resource文件下编写mapper.xml
+### 8.编写测试，结果返回。

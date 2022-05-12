@@ -1,5 +1,3 @@
-参考文章狂神boot系列
-
 # 创建一个springboot项目
 
 选择SpringBoot Intlizer然后选择Java Web组件
@@ -100,6 +98,9 @@ pets:
 ```yml
 pets:[cat,dog,pig]
 ```
-
-### 注入配置文件
-
+### 注入配置
+# 多环境切换
+# 数据校验
+# Web开发
+## 静态资源导入
+## 首页和图标定制

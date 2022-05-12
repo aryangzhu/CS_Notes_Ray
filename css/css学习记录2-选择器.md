@@ -58,7 +58,7 @@
 ​            background: chocolate;
 ​        }
 
-```html
+```css
 /*选中父元素,下的p元素第二个,类型*/
     p:nth-of-type(2){
         background: coral;
