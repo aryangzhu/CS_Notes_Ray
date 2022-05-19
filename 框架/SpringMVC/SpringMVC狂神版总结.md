@@ -1,12 +1,9 @@
 看了狂神的博客，做一下学习记录
 
 # 1.MVC
-
-```scss
 MVC是将Model(模型)、视图(view)、控制器(controller)的简写，是一种软件设计规范。
 是将业务逻辑、数据、显示分离的方法来组织代码。
 MVC主要作用是降低了视图与业务逻辑的双向耦合。
-```
 
 **MVC不是一种设计模式，MVC是一种架构模式**，当然不同的MVC存在差异。
 Model：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型或者JavaBean组件。现在分割开来，提供了模型数据查询和模型数据状态更新等功能，包括业务和数据。
@@ -23,7 +20,6 @@ JSP+Servlet+JavaBean的模式
 ![选区_104.png](https://segmentfault.com/img/bVcNvRN)
 
 
-
 ## 2.model2时代--基础MVC
 
 ![选区_105.png](https://segmentfault.com/img/bVcNvSs)
@@ -31,15 +27,13 @@ JSP+Servlet+JavaBean的模式
 
 
 ### 流程
-1.用户发请求
-​2.用Servlet处理完毕，并调用对应的业务逻辑方法。
-​3.业务处理完毕，返回更新后的数据给Servlet。
-​4.Servlet转向到JSP,由JSP来渲染页面。
+1.用户发请求  
+​2.用Servlet处理完毕，并调用对应的业务逻辑方法。  
+​3.业务处理完毕，返回更新后的数据给Servlet。  
+​4.Servlet转向到JSP,由JSP来渲染页面。  
 ​5.响应给前端更新后的页面。
-
 # SpringMVC
 ## 1.概述
-
 SpringMVC是spring framework的一部分，是基于Java实现MVC的轻量级Web框架。
 ### 特点：
 1.轻量级，简单易学。
@@ -52,14 +46,12 @@ SpringMVC是spring framework的一部分，是基于Java实现MVC的轻量级Web
 Spring的web框架围绕**DispatcherServlet**[调度Servlet]设计。
 
 ## 2.中心控制器
-
 DispatcherServlet的作用是将请求分发到不同的**处理器**。
 SpringMVC框架以请求为驱动，围绕一个中心Servlet分派请求提供其他功能，DispatcherServlet是一个实际的Servlet。
 
 ![选区_106.png](https://segmentfault.com/img/bVcNvYY)
 
-### 原理
-
+### 原理  
 当发起请求时被前置的控制气拦截到请求，根据请求参数生成代理请求，找到对应的实际控制器，控制器处理请求，创建数据模型，访问数据库，将模型响应给中心控制器，控制器使用模型与视图渲染结果，将结果返回给中心控制器，再将结果返回给请求者。
 
 ![选区_107.png](https://segmentfault.com/img/bVcNv0Q)

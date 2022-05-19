@@ -1,4 +1,4 @@
-# 创建一个springboot项目
+# 创建一个springboot项目(非官方文档)
 
 选择SpringBoot Intlizer然后选择Java Web组件
 
@@ -19,13 +19,13 @@ server.port=8081;
 ## yml描述
 
 让我们先回顾一下xml长什么样子
-
+### xml
 ```xml
 <server>
     <port>8081<port>
 </server>
 ```
-
+### yaml
 **yml以数据作为中心,而不是以标记语言为重点**
 
 yml配置
@@ -99,8 +99,85 @@ pets:
 pets:[cat,dog,pig]
 ```
 ### 注入配置
+@Value可以注入我们自己的配置值
 # 多环境切换
+```yaml
+spring:
+	profies:
+```
 # 数据校验
+使用注解@Valid来完成数据校验
 # Web开发
+我们知道，在Spring框架中主要的和web相关的无非就是静态资源的配置和SpringMVC的相关配置。
 ## 静态资源导入
+通过官方文档可以得知，自定义的配置主要可以放在resource文件下的几个文件里面(这个是由源码所决定的)。
 ## 首页和图标定制
+自定义配置文件里面，我们可以自行修改。
+# 如何写一个网站
+## 尽量用前端模板
+### 栅格
+### 导航栏
+### 侧边栏
+### 表单
+### 尾部
+## 设计数据库(难点!)
+## 前端让它能够自动运行,独立化工程
+## 数据接口对接
+### json
+### 前后端联调
+# 整合持久层
+## 整合JDBC
+## 整合Druid
+## 整合Mybatis(重点)
+1.在springboot.yaml文件编写数据库相关配置
+2.在dao/mapper包下使用注解来声明组件
+3.现在需要在resource下编写xml文件.
+# 权限&认证
+## 整合SpringSecurity
+建议直接阅读官方文档
+https://www.docs4dev.com/docs/zh/spring-security/5.1.2.RELEASE/reference/jc.html
+
+首先需要创建Config类来实现WebSecurityConfigurerAdapter
+在配置类中我们需要做的工作有下面这两个步骤:
+注:下面的代码是链式的，关于这里可以看书
+### 1.授权
+主要是设置什么权限能够访问什么页面
+```java
+protected void configure(HttpSecurity http) throws Excption{
+	//设置路径访问权限
+	http.authorizeRequest()
+	.anMacters("/").permitAll()
+	.antMacters("/level1/**").hasRoles("vip1");
+	...
+
+	//登录
+	// http.login()，主要是对登录做一系列的设置，具体可以参考官方文档
+	http.formLogin(); 
+
+	//登出
+	http.logout().logoutSuccessfulurl("/");
+
+	//开启记住我，默认remeber-me
+	http.remeberMe().remeberMeParameter("remeber-me");
+}
+```
+### 2.认证
+```java
+protected void configure(AuthenticationManagerBuilder auth)throws Exception{
+	//注意，这里要对密码进行加密，否则会报错
+	auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
+	.withUser("root").password(new BCryptPasswordEncoder().encode("123456")).roles("vip1","vip2","vip3")
+	.and()
+	.withUser("user").password(new BCryptPasswordEncoder().encode("123456")).roles("vip1");
+}
+```
+踩过的坑
+1.直接导入springsecurity5和thymleaf的依赖
+并且在thymleaf模板加上下面这行代码
+```html
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+```
+## 整合Shiro
+

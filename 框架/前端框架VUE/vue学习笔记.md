@@ -63,7 +63,7 @@ $ vue init webpack my-project
 ```
 这里需要进行一些配置，默认回车即可
 
-## 语法
+## 基本语法
 如果想要学习这种类JSTL语法，我们只需要以下这四个语法
 前提，我们先学习一些简单的语法
 ```html
@@ -108,3 +108,109 @@ $ vue init webpack my-project
 ```html
 <li v-for="item in items"></li>
 ```
+## 模板语法
+也就是对HTML元素节点进行一些操作
+{{}}文本值
+### v-html输出HTML代码
+```html
+<div id="app">
+    <div v-html="message"></div>
+</div>
+
+<script>
+new Vue({
+    el:'#app',
+    data:{
+        message:'<h1>菜鸟教程</h1>'
+    }
+})
+</script>
+```
+### v-bind设置标签属性
+```html
+<div v-bind:class="{'class1':use}"></div>
+```
+### 指令
+带有v-前缀的特殊属性
+## 计算属性
+关键词 computed
+```html
+<script>
+var vm=new Vue({
+    el:'#app',
+    data:{
+        message:'Runoob!'
+    },
+    computed:{
+        reversedMessage:function(){
+            return this.message.split('').reverse().join('');
+        }
+    }
+})
+</script>
+```
+上面声明了一个计算属性reversedMessage
+提供的函数将用作的vm.reverseMessage的getter,vm.reversedMessage依赖于vm.message，在vm.message发生改变时,vm.reversedMessage也会更新。
+computed 和mehods
+computed是基于它的依赖缓存，只有相关依赖发发生改变才会重新获取值。
+## 样式绑定
+v-bind:class="{''active':isActive}"
+为v-bind:class属性绑定一个对象，从而动态切换class
+### 数组语法
+```html
+<div v-bind:class="[activeClass, errorClass]"></div>
+```
+### Vue.js.style(内联样式)
+```html
+<div id="app">
+    <div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }">菜鸟教程</div>
+</div>
+```
+## 事件处理器
+v-on指令来绑定事件
+## Vue.js表单
+### 双向绑定
+v-model会根据控件类型自动选取正确方法来更新元素
+```html
+  <input v-model="message" placeholder="编辑我……">
+```
+单选框绑定
+```html
+  <input type="radio" id="google" value="Google" v-model="picked">
+```
+复选框绑定
+```html
+<input type="checkbox" id="runoob" value="Runoob" v-model="checkedNames">
+   <input type="checkbox" id="runoob" value="Runoob" v-model="checkedNames">
+```
+下拉框列表
+```html
+<select v-model="selected" name="fruit">
+```
+##  Vue.js组件
+组件可以扩展HTML元素，封装可重用的代码
+```html
+<div id="app">
+    <runoob></runoob>
+</div>
+ 
+<script>
+// 注册
+Vue.component('runoob', {
+  template: '<h1>自定义组件!</h1>'
+})
+// 创建根实例
+new Vue({
+  el: '#app'
+})
+</script>
+```
+## 自定义指令
+## Vue.js路由
+安装vue-router
+```shell
+cnpm install vue-router
+```
+### 简单实例
+vue-js+vue-router可以很简单的实现单页应用。
+使用/<router-link>设置一个导航链接，切换不同的HTML内容。
