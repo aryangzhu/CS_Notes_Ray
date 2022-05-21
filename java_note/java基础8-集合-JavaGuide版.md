@@ -1,27 +1,6 @@
-# 集合概述
-
-## Java集合概述
-
-集合也被称作容器,主要由两大接口派生而来,一个是Collection接口,另一个是Map接口,主要用于存放键值对。
-
-![](https://gitee.com/aryangzhu/picture/raw/master/java/Java%E9%9B%86%E5%90%88%E4%BD%93%E7%B3%BB.png)
-
-## 说说List、Set、Queue和Map四者的区别- [集合概述](#集合概述)
-  - [Java集合概述](#java集合概述)
-  - [说说List、Set、Queue和Map四者的区别](#说说listsetqueue和map四者的区别)
-  - [集合框架底层数据结构总结](#集合框架底层数据结构总结)
-    - [Collectio接口下面的集合](#collectio接口下面的集合)
-      - [List](#list)
-      - [Set](#set)
-      - [Queue](#queue)
-  - [Map接口下的集合](#map接口下的集合)
-    - [HashMap](#hashmap)
-    - [LinkedHashMap](#linkedhashmap)
-  - [如何选用集合](#如何选用集合)
-  - [为什么使用集合](#为什么使用集合)
 - [集合概述](#集合概述)
   - [Java集合概述](#java集合概述)
-  - [说说List、Set、Queue和Map四者的区别- 集合概述](#说说listsetqueue和map四者的区别--集合概述)
+  - [说说List、Set、Queue和Map四者的区别](#说说listsetqueue和map四者的区别)
   - [集合框架底层数据结构总结](#集合框架底层数据结构总结)
     - [Collectio接口下面的集合](#collectio接口下面的集合)
       - [List](#list)
@@ -62,6 +41,15 @@
   - [ConcurrentHashMap线程安全的具体实现方式/底层具体实现](#concurrenthashmap线程安全的具体实现方式底层具体实现)
     - [1.底层数据结构](#1底层数据结构)
     - [2.实现线程安全的主要方式(重要)](#2实现线程安全的主要方式重要)
+# 集合概述
+
+## Java集合概述
+
+集合也被称作容器,主要由两大接口派生而来,一个是Collection接口,另一个是Map接口,主要用于存放键值对。
+
+![](https://gitee.com/aryangzhu/picture/raw/master/java/Java%E9%9B%86%E5%90%88%E4%BD%93%E7%B3%BB.png)
+
+## 说说List、Set、Queue和Map四者的区别
 
 List:存储的元素是**有序的、可重复的**。
 

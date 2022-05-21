@@ -1,3 +1,8 @@
+- [新建一个线程](#新建一个线程)
+  - [三种方式](#三种方式)
+    - [extends Thread](#extends-thread)
+    - [implements Runnbale](#implements-runnbale)
+    - [匿名内部类](#匿名内部类)
 - [线程的状态](#线程的状态)
   - [6种状态](#6种状态)
 - [中断线程](#中断线程)
@@ -12,6 +17,7 @@
 - [Condition](#condition)
 - [使用ReadWriteLock](#使用readwritelock)
 - [使用线程池](#使用线程池)
+## 新建一个线程
 
 ### 三种方式
 

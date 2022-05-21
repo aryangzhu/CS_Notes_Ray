@@ -1,12 +1,5 @@
 在没有泛型之前,必须使用Object来编写适用多种类型的代码。泛型类和泛型方法有**类型参数**,使得它们可以准确描述**特定类型实例化**时会发生什么。
 
-
-
-# 为什么要使用泛型程序设计
-
-**泛型程序设计(generic programming)**意味着编写的代码可以被多种不同的类型的对象重用。例如,收集File类型和String类型对象就可以设计为ArrayList\<T>。
-
-## 1.类型参数的好处
 - [为什么要使用泛型程序设计](#为什么要使用泛型程序设计)
   - [1.类型参数的好处](#1类型参数的好处)
   - [2.泛型程序员](#2泛型程序员)
@@ -70,6 +63,12 @@
         - [Type getOwnerType()](#type-getownertype)
       - [java.lang.reflect.GenericArrayType](#javalangreflectgenericarraytype)
         - [Type getGenericComponent()](#type-getgenericcomponent)
+# 为什么要使用泛型程序设计
+
+**泛型程序设计(generic programming)**意味着编写的代码可以被多种不同的类型的对象重用。例如,收集File类型和String类型对象就可以设计为ArrayList\<T>。
+
+## 1.类型参数的好处
+
 在没有泛型之前,实现ArrayList的时候需要在内部**维护**一个Object类型
 
 引用的数组,这种设计很明显是利用了任何类都继承了**Object**类。
