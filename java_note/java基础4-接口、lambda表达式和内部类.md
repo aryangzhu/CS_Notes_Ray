@@ -12,6 +12,7 @@
   - [对象克隆Cloneable](#对象克隆cloneable)
 - [接口](#接口)
   - [接口的概念](#接口的概念)
+      - [常用API](#常用api)
   - [接口的属性](#接口的属性)
   - [接口与抽象类](#接口与抽象类)
     - [共同点](#共同点)
@@ -54,16 +55,27 @@
   - [静态内部类](#静态内部类)
     - [注意](#注意)
 - [服务加载器](#服务加载器)
-    - [常用API](#常用api)
+    - [常用API](#常用api-1)
       - [java.util.ServiceLoader\<S>](#javautilserviceloaders)
       - [java.util.ServiceLoader.Provider\<S>](#javautilserviceloaderproviders)
-- [代理](#代理)
+- [JDK动态代理](#jdk动态代理)
   - [何时使用代理](#何时使用代理)
+    - [InvocationHandler接口](#invocationhandler接口)
   - [创建代理对象](#创建代理对象)
+    - [两个需要解决的问题:](#两个需要解决的问题)
+      - [如何定义处理器？](#如何定义处理器)
+      - [另外，对于得到的代理对象能够做些什么？](#另外对于得到的代理对象能够做些什么)
+    - [这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:](#这两个问题取决于我们想要通过代理机制解决什么问题可能会有如下目的)
+      - [1.将方法调用路由到远程服务器(说实话不明白什么意思)。](#1将方法调用路由到远程服务器说实话不明白什么意思)
+      - [2.为了调试，跟踪方法调用。](#2为了调试跟踪方法调用)
   - [代理类的特性](#代理类的特性)
-    - [常用API](#常用api-1)
+    - [常用API](#常用api-2)
       - [java.lang.refelt.InvocationHandler](#javalangrefeltinvocationhandler)
       - [java.lang.refelt.Proxy](#javalangrefeltproxy)
+- [CGLIB动态代理机制](#cglib动态代理机制)
+  - [介绍](#介绍)
+  - [使用步骤](#使用步骤)
+  - [JavaGuide示例](#javaguide示例)
   接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
 
 # 接口
@@ -97,74 +109,7 @@ class Employee implents Comparable<Employee>{
         return Double.compareTo(salary,other.salary);
     }
 }
-```- [接口](#接口)
-  - [接口的概念](#接口的概念)
-      - [常用API](#常用api)
-  - [接口的属性](#接口的属性)
-  - [接口与抽象类](#接口与抽象类)
-    - [共同点](#共同点)
-    - [区别](#区别)
-  - [静态和私有方法](#静态和私有方法)
-  - [默认方法](#默认方法)
-  - [默认方法解决冲突](#默认方法解决冲突)
-  - [接口与回调](#接口与回调)
-  - [Comparator接口](#comparator接口)
-  - [对象克隆Cloneable](#对象克隆cloneable)
-- [接口](#接口)
-  - [接口的概念](#接口的概念)
-  - [接口的属性](#接口的属性)
-  - [接口与抽象类](#接口与抽象类)
-    - [共同点](#共同点)
-    - [区别](#区别)
-  - [静态和私有方法](#静态和私有方法)
-  - [默认方法](#默认方法)
-  - [默认方法解决冲突](#默认方法解决冲突)
-  - [接口与回调](#接口与回调)
-  - [Comparator接口](#comparator接口)
-  - [对象克隆Cloneable](#对象克隆cloneable)
-- [lamda表达式](#lamda表达式)
-  - [为什么引入lamba表达式](#为什么引入lamba表达式)
-  - [lamba表达式的语法](#lamba表达式的语法)
-    - [几种常见的用法](#几种常见的用法)
-    - [函数式接口](#函数式接口)
-      - [Java API在java.util.function包中定义的通用的函数式接口](#java-api在javautilfunction包中定义的通用的函数式接口)
-        - [Predicate接口](#predicate接口)
-  - [方法引用](#方法引用)
-    - [使用::运算符的三种情况](#使用运算符的三种情况)
-      - [1.object::instanceMethod](#1objectinstancemethod)
-      - [2.Class::instanceMethod](#2classinstancemethod)
-      - [3.Class:StaticMethod](#3classstaticmethod)
-  - [引用构造](#引用构造)
-  - [变量的作用域](#变量的作用域)
-  - [处理lambda表达式](#处理lambda表达式)
-  - [再谈Comparator](#再谈comparator)
-- [内部类](#内部类)
-  - [使用内部类访问对象状态](#使用内部类访问对象状态)
-  - [内部类的特殊语法规则](#内部类的特殊语法规则)
-    - [1.OuterClass.this](#1outerclassthis)
-    - [2.outerObject.new innerClass(construction parameters)](#2outerobjectnew-innerclassconstruction-parameters)
-    - [3.几个注意的点](#3几个注意的点)
-      - [1.外围类的作用域之外调用内部类](#1外围类的作用域之外调用内部类)
-      - [2.内部类中的静态字段都必须是final,并初始化为一个编译时常量](#2内部类中的静态字段都必须是final并初始化为一个编译时常量)
-      - [3.内部类中不允许有static方法](#3内部类中不允许有static方法)
-  - [内部类是否有用、必要和安全](#内部类是否有用必要和安全)
-  - [内部局部类](#内部局部类)
-  - [由外部方法访问变量](#由外部方法访问变量)
-  - [匿名内部类](#匿名内部类)
-  - [静态内部类](#静态内部类)
-    - [注意](#注意)
-- [服务加载器](#服务加载器)
-    - [常用API](#常用api)
-      - [java.util.ServiceLoader\<S>](#javautilserviceloaders)
-      - [java.util.ServiceLoader.Provider\<S>](#javautilserviceloaderproviders)
-- [代理](#代理)
-  - [何时使用代理](#何时使用代理)
-  - [创建代理对象](#创建代理对象)
-  - [代理类的特性](#代理类的特性)
-    - [常用API](#常用api-1)
-      - [java.lang.refelt.InvocationHandler](#javalangrefeltinvocationhandler)
-      - [java.lang.refelt.Proxy](#javalangrefeltproxy)
-
+```
 实现接口时使用public，否则编译器会视为包权限。
 
 注:正常情况下x.equals()y时x.compareTo(y)就应当为0，有一个类例外，BigDecimal,在比较1.0和1.00时comparable就会出现负值。
@@ -245,7 +190,7 @@ public interface Powered extends Mobeable{
 
 2.一个类只能继承一个类,但是可以实现多个接口
 
-3.而抽象类的成员变量默认default,可在子类中被重新定义,也可以被重新赋值。
+3.抽象类的成员变量默认default,可在子类中被重新定义,也可以被重新赋值。
 
 ## 静态和私有方法
 
@@ -1255,7 +1200,7 @@ S get()
 
 获得这个提供者的实例。
 
-# 代理
+# JDK动态代理
 
 利用代理(proxy)在运行时**创建了一组给定接口的新类**。只有在编译时无法确定需要实现哪个接口才需要使用代理。
 
@@ -1268,107 +1213,51 @@ S get()
 而代理机制是更好的解决方案，代理类可以在**运行**的时候由**JVM**创建全新的类。这样的代理类能够实现你指定的接口。具体的，代理类包含以下方法:
 
 1.指定接口所需要的全部方法
-
 2.Object类中的全部方法，例如，toString、equlas等。
 
 说实话，上面的这些话我看了半天还是不太理解，从网上的关于代理模式的博文中我有了更加直观的了解。
 
 https://xie.infoq.cn/article/9a9387805a496e1485dc8430f
 
-**代理类和委托类有相同的方法**，代理类为委托类做了消息的预处理、过滤或者调用委托类的方法以及事后的处理。
+**代理类和委托类有相同的方法**，代理类为委托类做了**消息的预处理、过滤或者调用委托类的方法以及事后的处理**。
 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/%E9%80%89%E5%8C%BA_025.png)
 
 有几点我们需要注意:
 
-1.用户只在乎接口功能，而不关心是谁实现的。
+1.**用户只在乎接口功能，而不关心是谁实现的**。
 
-2.接口的真正实现者是RealSubject，但是它不与用户直接接触，而是通过代理。
+2.接口的真正实现者是**RealSubject，但是它不与用户直接接触**，而是通过代理。
 
 3.代理就是上图中的Proxy，由于它实现了Subject,所以它可以和用户直接接触。
 
 4.用户调用Proxy时，Proxy内部调用了RealSubject的方法,是对RealSubject的方法的增强。
-
+### InvocationHandler接口
 不能在运行时为这些方法提供新代码，必须提供一个**调用处理器**(invocation handler)。调用处理器是实现了**InvocationHandler**接口的类的对象。这个接口只有一个方法:
 
 ```java
 Object invoke(Object proxy,Method method,Object[] args)
 ```
+分别有三个参数代理类，调用方法，方法参数。
 
 无论何时调用代理对象的方法(proxy)，调用处理器的invoke方法都会被调用，并向其传递Method对象和原调用的参数。之后调用处理器必须确定如何处理这个调用。
-- [接口](#接口)
-  - [接口的概念](#接口的概念)
-  - [接口的属性](#接口的属性)
-  - [接口与抽象类](#接口与抽象类)
-    - [共同点](#共同点)
-    - [区别](#区别)
-  - [静态和私有方法](#静态和私有方法)
-  - [默认方法](#默认方法)
-  - [默认方法解决冲突](#默认方法解决冲突)
-  - [接口与回调](#接口与回调)
-  - [Comparator接口](#comparator接口)
-  - [对象克隆Cloneable](#对象克隆cloneable)
-- [lamda表达式](#lamda表达式)
-  - [为什么引入lamba表达式](#为什么引入lamba表达式)
-  - [lamba表达式的语法](#lamba表达式的语法)
-    - [几种常见的用法](#几种常见的用法)
-    - [函数式接口](#函数式接口)
-      - [Java API在java.util.function包中定义的通用的函数式接口](#java-api在javautilfunction包中定义的通用的函数式接口)
-        - [Predicate接口](#predicate接口)
-  - [方法引用](#方法引用)
-    - [使用::运算符的三种情况](#使用运算符的三种情况)
-      - [1.object::instanceMethod](#1objectinstancemethod)
-      - [2.Class::instanceMethod](#2classinstancemethod)
-      - [3.Class:StaticMethod](#3classstaticmethod)
-  - [引用构造](#引用构造)
-  - [变量的作用域](#变量的作用域)
-  - [处理lambda表达式](#处理lambda表达式)
-  - [再谈Comparator](#再谈comparator)
-- [内部类](#内部类)
-  - [使用内部类访问对象状态](#使用内部类访问对象状态)
-  - [内部类的特殊语法规则](#内部类的特殊语法规则)
-    - [1.OuterClass.this](#1outerclassthis)
-    - [2.outerObject.new innerClass(construction parameters)](#2outerobjectnew-innerclassconstruction-parameters)
-    - [3.几个注意的点](#3几个注意的点)
-      - [1.外围类的作用域之外调用内部类](#1外围类的作用域之外调用内部类)
-      - [2.内部类中的静态字段都必须是final,并初始化为一个编译时常量](#2内部类中的静态字段都必须是final并初始化为一个编译时常量)
-      - [3.内部类中不允许有static方法](#3内部类中不允许有static方法)
-  - [内部类是否有用、必要和安全](#内部类是否有用必要和安全)
-  - [内部局部类](#内部局部类)
-  - [由外部方法访问变量](#由外部方法访问变量)
-  - [匿名内部类](#匿名内部类)
-  - [静态内部类](#静态内部类)
-    - [注意](#注意)
-- [服务加载器](#服务加载器)
-    - [常用API](#常用api)
-      - [java.util.ServiceLoader\<S>](#javautilserviceloaders)
-      - [java.util.ServiceLoader.Provider\<S>](#javautilserviceloaderproviders)
-- [代理](#代理)
-  - [何时使用代理](#何时使用代理)
-  - [创建代理对象](#创建代理对象)
-  - [代理类的特性](#代理类的特性)
-    - [常用API](#常用api-1)
-      - [java.lang.refelt.InvocationHandler](#javalangrefeltinvocationhandler)
-      - [java.lang.refelt.Proxy](#javalangrefeltproxy)
 ## 创建代理对象
-
 创建代理对象需要使用**Proxy**类的**newProxyInstance**(之前见过的类似的工厂方法)。**这个方法有三个参数**:
 
 1.**一个类加载器**(class loader)。作为Java安全模型的一部分，可以对平台和应用类、从因特网上下载的类等使用的加载器。
 
-2.一个Class对象数组，**每个元素对应需要实现的各个接口**。
+2.一个**Class对象数组，每个元素对应需要实现的各个接口**。
 
-3.一个调用处理器(invocation handler)。
+3.一个**调用处理器(invocation handler)**。
 
-还有两个需要解决的问题。如何定义处理器？
+### 两个需要解决的问题:
 
-另外，对于得到的代理对象能够做些什么？
+#### 如何定义处理器？
+#### 另外，对于得到的代理对象能够做些什么？
 
-这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:
-
-1.将方法调用路由到远程服务器(说实话不明白什么意思)。
-
-2.为了调试，跟踪方法调用。
+### 这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:
+#### 1.将方法调用路由到远程服务器(说实话不明白什么意思)。
+#### 2.为了调试，跟踪方法调用。
 
 下面的例子中，我们使用代理和调用处理器跟踪方法调用。**我们定义了一个TraceHandler包装器类存储包装的对象**(将委托类包装在里面，查看委托类方法的调用情况)。其中的invoke方法会打印所调用方法的名称和参数，随后使用包装的对象作为隐式参数调用这个方法。
 
@@ -1405,20 +1294,17 @@ Object proxy=Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
 
 这是Proxy类中newProxyInstance方法的注释
 
-```
-返回将方法调用分派到指定调用处理程序的指定接口的代理类的实例。
-Proxy.newProxyInstance抛出IllegalArgumentException的原因与Proxy.getProxyClass相同。
-
-参数：
+```java
+//返回将方法调用分派到指定调用处理程序的指定接口的代理类的实例。
+//Proxy.newProxyInstance抛出IllegalArgumentException的原因与Proxy.getProxyClass相同。
+/**参数：
 loader – 定义代理类的类加载器
 interfaces – 代理类要实现的接口列表
 h - 将方法调用分派到的调用处理程序
 回报：
 具有代理类的指定调用处理程序的代理实例，该代理类由指定的类加载器定义并实现指定的接口
+**/
 ```
-
-
-
 这是方法中的部分源码，可以看出，代理类是由类加载器定义并实现
 
 ```java
@@ -1484,4 +1370,70 @@ static Object newProxyInstance(ClassLoader loader,Class\<?> interfaces,Invocatio
 static boolean isProxyClass(Class<?> cl)
 
 如果cl是一个代理类则返回true。
+# CGLIB动态代理机制
+## 介绍
+JDK动态代理有一个最的问题就是**只能代理实现了接口的方法**
+cglib动态代理中重要的是
+MethodInterceptor接口和Enhacer类
+其中MethodInterceptor接口中的intercep方法又是重中之重。
+```Java
+public interface MethodInterceptor
+extends Callback{
+    // 拦截被代理类中的方法
+    public Object intercept(Object obj, java.lang.reflect.Method method, Object[] args, MethodProxy proxy) throws Throwable;
+}
+```
+参数:
+obj:要被代理的对象
+method:被代理方法
+args:方法参数
+proxy:代理类
+## 使用步骤
+1. 导入依赖  
+2. 定义一个类
+3. 自定义MethodInterceptor并重写intercept方法,intercept方法用于拦截被代理方法，与JDK动态代中的invoke方法类似
+4. **通过Enhancer类的create()创建代理类**
+## JavaGuide示例
+1.定义发送短信的类
+```java
+public class MessageService{
+  public Strng send(String message){
+    //dosomething
+    return message;
+  }
+}
+```
+2.定义MethodInterceptore
+```java
+public class DebugMethodInterceptor implements MethodInterceptor{
+  public Object interceptor(Object o,Method m,Object[]  args,MethodProxy proxy){
+    //前增强
+    Object object=proxy.invokeSuper(o,args);
+    //后增强
+    return object;
+  }
+}
+```
+3.获取代理类
+```java
+public class CglibProxyFactory{
+  public static Object getProxy(Class<?> clazz){
+    
+      Enhancer enhancer=new Enhancer();
 
+      enhancer.setClassLoader(clazz.getClassLoader());
+
+      enhancer.setSuperClass(clazz);
+
+      enhancer.setInteceptor(new DebugInterceptor());
+
+      return enhancer.create();
+      
+  }
+}
+```
+4.使用
+```java
+MessageService service=(MessageService)new CglibProxyFactory().getProxy(MessageService.class);
+service.send("hello");
+```
