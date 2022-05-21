@@ -59,7 +59,7 @@ k: v
 
 ''单引号会转义特殊字符
 
-### 对象、Map(键值对)
+### 对象、Map(键值对)shi
 
 ```yml
 #对象、Map格式
@@ -180,4 +180,89 @@ protected void configure(AuthenticationManagerBuilder auth)throws Exception{
 <head>
 ```
 ## 整合Shiro
+1.导入依赖
+2.配置文件
+3.HelloWorld
+### Shiro中经常使用的三个类
+#### Subject
+我们正在进行的认证和授权的对象,通过subject.getPrinpal()获取。
+#### SubjectManager
+#### Relm
+真正连接数据库并进行认证和授权的类。
 
+### 常用API
+Subject currentUser=SecurityUtils.getSubject();
+Session session=currentUser.getSession();
+currentUser.isAuthenticated();
+currentUser.getPrincipal();
+currentUser.hasRole("schwartz");
+currentUser.isPermitted("lightsaber:wield");
+currentUser.logout();
+### 项目使用
+#### 1.配置Shiro相关的类即ShrioConfig
+在这个类下我们主要是配置访问拦截以及工厂方法
+```Java
+@Bean(name="manage")
+public DefalutWebSecurityManager(UserRealm userRealm){
+	DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
+        manager.setRealm(userRealm);
+        return manager;
+}
+@Bean
+public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qulifier("manager") DefaultWebSecurityManager defaultWebSecurityManager){
+	 ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
+	 bean.setSecurityManager(defaultWebSecurityManager);
+
+	/**
+	访问拦截一共有5种级别
+	anno 任何人都可访问
+	authc 必须得认证，这里提一下，登录时是先认证然后再授权访问页面的
+	user 必须记住我
+	perms 必须有某个资源的权限
+	roles 必须是某个角色
+	**/
+
+	Map<String,String > map=new HashMap<>();
+	Map<String,String > filterMap=new HashMap<>();
+	map.put("/user/add","perms[user:add]");
+	map.put("/user/*","authc");
+	map.put("/admin/*","roles[amin]");
+	bean.setFilterChainDefinitionMap(filterMap);
+
+	//设置登录请求
+	bean.setLoginUrl("/toLoging");
+
+	//设置未授权请求
+	bean.unauthorizedUrl("/login");
+
+	return bean;
+}
+```
+#### 2.Realm
+下来就是Realm,来进行授权和认证操作
+我们自己的类需要继承AuthorizeRealm这个类
+先来看认证
+令牌是从Controller传过来的，主要是对密码进行加密
+```java
+public  Authentication doGetAuthectication(AuthenticationToken token){
+	//指令令牌进行了加密
+	  UsernamePasswordToken passwordToken = (UsernamePasswordToken) token;
+        User user = userService.getOne(new QueryWrapper<User>()
+                .eq("username", passwordToken.getUsername()));
+        if (user == null){
+            return null;
+        }
+        return new SimpleAuthenticationInfo(user,user.getPassword(),"");
+}
+```
+接着再来看授权
+```java
+public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal){
+	        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+
+			Subject subject=SecurityUitls.getSubject();
+			User user=subject.getPrincipal();
+			authorizationInfo.addStringPermission(user.getPerms());
+			return authorizeInfo;
+}
+```
