@@ -1,4 +1,17 @@
-## 新建一个线程
+- [线程的状态](#线程的状态)
+  - [6种状态](#6种状态)
+- [中断线程](#中断线程)
+- [守护线程](#守护线程)
+- [线程同步](#线程同步)
+  - [sychronized加锁的三种方式](#sychronized加锁的三种方式)
+    - [对象加锁](#对象加锁)
+    - [静态方法加锁](#静态方法加锁)
+    - [实例方法加锁](#实例方法加锁)
+- [使用wait和notify](#使用wait和notify)
+- [sychronzied和ReentrantLock](#sychronzied和reentrantlock)
+- [Condition](#condition)
+- [使用ReadWriteLock](#使用readwritelock)
+- [使用线程池](#使用线程池)
 
 ### 三种方式
 
