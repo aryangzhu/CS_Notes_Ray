@@ -313,13 +313,13 @@ void write(byte[] b)
 
 C语言中只有单一类型File*包打天下,Java拥有一个家族。
 
-按照处理字节和字符分为两个单独的层次结构。一方面,InputStream和OutputStream类可以读写单个字节或者数组,这些类构成了字节的层次结构的基础。要想读写字符串和数字,就需要功能更加强大的子类。例如,DataInputStream和DataOutputStream可以以**二进制格式**读写所有的**基本Java类型**。最后,还包含了多个有用的输入/输出流,例如,ZipInputStream和ZipOutputStream可以以我们常见的**ZIP压缩格式**读写文件。
+1. 按照处理字节和字符分为两个单独的层次结构。一方面,InputStream和OutputStream类可以读写单个字节或者数组,这些类构成了字节的层次结构的基础。要想读写字符串和数字,就需要功能更加强大的子类。例如,DataInputStream和DataOutputStream可以以**二进制格式**读写所有的**基本Java类型**。最后,还包含了多个有用的输入/输出流,例如,ZipInputStream和ZipOutputStream可以以我们常见的**ZIP压缩格式**读写文件。
 
-![](https://gitee.com/aryangzhu/picture/raw/master/java/InputStream&OutputStream.jpg)
+![](https://github.com/aryangzhu/blogImage/raw/master/java/InputStream%26OutputStream.jpg)
 
-另一方面,对于Unicode文本(说明Unicode文本是前提),可以使用抽象类Reader和Writer的子类。Reader和Writer类的基本方法与InputStream和OutputStream中的方法类似。
+2. 另一方面,对于Unicode文本(说明Unicode文本是前提),可以使用抽象类Reader和Writer的子类。Reader和Writer类的基本方法与InputStream和OutputStream中的方法类似。
 
-![](https://gitee.com/aryangzhu/picture/raw/master/java/Reader&Writer.jpg)
+![](https://github.com/aryangzhu/blogImage/raw/master/java/Reader%26Writer.jpg)
 
 ```java
 abstract int read()

@@ -10,6 +10,7 @@
     - [@Retention](#retention)
     - [@Repeatable](#repeatable)
     - [@Inherited](#inherited)
+    - [@Documented 注解类会被JavaDoc 工具提取成文档](#documented-注解类会被javadoc-工具提取成文档)
 - [处理/读取注解](#处理读取注解)
   - [读取方法参数的注解](#读取方法参数的注解)
   - [使用注解](#使用注解-1)
@@ -127,7 +128,7 @@ public @interface Report{
 }
 }
 ```
-
+#### @Documented 注解类会被JavaDoc 工具提取成文档
 定义步骤
 
 1.基本格式 带默认值

@@ -45,6 +45,8 @@
 		- [项目使用](#项目使用)
 			- [1.配置Shiro相关的类即ShrioConfig](#1配置shiro相关的类即shrioconfig)
 			- [2.Realm](#2realm)
+- [SpringBoot集成Swagger](#springboot集成swagger)
+	- [详细配置](#详细配置)
 # 创建一个springboot项目(非官方文档)
 
 选择SpringBoot Intlizer然后选择Java Web组件
@@ -290,54 +292,7 @@ public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qulifier("manager") Def
 我们自己的类需要继承AuthorizeRealm这个类
 先来看认证
 令牌是从Controller传过来的，主要是对密码进行加密
-```java- [创建一个springboot项目(非官方文档)](#创建一个springboot项目非官方文档)
-- [创建一个springboot项目(非官方文档)](#创建一个springboot项目非官方文档)
-- [yml文件](#yml文件)
-	- [配置文件](#配置文件)
-	- [yml描述](#yml描述)
-		- [xml](#xml)
-		- [yaml](#yaml)
-	- [yml基础语法](#yml基础语法)
-		- [注意事项](#注意事项)
-		- [字面量[数字,布尔值,字符串]](#字面量数字布尔值字符串)
-			- [注意](#注意)
-		- [对象、Map(键值对)shi](#对象map键值对shi)
-		- [数组](#数组)
-		- [注入配置](#注入配置)
-- [多环境切换](#多环境切换)
-- [数据校验](#数据校验)
-- [Web开发](#web开发)
-	- [静态资源导入](#静态资源导入)
-	- [首页和图标定制](#首页和图标定制)
-- [如何写一个网站](#如何写一个网站)
-	- [尽量用前端模板](#尽量用前端模板)
-		- [栅格](#栅格)
-		- [导航栏](#导航栏)
-		- [侧边栏](#侧边栏)
-		- [表单](#表单)
-		- [尾部](#尾部)
-	- [设计数据库(难点!)](#设计数据库难点)
-	- [前端让它能够自动运行,独立化工程](#前端让它能够自动运行独立化工程)
-	- [数据接口对接](#数据接口对接)
-		- [json](#json)
-		- [前后端联调](#前后端联调)
-- [整合持久层](#整合持久层)
-	- [整合JDBC](#整合jdbc)
-	- [整合Druid](#整合druid)
-	- [整合Mybatis(重点)](#整合mybatis重点)
-- [权限&认证](#权限认证)
-	- [整合SpringSecurity](#整合springsecurity)
-		- [1.授权](#1授权)
-		- [2.认证](#2认证)
-	- [整合Shiro](#整合shiro)
-		- [Shiro中经常使用的三个类](#shiro中经常使用的三个类)
-			- [Subject](#subject)
-			- [SubjectManager](#subjectmanager)
-			- [Relm](#relm)
-		- [常用API](#常用api)
-		- [项目使用](#项目使用)
-			- [1.配置Shiro相关的类即ShrioConfig](#1配置shiro相关的类即shrioconfig)
-			- [2.Realm](#2realm)
+```java
 public  Authentication doGetAuthectication(AuthenticationToken token){
 	//指令令牌进行了加密
 	  UsernamePasswordToken passwordToken = (UsernamePasswordToken) token;
@@ -361,3 +316,32 @@ public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal){
 }
 ```
 令牌需要在Controller中获取登录信息时指定。
+# SpringBoot集成Swagger
+1.导入swagger和swagger-ui的依赖
+2.编写一个配置类，并声明@Coifiguration和@EnableSwagger2(其中有一个@Import,导入的是Swagger2DocumentationConfiguration)
+## 详细配置
+需要在配置类中自己编写接口相关信息
+首先需要创建一个Docket，如果需要多个组的话那么就创建过个Docket。
+```java
+public Docket createRestApi(){
+	return new Docket(DocumentationType.SWAGGER_2)
+	.enable(swaggerShow); //在Swagger类中可以定义，也可以在配置文件中定义用@Value()注解读取数据。
+	.apiInfo(apiInfo)
+	.select()
+	.apis(RequestHandlerSelectors.basePackage("")) //扫描什么位置的接口,从java包路径开始
+	.paths(PathSelectors.any())//过滤路径
+	.build();
+}
+```
+编写apiInfo方法
+```java
+private ApiInfo apiInfo(){
+	return new ApiInfoBuilder()
+	.title("xxx")
+	.description("xxx")
+	.termsOfServiceUrl("")
+	.contact("Luis chen")
+	.version("1.0")
+	.build();
+}
+```
