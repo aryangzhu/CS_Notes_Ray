@@ -49,23 +49,36 @@
       - [FactoryBean](#factorybean)
     - [偷梁换柱之法(修改默认配置)](#偷梁换柱之法修改默认配置)
       - [方法注入](#方法注入)
-      - [BeanFactoryAware接口](#beanfactoryaware接口)
+      - [BeanFactoryAware接口、](#beanfactoryaware接口)
       - [方法替换](#方法替换)
   - [容器背后的秘密](#容器背后的秘密)
     - [IoC容器的两个阶段](#ioc容器的两个阶段)
       - [启动阶段](#启动阶段)
         - [加载配置](#加载配置)
         - [装备到BeanDefinition](#装备到beandefinition)
+        - [其他后处理](#其他后处理)
       - [实例化阶段](#实例化阶段)
         - [实例化对象](#实例化对象)
         - [装配依赖](#装配依赖)
-    - [插手容器启动的BeanFactoryPostProcessor机制](#插手容器启动的beanfactorypostprocessor机制)
-      - [PropertyPlaceholderConfigurer](#propertyplaceholderconfigurer)
-      - [PropertyOverrideConigurer](#propertyoverrideconigurer)
-      - [CustomeEditorConfigurer](#customeeditorconfigurer)
     - [bean的一生](#bean的一生)
-      - [Bean的实例化与BeanWrapper](#bean的实例化与beanwrapper)
+      - [Bean的初始化与BeanWrapper](#bean的初始化与beanwrapper)
       - [各色的Aware接口](#各色的aware接口)
+      - [BeanPostFactoryProcessor与BeanFactory](#beanpostfactoryprocessor与beanfactory)
+      - [Initical阶段](#initical阶段)
+      - [后置处理](#后置处理)
+- [ApplicationContext](#applicationcontext)
+  - [统一资源加载策略](#统一资源加载策略)
+    - [Spring中的Resource](#spring中的resource)
+    - [ResourceLoader](#resourceloader)
+      - [默认实现DefalutResourceLoader](#默认实现defalutresourceloader)
+      - [FileSytemResourceLoader和FileSystemXmlResourceLoader](#filesytemresourceloader和filesystemxmlresourceloader)
+      - [ResourcePatternReslover](#resourcepatternreslover)
+        - [实现类org.springframework.core.io.support.PathMatchingResourcePatternResolover](#实现类orgspringframeworkcoreiosupportpathmatchingresourcepatternresolover)
+    - [ApplicationContext与ResourceLoader](#applicationcontext与resourceloader)
+      - [Application扮演ResourceLoader的角色](#application扮演resourceloader的角色)
+      - [ResourceLoader类型的注入](#resourceloader类型的注入)
+      - [Resource注入](#resource注入)
+      - [ClassPathXmlApplication和FileSystemXmlApplication](#classpathxmlapplication和filesystemxmlapplication)
 ## 时代发展
 ## IOC初入门
 ### 什么是IOC
@@ -256,6 +269,7 @@ public class NextDateFactoryBean {
 
 可以和之前的静态方法和非静态方法做个对比
 #### 偷梁换柱之法(修改默认配置)
+有的时候声明了protype，但是当从另一个类中getBean()得到的仍然是singleton。
 主要是针对prototype(原型)和singleton(单例)的场景做了分析，如果我们需要的是原型应该怎么配置xml。
 让我想起了SpringBoot中@Configuration(ProxyBeanMethod="xxx")有着异曲同工之妙。
 ##### 方法注入
@@ -269,44 +283,85 @@ Spring还有其他的机制来帮我们解决这个问题
      />
 </bean>
 ```
-##### BeanFactoryAware接口
+##### BeanFactoryAware接口、
+只要使用了这个接口，那么在会在当前实例中注入BeanFactory，所以我们就能直接使用BeanFactory.getBean(xxx.class);
+这个时候Bean就是原型的。
 ##### 方法替换
 ### 容器背后的秘密
 #### IoC容器的两个阶段
+下面这个图很重要  
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E5%AE%B9%E5%99%A8%E5%8A%9F%E8%83%BD%E5%90%84%E4%B8%AA%E5%AE%9E%E7%8E%B0%E7%9A%84%E9%98%B6%E6%AE%B5.png)
 ##### 启动阶段
 ###### 加载配置
 加载Configuration Meta
 分析配置信息
 通常是利用BeanDefinitionReader分析
 ###### 装备到BeanDefinition
-其他后处理
-将BeanDefinition注册到BeanDefinitionRegistry
+###### 其他后处理
+将BeanDefinition注册到BeanDefinitionRegistry  
+**插手**容器的启动  
+通过BeanFactoryProcessor接口及其实现类来完成。
+试想这样一个场景:
+当BeanDefiniation被创建之后如果要对其中的属性进行修改该如何操作(假设有配置生成的Bean)
+BeanFctoryProcessor的一个实现类BeanFatoryPropertyPlaceholderConfigure就是将**占位符**${jdbc.url}这类属性(注意:生成的BeanDefiniton中的jdbcUrl属性还是占位符形式)与配置文件properties中的值进行填入。
+BeanFactory的另一个实现类BeanFactoryPropertyPropertyOverrideConfigure可以将配置文件中的属性进行替换，这里BeanFactoryPropertyProperyOverrideConfigure有对应的配置文件，可以将Bean里面的属性值替换掉。
+**CustomEditorConfigure与自定义PropertyEditor**
+从xml中读取出来的都是字符串形式，如何将其转化为一个对象是也是很重要的一项职责。
+Spring中提供了很多的propertyEditor来帮助我们完成这一转化。
+但是在ApplicationContext的时候，由于Application本身就具有ClassLoader的功能，所以对于Resource类型来说，不用我们自己编写代码。而在BeanFactory中则需要字节编写代码来完成自定义PropertyEditor的职责。
 ##### 实例化阶段
-调用getBean()方法或者隐式调用getBean()方法时就会启动
+对于BeanFactory来说调用getBean()方法或者隐式调用getBean()方法时就会启动。ApplicationContext则是启动完成就会实例化。
 ###### 实例化对象
-检查是否被初始化，如果没有就根据BeanDefinition提供的信息来创建对象实例
+检查是否被初始化，如果没有就根据BeanDefinition提供的信息来创建对象实例。
 ###### 装配依赖
 注入依赖
 生命周期回顾
 对象其他处理
 注册回调接口
-#### 插手容器启动的BeanFactoryPostProcessor机制
-注意:上面说的再多也只是一种机制。
-场景:在实例化之前想要对BeanDefinition做一些修改。
-##### PropertyPlaceholderConfigurer
-使用占位符(placeholder)来编写xml,并将这些占位符代表的配置放在简单的properties文件中。
-当第一阶段加载完配置信息时，BeanFactory中对象的属性信息还是占位符，但是当PropertyPlaceholderConfigurer作为BeanFactoryPostProcessor时就会加载properties文件中的数据进行相应替换。
-##### PropertyOverrideConigurer
-与上面不同的是用来修改xml的默认配置。例如，dataSource.maxActive=200
-##### CustomeEditorConfigurer
-从xml中读取的数据是String类型的，所以要进行转换，需要为每种对象提供一种PropertyEditor，Spring自带了许多完成这种功能的类
-ClassEditor:根据String类型的Class名称，直接将其转换成相应的Class对象，相当于完成Class.forName(String)。
-后面通过CustomEditorConfigurer注册自定义的PropetyEditor。
 #### bean的一生
-BeanFactory和ApplicationContext的区别
-##### Bean的实例化与BeanWrapper
+##### Bean的初始化与BeanWrapper
 容器内部实例化使用了"策略"模式来决定何种方式初始化bean实例，可选的策略有反射或者CGlib动态字节码来生成初始化相应的bean实例或者动态生成其子类。默认情况下，容器内部采用的是CGlibSubClassingInstantiationStrategy。
-容器根据BeanDefinition取得实例化信息，再加上上面的CGlibSubClassingInstantantiationStrategy就可以创建实例。但是，由于返回方式上有些"点缀"，所以不直接返回Bean而是BeanWrapper。
+容器根据BeanDefinition取得实例化信息，再加上上面的CGlibSubClassingInstantantiationStrategy(从名字就可以看出生成字节码且是某个类的子类)就可以创建实例。但是，由于返回方式上有些"点缀"，所以不直接返回Bean而是BeanWrapper。
 下来的这段话很重要，也表明了为什么需要BeanWrapper的存在。
-
+BeanWrapper实现了实现了PropertyAccessor和TypeConVert接口，所以之前阶段定义的PorpetyEditorRegistry就是这个时候用的，也就是说启动阶段只负责加载了这些玩意儿，而在真正的实例化阶段属性和依赖设置的时候这些才会真正的起作用。
 ##### 各色的Aware接口
+Aware接口的作用通常是将某个依赖注入到实例中。
+BeanNameAware将BeanName添加到当前实例中。
+ResourceContextAware将Application添加到当前实例中。
+##### BeanPostFactoryProcessor与BeanFactory
+这个阶段常见的就是处理标记接口实现类Aware。
+##### Initical阶段
+检查是否初始化
+是否有初始化方法
+##### 后置处理
+也是Processro机制的一种。
+## ApplicationContext
+### 统一资源加载策略
+URL统一资源定位
+#### Spring中的Resource
+ByteResource
+ClassPathResource
+FileSystemResource
+...
+#### ResourceLoader
+##### 默认实现DefalutResourceLoader
+1.先检查是否以classpath:开头，如果是则使用ClassResource来封装，如果不是跳到2
+2.1先判断是否是url形式，如果是的话则使用URLResource封装，如果不是则抛出Exception.
+2.2前面无法获取资源直接getResourceByPath(String)
+##### FileSytemResourceLoader和FileSystemXmlResourceLoader
+重写了GetResourceByPath()方法
+##### ResourcePatternReslover
+批量获得Resource
+Resource[] getResource(String)
+###### 实现类org.springframework.core.io.support.PathMatchingResourcePatternResolover
+classpath:*/
+#### ApplicationContext与ResourceLoader
+首先我们来看先面的图  
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/ApplicationContext%E4%B8%8EResourceLoader.png)  
+##### Application扮演ResourceLoader的角色
+##### ResourceLoader类型的注入
+这就跟我们之前提到的Aware接口的时候一样
+##### Resource注入
+Spring提供了针对Resource类型的PropertyEditor的实现到容器中。
+##### ClassPathXmlApplication和FileSystemXmlApplication
+两者的区别就是ClassPathXmlApplication及时pattern没有标明为classpath:,它也会到classpath下去找。
