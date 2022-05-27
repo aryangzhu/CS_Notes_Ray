@@ -315,11 +315,11 @@ C语言中只有单一类型File*包打天下,Java拥有一个家族。
 
 1. 按照处理字节和字符分为两个单独的层次结构。一方面,InputStream和OutputStream类可以读写单个字节或者数组,这些类构成了字节的层次结构的基础。要想读写字符串和数字,就需要功能更加强大的子类。例如,DataInputStream和DataOutputStream可以以**二进制格式**读写所有的**基本Java类型**。最后,还包含了多个有用的输入/输出流,例如,ZipInputStream和ZipOutputStream可以以我们常见的**ZIP压缩格式**读写文件。
 
-![](https://github.com/aryangzhu/blogImage/raw/master/java/InputStream%26OutputStream.jpg)
+![InputStream&OutputStream](https://github.com/aryangzhu/blogImage/raw/master/java/InputStream%26OutputStream.jpg)
 
 2. 另一方面,对于Unicode文本(说明Unicode文本是前提),可以使用抽象类Reader和Writer的子类。Reader和Writer类的基本方法与InputStream和OutputStream中的方法类似。
 
-![](https://github.com/aryangzhu/blogImage/raw/master/java/Reader%26Writer.jpg)
+![Reader&Writer](https://github.com/aryangzhu/blogImage/raw/master/java/Reader%26Writer.jpg)
 
 ```java
 abstract int read()
@@ -339,7 +339,6 @@ void close() throws IOException
 ````java
 void flush()
 ````
-
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/Closeable%E6%8E%A5%E5%8F%A3.jpg)
 
 InputStream、OutputStream、Reader和Writer都实现了Closeable接口。
@@ -347,7 +346,6 @@ InputStream、OutputStream、Reader和Writer都实现了Closeable接口。
 注:java.io.Closeable接口实现了java.lang.AutoCloseable接口。因此,对于任何Closeable接口进行操作时,都可以使用try-with-resource语句(我们之前在捕获异常中有有学习过)。
 
 OutputStream和Writer还实现了Flushable接口。
-
 Readable接口只有一个方法
 
 ```java

@@ -47,6 +47,9 @@
 			- [2.Realm](#2realm)
 - [SpringBoot集成Swagger](#springboot集成swagger)
 	- [详细配置](#详细配置)
+- [异步任务](#异步任务)
+- [发送邮件](#发送邮件)
+- [定时任务](#定时任务)
 # 创建一个springboot项目(非官方文档)
 
 选择SpringBoot Intlizer然后选择Java Web组件
@@ -153,6 +156,7 @@ pets:[cat,dog,pig]
 ```yaml
 spring:
 	profies:
+		active:
 ```
 # 数据校验
 使用注解@Valid来完成数据校验
@@ -178,9 +182,9 @@ spring:
 ## 整合JDBC
 ## 整合Druid
 ## 整合Mybatis(重点)
-1.在springboot.yaml文件编写数据库相关配置
-2.在dao/mapper包下使用注解来声明组件
-3.现在需要在resource下编写xml文件.
+1.在springboot.yaml文件编写数据库相关配置  
+2.在dao/mapper包下使用注解来声明组件  
+3.现在需要在resource下编写xml文件.  
 # 权限&认证
 ## 整合SpringSecurity
 建议直接阅读官方文档
@@ -240,13 +244,13 @@ protected void configure(AuthenticationManagerBuilder auth)throws Exception{
 真正连接数据库并进行认证和授权的类。
 
 ### 常用API
-Subject currentUser=SecurityUtils.getSubject();
-Session session=currentUser.getSession();
-currentUser.isAuthenticated();
-currentUser.getPrincipal();
-currentUser.hasRole("schwartz");
-currentUser.isPermitted("lightsaber:wield");
-currentUser.logout();
+Subject currentUser=SecurityUtils.getSubject();  
+Session session=currentUser.getSession();  
+currentUser.isAuthenticated();  
+currentUser.getPrincipal();  
+currentUser.hasRole("schwartz");  
+currentUser.isPermitted("lightsaber:wield");  
+currentUser.logout();  
 ### 项目使用
 #### 1.配置Shiro相关的类即ShrioConfig
 在这个类下我们主要是配置访问拦截以及工厂方法
@@ -345,3 +349,38 @@ private ApiInfo apiInfo(){
 	.build();
 }
 ```
+# 异步任务
+在Service层使用@Service注解
+# 发送邮件
+1.需要在自己的邮箱进行配置，qq邮箱开启POP3/SMTP服务
+2.application.yml中进行配置
+```yml
+spring:
+	emial:
+		username:xxx
+		password:xxx
+		host:stamp.qq.com
+		properties:{xxx:xxx}
+```
+3.编写Service
+下面以发送带附件的为例(这就是复杂邮件，最重要的是JavaMailSender这个类)
+```java
+@Override
+    public void sendAttachmentsMail(String to, String subject, String content, String filePath, String... cc) throws MessagingException {
+        Message message=mailSender.createMimeMessage();
+
+		MimeMessageHelper helper=new MimeMessageHelper(message,true);
+		helper.setFrom(from);
+		helper.setTo(to);
+		helper.setSubject(subject);
+		helper.setText(content,true);
+		if(ArrayUtil.isEmpty(Cc)){
+			helper.setCc(Cc);
+		}
+		FileSystemResource file=new FileSystemResource(new File(filePath));
+		String fileName=filePath.substring(filePath.lastIndexOf(File.separator.));
+		helper.addAttachment(fileName,file);
+		mailSender.send(message);
+    }
+```
+# 定时任务
