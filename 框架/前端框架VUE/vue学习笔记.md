@@ -1,3 +1,40 @@
+- [介绍vue](#介绍vue)
+  - [前端都有什么部分(前端的核心)](#前端都有什么部分前端的核心)
+  - [前端发展史](#前端发展史)
+- [vue入门](#vue入门)
+  - [快速开始](#快速开始)
+    - [1.独立下载](#1独立下载)
+    - [2.\<script>引入](#2script引入)
+    - [3.着重强调一下npm方法安装](#3着重强调一下npm方法安装)
+- [Vue.js目录结构](#vuejs目录结构)
+  - [导入组件](#导入组件)
+- [Vue.js起步](#vuejs起步)
+  - [基本语法](#基本语法)
+    - [判断循环](#判断循环)
+      - [判断](#判断)
+      - [循环](#循环)
+  - [模板语法](#模板语法)
+    - [v-html输出HTML代码](#v-html输出html代码)
+    - [v-bind设置标签属性](#v-bind设置标签属性)
+    - [指令](#指令)
+  - [计算属性](#计算属性)
+  - [样式绑定](#样式绑定)
+    - [数组语法](#数组语法)
+    - [Vue.js.style(内联样式)](#vuejsstyle内联样式)
+  - [事件处理器](#事件处理器)
+  - [Vue.js表单](#vuejs表单)
+    - [双向绑定](#双向绑定)
+  - [Vue.js组件](#vuejs组件)
+  - [自定义指令](#自定义指令)
+  - [Vue.js路由](#vuejs路由)
+    - [引入router相关的js](#引入router相关的js)
+    - [编写代码](#编写代码)
+    - [简单实例](#简单实例)
+- [Vue.js Ajax(axios)](#vuejs-ajaxaxios)
+  - [GET请求](#get请求)
+  - [使用response.data读取JSON数据](#使用responsedata读取json数据)
+- [Vue.js实例](#vuejs实例)
+- [组合式API](#组合式api)
 # 介绍vue 
 ## 前端都有什么部分(前端的核心)
 视图层 HTML+CSS+JS 
@@ -62,7 +99,25 @@ $ cnpm install --global vue-cli
 $ vue init webpack my-project
 ```
 这里需要进行一些配置，默认回车即可
+# Vue.js目录结构
+## 导入组件
+```js
+import Hello from './components/Hello'
 
+export default{
+    name:'app',
+    components:{
+        Hello
+    }
+}
+```
+# Vue.js起步
+每个Vue应用都需要通过实例化Vue来实现
+```js
+var vm=new Vue({
+    //选项
+})
+```
 ## 基本语法
 如果想要学习这种类JSTL语法，我们只需要以下这四个语法
 前提，我们先学习一些简单的语法
@@ -94,6 +149,7 @@ $ vue init webpack my-project
 就是说data.site===vm.site为true。  
 **methods**用于定义函数。
 {{}}用于输出对象属性和函数返回值，可以和v-on搭配绑定事件 。
+v-on命令用来监听DOM事件
 ```html
 <div v-on="details"></div>
 ```
@@ -211,6 +267,79 @@ new Vue({
 ```shell
 cnpm install vue-router
 ```
+### 引入router相关的js
+### 编写代码
+html中使用
+```html
+<!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+ <router-link to="/foo">Go to Foo</router-link>
+    <router-link to="/bar">Go to Bar</router-link>
+    <!-- 路由出口-->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <router-view></router-view>
+```
+js中使用
+```js
+<!--1.自定义组件，可以从其他地方导入进来 -->
+const Foo={template:'<div>foo</div>'}
+<!-- 2.定义路由 -->
+const routes={
+    {path:'/foo',component:Foo},
+}
+<!-- 3.创建router实例 -->
+const router=new VueRouter({
+    routes
+})
+    
+<!-- 4.创建和挂载实例 -->
+const app=new Vue({
+    router
+}).$mount('#app')
+```
 ### 简单实例
 vue-js+vue-router可以很简单的实现单页应用。
 使用/<router-link>设置一个导航链接，切换不同的HTML内容。
+# Vue.js Ajax(axios)
+## GET请求
+``` js
+new Vue({
+  el: '#app',
+  data () {
+    return {
+      info: null
+    }
+  },
+  mounted () {
+    axios
+      .get('https://www.runoob.com/try/ajax/json_demo.json')
+      .then(response => (this.info = response))
+      .catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+  }
+})
+```
+上面的方法很容易看出来then(response=>(this.info=response))将response的内容赋值给info
+## 使用response.data读取JSON数据
+```js
+new Vue({
+  el: '#app',
+  data () {
+    return {
+      info: null
+    }
+  },
+  mounted () {
+    axios
+      .get('https://www.runoob.com/try/ajax/json_demo.json')
+      .then(response => (this.info = response.data.sites))
+      .catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+  }
+})
+```
+# Vue.js实例
+直接参照菜鸟教程即可
+https://www.runoob.com/vue2/vue-examples.html
+# 组合式API

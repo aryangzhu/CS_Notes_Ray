@@ -50,6 +50,9 @@
 - [异步任务](#异步任务)
 - [发送邮件](#发送邮件)
 - [定时任务](#定时任务)
+- [Redis缓存](#redis缓存)
+	- [本地缓存](#本地缓存)
+	- [分布式缓存](#分布式缓存)
 # 创建一个springboot项目(非官方文档)
 
 选择SpringBoot Intlizer然后选择Java Web组件
@@ -384,3 +387,11 @@ spring:
     }
 ```
 # 定时任务
+@Secdule
+# Redis缓存
+## 本地缓存
+1. 导入依赖
+2. application.yml配置文件
+3. RedisConfig文件编写，其中最重要的就是RedisTemplate
+4. RedisUtil，用来存放我们处理缓存的常用方法
+## 分布式缓存

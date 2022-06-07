@@ -1,20 +1,14 @@
 ## 1.概述
-
 流行的脚本语言,js是一中弱类型语言(变量的类型是根据值来确定的,使用typeof关键字可以来判断类型)。
-
 ## 2.快速入门
-
 ### 1.引入方式
-
 ####　1.内部引入
-
 ```html
 <script>
 	alert('hello world');
 </script>
 ```
 #### 2.外部引入
-
 ```html
 <script src="js/qj.js">
 </script>
@@ -23,13 +17,10 @@ qj.js
 alert('hello world');
 ```
 ### 2.基本语法入门
-
 console.log("...");
 浏览器
 ![选区_125.png](https://i.loli.net/2021/03/02/PSKtH56Eubf3Mxy.png)
-
 ### 3.数据类型
-
 数值、文本、图形、音频、视频
 
 #### Number数值类型
