@@ -52,9 +52,21 @@
 - [定时任务](#定时任务)
 - [Redis缓存](#redis缓存)
 	- [本地缓存](#本地缓存)
+		- [RedisTemplate](#redistemplate)
+		- [RedisTemplate与StringRedisTemplate](#redistemplate与stringredistemplate)
+		- [RedisConfig](#redisconfig)
+			- [配置工厂](#配置工厂)
+			- [实例化RedisTemplate组件，注入到容器中](#实例化redistemplate组件注入到容器中)
+			- [设置Redis的序列化方式，并开启事务](#设置redis的序列化方式并开启事务)
+		- [注入封装的RedisUtil](#注入封装的redisutil)
 	- [订阅和发布](#订阅和发布)
-		- [](#)
+		- [SpringBoot项目中实现Redis的订阅与发布](#springboot项目中实现redis的订阅与发布)
+			- [RedisConfig配置](#redisconfig配置)
+				- [实例化RedisMessageListenerXContainer组件并注入到容器中](#实例化redismessagelistenerxcontainer组件并注入到容器中)
+			- [实例化两个监听方法](#实例化两个监听方法)
 	- [消息队列](#消息队列)
+		- [生产者lpush](#生产者lpush)
+		- [消费这rpop](#消费这rpop)
 	- [分布式缓存](#分布式缓存)
 # 创建一个springboot项目(非官方文档)
 
@@ -398,16 +410,70 @@ spring:
 2. application.yml配置文件
 3. RedisConfig文件编写，其中最重要的就是RedisTemplate
 4. RedisUtil，用来存放我们处理缓存的常用方法
-其中最重要的类就是RedisTemplate,对每种数据结构都定义了操作:
+### RedisTemplate
 操作字符串: redisATemplate.opsForValue()
 操作Hash: redisTemplate.opsForHash()
 操作List: redisTemplate.opsForList()
-操作Set: 
+操作Set: redisTemplate.opsForSet()
+操作ZSet: redisTemplate.opsForZSet()
+### RedisTemplate与StringRedisTemplate
+1. RedisTemplate是一个**泛型类**，而StringRedisTemplate不是，后者只能对键和值都为String类型的数据进行操作，而前者则可以操作任何类型
+2. 两者的数据是不共通的，StringRedisTemplate只能管理StringRedisTemplate里面的数据，RedisATemplate只能管理RedisTemplate中的数据
+### RedisConfig
+#### 配置工厂
+其实配置文件中已经进行了配置，我看的别人的源码进行了工厂的配置，猜测可能不需要进行配置
+#### 实例化RedisTemplate组件，注入到容器中
+核心方法:**initDomainRedisTemplate**(redisTemplate,redisConnectionFactory)
+#### 设置Redis的序列化方式，并开启事务
+```java
+ /*
+         * 设置 序列化器 .
+         * 如果不设置，那么在用实体类(未序列化)进行存储的时候，会提示错误: Failed to serialize object using DefaultSerializer;
+         */
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        // 开启事务
+		redisTemplate.setEnableTransactionSupport(true);
+        // 将连接工厂设置到模板类中
+        redisTemplate.setConnectionFactory(factory);
+```
+### 注入封装的RedisUtil
+```java
+/**
+     * 注入封装RedisTemplate
+     */
+    @Bean(name = "redisUtil")
+    public RedisUtil redisUtil(RedisTemplate<String, Object> redisTemplate) {
+        RedisUtil redisUtil = new RedisUtil();
+        redisUtil.setRedisTemplate(redisTemplate);
+        return redisUtil;
+    }
+```
 ## 订阅和发布
 Redis中有原生的命令publish channel message
 以及subscribe channel来订阅消息
-### 
+###  SpringBoot项目中实现Redis的订阅与发布
+#### RedisConfig配置
+##### 实例化RedisMessageListenerXContainer组件并注入到容器中
+核心代码
+```Java
+RedisMessageListenerContainer container=new RedisMessageListenerContainer();
+container.setConnectionFactory(connectionFactory);
+container.addMessageListener(listenerAdapter,new PatternTopic(channel));
+container.addMessageListener(listenerAdapter,new PatternTopic(channel));
+```
+#### 实例化两个监听方法
+```java
+@Bean(name="listennerAdapter")
+MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
+	return new MessageListenerAdapterr(consumer,"on message");
+}
+```
 ## 消息队列
-
+### 生产者lpush
+### 消费这rpop
 ## 分布式缓存
 
