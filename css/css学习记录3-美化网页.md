@@ -40,7 +40,7 @@
 a:link--链接
 a:hover--鼠标悬浮
 a:active--鼠标按住未释放
-a;visited--已经访问过的链接
+a:visited--已经访问过的链接
 
 ```html
   /*鼠标悬浮的颜色*/

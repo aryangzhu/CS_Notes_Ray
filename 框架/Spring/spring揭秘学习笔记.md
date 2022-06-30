@@ -1,7 +1,7 @@
 - [时代发展](#时代发展)
 - [IOC初入门](#ioc初入门)
   - [什么是IOC](#什么是ioc)
-  - [什么方式通知](#什么方式通知)
+  - [什么方式通知(依赖注入方式)](#什么方式通知依赖注入方式)
     - [构造方法注入](#构造方法注入)
     - [setter方法注入](#setter方法注入)
     - [接口注入](#接口注入)
@@ -17,7 +17,7 @@
 - [Spring的IoC容器之BeanFactory](#spring的ioc容器之beanfactory)
   - [BeanFactory的对象注册和依赖管理](#beanfactory的对象注册和依赖管理)
     - [直接编码方式](#直接编码方式-1)
-    - [外部配置文件、](#外部配置文件)
+    - [外部配置文件](#外部配置文件)
     - [注解方式](#注解方式)
   - [BeanFatory的xml(配置文件方式详细)](#beanfatory的xml配置文件方式详细)
     - [\<beans>和 \<bean>](#beans和-bean)
@@ -39,7 +39,7 @@
       - [dependency-oncheck](#dependency-oncheck)
       - [lazy-init](#lazy-init)
     - [关于继承](#关于继承)
-    - [bean的scope(范围)](#bean的scope范围)
+    - [bean的scope(范围,也就是作用域)](#bean的scope范围也就是作用域)
       - [singleton](#singleton)
       - [protype](#protype)
       - [request、session和global session](#requestsession和global-session)
@@ -49,7 +49,7 @@
       - [FactoryBean](#factorybean)
     - [偷梁换柱之法(修改默认配置)](#偷梁换柱之法修改默认配置)
       - [方法注入](#方法注入)
-      - [BeanFactoryAware接口、](#beanfactoryaware接口)
+      - [BeanFactoryAware接口](#beanfactoryaware接口)
       - [方法替换](#方法替换)
   - [容器背后的秘密](#容器背后的秘密)
     - [IoC容器的两个阶段](#ioc容器的两个阶段)
@@ -60,7 +60,7 @@
       - [实例化阶段](#实例化阶段)
         - [实例化对象](#实例化对象)
         - [装配依赖](#装配依赖)
-    - [bean的一生](#bean的一生)
+    - [bean的一生(生命周期)](#bean的一生生命周期)
       - [Bean的初始化与BeanWrapper](#bean的初始化与beanwrapper)
       - [各色的Aware接口](#各色的aware接口)
       - [BeanPostFactoryProcessor与BeanFactory](#beanpostfactoryprocessor与beanfactory)
@@ -91,16 +91,14 @@ IOC-Inversion Of Control,又名Denpendency Inject
 
 将代码调用者想象成个体的话,为你服务的角色就是IOC容器。
 
-### 什么方式通知
+### 什么方式通知(依赖注入方式)
 
 #### 构造方法注入
 
 #### setter方法注入
 
 #### 接口注入
-
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/spring%E6%8E%A5%E5%8F%A3%E6%B3%A8%E5%85%A5.png)
-
 这种方式使用较少
 
 #### IOC的附加值
@@ -113,33 +111,24 @@ IOC-Inversion Of Control,又名Denpendency Inject
 
 #### 业务的创建与管理
 
-
-
 #### 业务对象之间的依赖绑定
 
 IoC Service Provider通过结合之前构建和管理的所有业务对象，以及各个业务对象之间可以识别的依赖关系，将这些对象所依赖的对象注入绑定，从而保证每个业务对象的依赖关系。
 
 ### IoC Service Provider如何管理对象间的依赖关系
-
 #### 直接编码方式
-
-
-
 #### 配置文件
-
-
-
 #### 元数据方式
-
+基于java5的注解和Generic的基础上开发的框架。
 ## Spring的IoC容器之BeanFactory
-BeanFactory和ApplicationContext是有区别的,主要区别就是BeanFactory主要是IoC Service Provider功能的实现,而Application承担的更多例如Web场景、Aop场景。
+BeanFactory和ApplicationContext是有区别的,主要区别就是**BeanFactory主要是IoC Service Provider功能的实现**,而Application承担的更多例如Web场景、Aop场景。
 
 ### BeanFactory的对象注册和依赖管理
 既然是IoC Service Provider的实现，那么就需要和IoC Service Provider一样三种实现。
 #### 直接编码方式
-BeanFactory只是一个接口,具体的实现由子类DefaultListableBeanFactory来实现,同时DefaultListableBeanFactory又实现了BeanDefinationRegistry接口,该接口才担任Bean组件的注册管理的角色。
-在容器中每一个受管的对象都会有一个BeanDefination实例,包含了该对象的class类型、是否是抽象类、构造方法等属性。
-#### 外部配置文件、
+BeanFactory只是一个接口,具体的实现由子类**DefaultListableBeanFactory**来实现,同时DefaultListableBeanFactory又实现了BeanDefinationRegistry接口,该接口才担任Bean组件的注册管理的角色。
+**在容器中每一个受管的对象都会有一个BeanDefination实例**,包含了该对象的class类型、是否是抽象类、构造方法等属性。
+#### 外部配置文件
 这里以properties文件为例
 ```java
 public static void main(String[] args){
@@ -156,6 +145,7 @@ public static BeanFactory bindFile(BeanRegistry registry){
 }
 ```
 #### 注解方式
+@Autowired是最重要的一个注解。
 ### BeanFatory的xml(配置文件方式详细)
 #### \<beans>和 \<bean>
 \<beans>下面包含许多\<bean>,也包含许多属性
@@ -222,7 +212,7 @@ public class Bar{
 #### 关于继承
 parenet属性
 \<bean id="" parent="">
-#### bean的scope(范围)
+#### bean的scope(范围,也就是作用域)
 ##### singleton
 容器中只有一个实例,声明周期一直伴随IoC容器结束。
 ##### protype
@@ -283,7 +273,7 @@ Spring还有其他的机制来帮我们解决这个问题
      />
 </bean>
 ```
-##### BeanFactoryAware接口、
+##### BeanFactoryAware接口
 只要使用了这个接口，那么在会在当前实例中注入BeanFactory，所以我们就能直接使用BeanFactory.getBean(xxx.class);
 这个时候Bean就是原型的。
 ##### 方法替换
@@ -302,15 +292,16 @@ Spring还有其他的机制来帮我们解决这个问题
 **插手**容器的启动  
 通过BeanFactoryProcessor接口及其实现类来完成。
 试想这样一个场景:
-当BeanDefiniation被创建之后如果要对其中的属性进行修改该如何操作(假设有配置生成的Bean)
-BeanFctoryProcessor的一个实现类BeanFatoryPropertyPlaceholderConfigure就是将**占位符**${jdbc.url}这类属性(注意:生成的BeanDefiniton中的jdbcUrl属性还是占位符形式)与配置文件properties中的值进行填入。
-BeanFactory的另一个实现类BeanFactoryPropertyPropertyOverrideConfigure可以将配置文件中的属性进行替换，这里BeanFactoryPropertyProperyOverrideConfigure有对应的配置文件，可以将Bean里面的属性值替换掉。
+当BeanDefiniation被创建之后如果要对其中的属性进行修改该如何操作(假设有配置生成的Bean)。  
+BeanFctoryProcessor的一个实现类**BeanFatoryPropertyPlaceholderConfigure**就是将**占位符**${jdbc.url}这类属性(注意:生成的BeanDefiniton中的jdbcUrl属性还是占位符形式)与配置文件properties中的值进行填入。  
+BeanFactory的另一个实现类**BeanFactoryPropertyPropertyOverrideConfigure**可以将配置文件中的属性进行替换，这里BeanFactoryPropertyProperyOverrideConfigure有对应的配置文件，可以将Bean里面的属性值替换掉。  
 **CustomEditorConfigure与自定义PropertyEditor**
-从xml中读取出来的都是字符串形式，如何将其转化为一个对象是也是很重要的一项职责。
-Spring中提供了很多的propertyEditor来帮助我们完成这一转化。
+从xml中读取出来的都是字符串形式，如何将其转化为一个对象是也是很重要的一项职责。  
+Spring中提供了很多的propertyEditor来帮助我们完成这一转化。  
 但是在ApplicationContext的时候，由于Application本身就具有ClassLoader的功能，所以对于Resource类型来说，不用我们自己编写代码。而在BeanFactory中则需要字节编写代码来完成自定义PropertyEditor的职责。
 ##### 实例化阶段
-对于BeanFactory来说调用getBean()方法或者隐式调用getBean()方法时就会启动。ApplicationContext则是启动完成就会实例化。
+对于BeanFactory来说调用getBean()方法或者隐式调用getBean()方法时就会启动。  
+ApplicationContext则是启动完成就会实例化。
 ###### 实例化对象
 检查是否被初始化，如果没有就根据BeanDefinition提供的信息来创建对象实例。
 ###### 装配依赖
@@ -318,16 +309,16 @@ Spring中提供了很多的propertyEditor来帮助我们完成这一转化。
 生命周期回顾
 对象其他处理
 注册回调接口
-#### bean的一生
+#### bean的一生(生命周期)
 ##### Bean的初始化与BeanWrapper
-容器内部实例化使用了"策略"模式来决定何种方式初始化bean实例，可选的策略有反射或者CGlib动态字节码来生成初始化相应的bean实例或者动态生成其子类。默认情况下，容器内部采用的是CGlibSubClassingInstantiationStrategy。
-容器根据BeanDefinition取得实例化信息，再加上上面的CGlibSubClassingInstantantiationStrategy(从名字就可以看出生成字节码且是某个类的子类)就可以创建实例。但是，由于返回方式上有些"点缀"，所以不直接返回Bean而是BeanWrapper。
-下来的这段话很重要，也表明了为什么需要BeanWrapper的存在。
+容器内部实例化使用了"策略"模式来决定何种方式初始化bean实例，**可选的策略有反射或者CGlib动态字节码来生成初始化相应的bean实例或者动态生成其子类**。默认情况下，容器内部采用的是CGlibSubClassingInstantiationStrategy。  
+容器根据**BeanDefinition取得实例化信息**，再加上上面的CGlibSubClassingInstantantiationStrategy(从名字就可以看出生成字节码且是某个类的子类)就可以创建实例。但是，由于返回方式上有些"点缀"，所以不直接返回Bean而是BeanWrapper。  
+下来的这段话很重要，也表明了为什么需要BeanWrapper的存在。  
 BeanWrapper实现了实现了PropertyAccessor和TypeConVert接口，所以之前阶段定义的PorpetyEditorRegistry就是这个时候用的，也就是说启动阶段只负责加载了这些玩意儿，而在真正的实例化阶段属性和依赖设置的时候这些才会真正的起作用。
 ##### 各色的Aware接口
-Aware接口的作用通常是将某个依赖注入到实例中。
-BeanNameAware将BeanName添加到当前实例中。
-ResourceContextAware将Application添加到当前实例中。
+Aware接口的作用通常是将某个依赖注入到实例中。  
+BeanNameAware将BeanName添加到当前实例中。  
+ResourceContextAware将Application添加到当前实例中。  
 ##### BeanPostFactoryProcessor与BeanFactory
 这个阶段常见的就是处理标记接口实现类Aware。
 ##### Initical阶段
@@ -345,8 +336,8 @@ FileSystemResource
 ...
 #### ResourceLoader
 ##### 默认实现DefalutResourceLoader
-1.先检查是否以classpath:开头，如果是则使用ClassResource来封装，如果不是跳到2
-2.1先判断是否是url形式，如果是的话则使用URLResource封装，如果不是则抛出Exception.
+1.先检查是否以classpath:开头，如果是则使用ClassResource来封装，如果不是跳到2  
+2.1先判断是否是url形式，如果是的话则使用URLResource封装，如果不是则抛出Exception  
 2.2前面无法获取资源直接getResourceByPath(String)
 ##### FileSytemResourceLoader和FileSystemXmlResourceLoader
 重写了GetResourceByPath()方法

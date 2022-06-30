@@ -1,3 +1,115 @@
+- [简介](#简介)
+- [Linux启动过程](#linux启动过程)
+  - [内核的引导](#内核的引导)
+  - [运行init](#运行init)
+    - [运行级别](#运行级别)
+  - [系统初始化](#系统初始化)
+  - [建立终端](#建立终端)
+  - [用户登录系统](#用户登录系统)
+- [系统目录结构](#系统目录结构)
+  - [几个重要的目录](#几个重要的目录)
+    - [/etc](#etc)
+    - [/bin、/sbin、/usr/bin、/usr/sbin](#binsbinusrbinusrsbin)
+    - [/var](#var)
+- [Linux文件属性](#linux文件属性)
+  - [文件类型](#文件类型)
+  - [属主权限](#属主权限)
+  - [属组权限](#属组权限)
+  - [其他用户权限](#其他用户权限)
+  - [更改文件属性](#更改文件属性)
+    - [chgrp 更改属主属性](#chgrp-更改属主属性)
+    - [chown 更改属主和属组](#chown-更改属主和属组)
+    - [chmod 更改9个属性](#chmod-更改9个属性)
+- [文件与目录管理](#文件与目录管理)
+  - [常用的操作文件的命令](#常用的操作文件的命令)
+    - [ls(list files)](#lslist-files)
+      - [-a](#-a)
+      - [-l](#-l)
+      - [-d](#-d)
+    - [cd(change directory)](#cdchange-directory)
+    - [pwd(print word directory)](#pwdprint-word-directory)
+      - [-P](#-p)
+    - [mkdir(make directory)](#mkdirmake-directory)
+    - [touch](#touch)
+    - [redir( remove direcotory)](#redir-remove-direcotory)
+      - [-P](#-p-1)
+    - [rm(remove)](#rmremove)
+      - [-r](#-r)
+      - [-f](#-f)
+    - [cp(copy )](#cpcopy-)
+    - [mv(move)](#mvmove)
+  - [Linux查看文件内容](#linux查看文件内容)
+    - [cat](#cat)
+    - [tac](#tac)
+    - [nl](#nl)
+    - [more](#more)
+      - [空白键(space)](#空白键space)
+      - [enter](#enter)
+      - [/字串](#字串)
+      - [-f](#-f-1)
+      - [q](#q)
+      - [b](#b)
+    - [less](#less)
+    - [head](#head)
+    - [tail](#tail)
+  - [硬连接和软连接](#硬连接和软连接)
+    - [硬连接](#硬连接)
+    - [软连接](#软连接)
+- [用户和用户组的管理](#用户和用户组的管理)
+  - [用户管理](#用户管理)
+    - [添加用户](#添加用户)
+    - [删除账号](#删除账号)
+    - [修改账号](#修改账号)
+    - [密码管理](#密码管理)
+  - [用户组管理](#用户组管理)
+    - [添加用户组](#添加用户组)
+    - [删除用户组](#删除用户组)
+    - [修改用户组属性](#修改用户组属性)
+    - [切换用户组](#切换用户组)
+  - [与用户账户有关的系统文件](#与用户账户有关的系统文件)
+    - [/etc/passwd](#etcpasswd)
+      - [用户名是代表用户账号的字符串](#用户名是代表用户账号的字符串)
+      - ["口令"用于存放加密后的用户口令字](#口令用于存放加密后的用户口令字)
+      - ["用户标识号"是一个整数,系统内部用它来标识用户](#用户标识号是一个整数系统内部用它来标识用户)
+      - ["组标识号"用户属组](#组标识号用户属组)
+      - ["注释性描述"字段记录着用户的一些个人情况](#注释性描述字段记录着用户的一些个人情况)
+      - ["主目录"用户的起始工作目录](#主目录用户的起始工作目录)
+      - [用户登录后，要启动一个进程，负责将用户的操作传给内核，这个进程是用户登录到系统后运行的命令解释器或者某个特定的程序,即Shell](#用户登录后要启动一个进程负责将用户的操作传给内核这个进程是用户登录到系统后运行的命令解释器或者某个特定的程序即shell)
+      - [系统中的伪用户](#系统中的伪用户)
+- [拥有账户文件](#拥有账户文件)
+  - [除了上面的伪用户，还有一些标准的伪用户。](#除了上面的伪用户还有一些标准的伪用户)
+  - [/etc/shadow和/etc/passwd的记录行一一对应，它由pwconv命令根据/etc/passwd的数据自动产生](#etcshadow和etcpasswd的记录行一一对应它由pwconv命令根据etcpasswd的数据自动产生)
+  - [用户组信息都存放在/etc/group文件中](#用户组信息都存放在etcgroup文件中)
+  - [添加批量用户](#添加批量用户)
+    - [先编辑一个文本用户文件](#先编辑一个文本用户文件)
+    - [root身份执行/usr/sbin/newusers，从刚创建的用户文件user.txt中导入数据，创建用户:](#root身份执行usrsbinnewusers从刚创建的用户文件usertxt中导入数据创建用户)
+    - [执行命令/usr/sbin/pwunconv](#执行命令usrsbinpwunconv)
+    - [编辑每个用户的密码对照文件](#编辑每个用户的密码对照文件)
+    - [以root身份执行命令/usr/sbin/chpasswd](#以root身份执行命令usrsbinchpasswd)
+    - [确定密码经编码写入/etc/passwd的密码栏后](#确定密码经编码写入etcpasswd的密码栏后)
+- [Linux磁盘管理](#linux磁盘管理)
+  - [df](#df)
+  - [du](#du)
+  - [fdisk](#fdisk)
+  - [磁盘格式化](#磁盘格式化)
+  - [磁盘检验](#磁盘检验)
+  - [磁盘的挂载与卸除](#磁盘的挂载与卸除)
+    - [什么是挂载](#什么是挂载)
+  - [linux文件结构](#linux文件结构)
+    - [inode](#inode)
+    - [data block](#data-block)
+    - [super block](#super-block)
+- [vi/vim](#vivim)
+  - [命令模式](#命令模式)
+  - [输入模式](#输入模式)
+  - [底线命令模式](#底线命令模式)
+    - [q 退出程序](#q-退出程序)
+    - [w 保存文件](#w-保存文件)
+- [yum命令](#yum命令)
+  - [语法](#语法)
+  - [常用命令](#常用命令)
+- [apt命令](#apt命令)
+  - [apt常用命令](#apt常用命令)
 # 简介
 开源操作系统
 # Linux启动过程
@@ -234,3 +346,61 @@ fsck(file system check)用来检查和维护不一致的文件系统。在电脑
 实际内容
 ### super block
 记录整个文件系统的整体信息，包括inode与block的总量、使用量和剩余量等。
+# vi/vim
+## 命令模式
+键盘输入将被识别为命令，而非输入字符。
+i:切换到输入模式
+x:删除当前的光标处的字符
+:切换到底线命令模式，在最后一行输入命令
+## 输入模式
+1. 字符按键以及shift组合,输入字符
+2. enter 回车键，换行
+3. back space 退格，删除前一个字符
+4. del 删除，删除后一个
+5. 方向键 在文本中移动光标
+6. home/end 移动光标到行首/行尾
+7. page up/page down 上/下翻页
+8. insert 切换为输入/替换模式
+9. esc 退出输入模式，切换到命令模式
+## 底线命令模式
+### q 退出程序
+### w 保存文件
+# yum命令
+Yellow dog Updater,Modified是一个**包管理器**。
+**基于 RPM 包管理**，能够从指定的服务器自动下载 RPM 包并且安装，可以自动处理依赖性关系，并且一次安装所有依赖的软件包，无须繁琐地一次次下载、安装。
+## 语法
+yum [options][command][package...]
+options:可选，包括帮助-h,yes-y,不显示安装过程-q等
+command:执行的命令
+package:安装的包名
+## 常用命令
+1. 列出可更新 yum check-update
+2. yum update 更新所有软件
+3. yum install <package_name> 安装指定包
+4. yum install <package_name> 更新指定包
+5. yum list 可安装列表
+6. 删除软件包 yum remove ...
+7. 查找软件包 yum search ...
+8. 清楚缓存命令
+   1. yum clean packages 清除目录下的软件包
+   2. yum clean headers 清除headers
+   3. yum clean oldheaders 旧的headers
+   4. yum clean=yum clean all 上面之和
+# apt命令
+Advanced Packaging Tool是一个Debian和Ubuntu中的shell前端软件包管理器，就和上面的yum一样，不过yum更通用。
+注:apt命令需要超级管理员权限
+## apt常用命令
+1. 列出所有可更新的软件清单命令：sudo apt update
+2. 升级软件包：sudo apt upgrade
+3. 列出可更新的软件包及版本信息：apt list --upgradeable
+4. 升级软件包，升级前先删除需要更新软件包：sudo apt full-upgrade
+5. 安装指定的软件命令：sudo apt install <package_name>
+6. 安装多个软件包：sudo apt install <package_1> <package_2> <package_3>
+7. 更新指定的软件命令：sudo apt update <package_name>
+8. 显示软件包具体信息,例如：版本号，安装大小，依赖关系等等：sudo apt show <package_name>
+9. 删除软件包命令：sudo apt remove <package_name>
+10. 清理不再使用的依赖和库文件: sudo apt autoremove
+11. 移除软件包及配置文件: sudo apt purge <package_name>
+12. 查找软件包命令： sudo apt search <keyword>
+13. 列出所有已安装的包：apt list --installed
+14. 列出所有已安装的包的版本信息：apt list --all-versions

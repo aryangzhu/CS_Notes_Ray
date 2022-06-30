@@ -35,9 +35,9 @@ public class ConsumerController{
 }
 ```
 # Eureka服务注册中心
-将服务都注册到分布式集群上，就像zookeeper一样，下面来看看步骤
-1.导入依赖
-2.配置application.yml
+将服务都注册到分布式集群上，就像zookeeper一样，下面来看看步骤  
+1.导入依赖  
+2.配置application.yml   
 ```yaml
 eureka:
   instance:
@@ -54,7 +54,7 @@ eureka:
       defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
 
 ```
-3.使用注解@EnableEurekaServer开启Eureka
+3.使用注解@EnableEurekaServer开启Eureka  
 4.生产者服务注册到中心
 ```yaml
 # Eureka 配置，服务注册到哪里
@@ -71,12 +71,12 @@ info:
 ```
 启动之后，浏览器输入localhost:7001就可以看到配置的服务
 # Ribbon负载均衡
-负载均衡是一个概念，它的实现可以是想Lvs这种基于client端或者消费者这一级的，也可以是从调用中心到服务这一层的Nigix。
-下面来看一下如何配置Ribbon
-1.导入依赖
-2.application.yml
-3.配置config;
-使用注解@LoadBalanced
+负载均衡是一个概念，它的实现可以是想Lvs这种基于client端或者消费者这一级的，也可以是从调用中心到服务这一层的Nigix。  
+下面来看一下如何配置Ribbon   
+1.导入依赖  
+2.application.yml  
+3.配置config  
+使用注解@LoadBalanced  
 4.主启动类添加开启Ribbon
 # Feign
 Feign是对Ribbon做了一层封装，更加符合接口编程的风格。
@@ -103,9 +103,9 @@ public class DeptConsumerController {
 ```
 # Hystrix服务熔断、降级和监视
 ## 服务熔断
-首先需要明确的是，服务熔断是在服务端，当一个服务出现问题，链路断掉，断电、网络问题，这个时候就需要有一手后备的解决方案，服务熔断为此而生。
-1.导入依赖
-2.配置文件中编写相关配置项
+首先需要明确的是，服务熔断是在服务端，当一个服务出现问题，链路断掉，断电、网络问题，这个时候就需要有一手后备的解决方案，服务熔断为此而生。   
+1.导入依赖  
+2.配置文件中编写相关配置项  
 ```yml
 # Eureka 配置，服务注册到哪里
 eureka:
@@ -121,7 +121,7 @@ info:
   compay.name: 现实
 
 ```
-配置中基本没有什么变化，当然你也可以根据需求来更改
+配置中基本没有什么变化，当然你也可以根据需求来更改  
 3.编写fallbackMehod兜底
 ```java
    @GetMapping("/dept/get/{id}")
@@ -145,7 +145,7 @@ info:
 4.开启Hystrix熔断功能
 @EnableCircuitBreaker // 添加对熔断的支持
 ## 服务降级
-当我们的某个服务在集群上被访问的过多时，可以将其他服务关闭，来节省资源给并发访问高的服务给以特殊照顾，这就是服务降级(降的是被声明关闭的那个服务)。
+当我们的某个服务在集群上被访问的过多时，可以将其他服务关闭，来节省资源给并发访问高的服务给以特殊照顾，这就是服务降级(降的是被声明关闭的那个服务)。  
 注意:服务降级是在客户端(也就是消费者模块)  
 1. 导入依赖  
 2. 编写配置

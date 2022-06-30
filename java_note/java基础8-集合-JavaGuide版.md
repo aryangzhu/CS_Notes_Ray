@@ -2,10 +2,18 @@
   - [Java集合概述](#java集合概述)
   - [说说List、Set、Queue和Map四者的区别](#说说listsetqueue和map四者的区别)
   - [集合框架底层数据结构总结](#集合框架底层数据结构总结)
-    - [Collectio接口下面的集合](#collectio接口下面的集合)
+    - [Collection接口下面的集合](#collection接口下面的集合)
       - [List](#list)
+        - [1.ArrayList: Object[]数组](#1arraylist-object数组)
+        - [2.Vector:Object[] 数组](#2vectorobject-数组)
+        - [3.LinkedList:双向链表(jdk1.7之后取消了循环链表)](#3linkedlist双向链表jdk17之后取消了循环链表)
       - [Set](#set)
+        - [1.HashSet(无序,唯一):基于HashMap实现的,底层采用HashMap来保存元素](#1hashset无序唯一基于hashmap实现的底层采用hashmap来保存元素)
+        - [2.LinkedHashSet:**LinkedHashSet是HashSet的子类**,并且内部是通过LinkedHashMap来实现的,而LinkedHashMap其内部是基于HashMap实现的一样。](#2linkedhashsetlinkedhashset是hashset的子类并且内部是通过linkedhashmap来实现的而linkedhashmap其内部是基于hashmap实现的一样)
+        - [3.TreeSet(有序,唯一):红黑树(自平衡的二叉排序树)。](#3treeset有序唯一红黑树自平衡的二叉排序树)
       - [Queue](#queue)
+        - [1.PriorityQueue:Obejct[] 数组来实现二叉堆](#1priorityqueueobejct-数组来实现二叉堆)
+        - [2.ArrayQueue:Object[] 数组+双指针](#2arrayqueueobject-数组双指针)
   - [Map接口下的集合](#map接口下的集合)
     - [HashMap](#hashmap)
     - [LinkedHashMap](#linkedhashmap)
@@ -61,43 +69,38 @@ Map:使用键值对(key-value)存储,类似于数学上的函数y=f(x)
 
 ## 集合框架底层数据结构总结
 
-### Collectio接口下面的集合
+### Collection接口下面的集合
 
 #### List
 
-1.ArrayList: Object[]数组
+##### 1.ArrayList: Object[]数组
 
-2.Vector:Object[] 数组
+##### 2.Vector:Object[] 数组
 
-3.LinkedList:双向链表(jdk1.7之后取消了循环链表)
+##### 3.LinkedList:双向链表(jdk1.7之后取消了循环链表)
 
 #### Set
 
-1.HashSet(无序,唯一):基于HashMap实现的,底层采用HashMap来保存元素
+##### 1.HashSet(无序,唯一):基于HashMap实现的,底层采用HashMap来保存元素
 
-2.LinkedHashSet:**LinkedHashSet是HashSet的子类**,并且内部是通过LinkedHashMap来实现的,而LinkedHashMap其内部是基于HashMap实现的一样。
+##### 2.LinkedHashSet:**LinkedHashSet是HashSet的子类**,并且内部是通过LinkedHashMap来实现的,而LinkedHashMap其内部是基于HashMap实现的一样。
 
-3.TreeSet(有序,唯一):红黑树(自平衡的二叉排序树)。
+##### 3.TreeSet(有序,唯一):红黑树(自平衡的二叉排序树)。
 
 #### Queue
 
-1.PriorityQueue:Obejct[] 数组来实现二叉堆
-
-2.ArrayQueue:Object[] 数组+双指针
+##### 1.PriorityQueue:Obejct[] 数组来实现二叉堆
+##### 2.ArrayQueue:Object[] 数组+双指针
 
 ## Map接口下的集合
-
 ### HashMap
-
 jdk1.8之前HashMap由数组+ 链表组成的。数组是HashMap的主体,链表主要是为了解决哈希冲突而存在的("拉链法"解决冲突)。**JDK1.8之后在解决哈希冲突时有了较大的变化,当链表长度大于阈值(默认为8)(将链表转换成红黑树前会判断,如果当前数组的长度小于64,那么先会对数组进行扩容而不是转换成红黑树)时,将链表转换成红黑树,以减少搜索时间**。
 
 ### LinkedHashMap
-
 LinkedHashMap继承自HashMap,所以在**它的底层仍然是基于拉链式散列结构即由数组和链表或红黑树组成**。另外,LinkedHashMap在上面结构的基础上,增加了一条由**双向链表**,使得上面的结构可以保持键值对的插入顺序。同时通过对链表进行相应的操作,实现了访问顺序的相关逻辑。
 
 ## 如何选用集合
-
-根据集合特点来选用,比如需要根据键值获取到元素时就选用Map接口下的集合,需要排序时选择TreeMap,不需要排序时就选择HashMap,需要**保证线程安全就选用ConcurrentHashMap**。
+根据**集合特点**来选用,比如需要根据键值获取到元素时就选用Map接口下的集合,需要排序时选择TreeMap,不需要排序时就选择HashMap,需要**保证线程安全就选用ConcurrentHashMap**。
 
 当我们只需要存放元素值时,就选择实现Collection接口的集合,需要保证元素唯一时选择实现Set接口的集合比如TreeSet或HashSet,不需要就选择实现List接口的比如ArrayList或LinkedList,然后再根据这些接口的集合的特点来选用。
 
@@ -145,7 +148,7 @@ Comparable接口实际上出自java.lang包,它有一个compareTo(Object obj)方
 
 Comparator接口实际上是出自java.util包它有一个compare(Object obj1,Object obj2)方法用来排序。
 
-guide的解释是自定义排序时就需要重写compareTo()方法或compare()方法,当我们需要对某一个集合实现两种排序方式,比如一个song对象中的歌名和歌手名分别采用一种排序方法的话,就可以重写compareTo()方法和使用自制的Comparator方法或者两个Comparator来实现歌名排序和歌手名排序。
+Guide哥的解释是自定义排序时就需要重写compareTo()方法或compare()方法,当我们需要对某一个集合实现两种排序方式,比如一个song对象中的歌名和歌手名分别采用一种排序方法的话,就可以重写compareTo()方法和使用自制的Comparator方法或者两个Comparator来实现歌名排序和歌手名排序。
 
 下面的代码是定制的Comparator(比较器,作为参数传入)
 

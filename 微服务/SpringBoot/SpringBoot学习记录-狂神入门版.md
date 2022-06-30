@@ -52,6 +52,9 @@
 - [定时任务](#定时任务)
 - [Redis缓存](#redis缓存)
 	- [本地缓存](#本地缓存)
+	- [订阅和发布](#订阅和发布)
+		- [](#)
+	- [消息队列](#消息队列)
 	- [分布式缓存](#分布式缓存)
 # 创建一个springboot项目(非官方文档)
 
@@ -355,6 +358,7 @@ private ApiInfo apiInfo(){
 # 异步任务
 在Service层使用@Service注解
 # 发送邮件
+最重要的两个类是MailSender和MimeMessage
 1.需要在自己的邮箱进行配置，qq邮箱开启POP3/SMTP服务
 2.application.yml中进行配置
 ```yml
@@ -394,4 +398,16 @@ spring:
 2. application.yml配置文件
 3. RedisConfig文件编写，其中最重要的就是RedisTemplate
 4. RedisUtil，用来存放我们处理缓存的常用方法
+其中最重要的类就是RedisTemplate,对每种数据结构都定义了操作:
+操作字符串: redisATemplate.opsForValue()
+操作Hash: redisTemplate.opsForHash()
+操作List: redisTemplate.opsForList()
+操作Set: 
+## 订阅和发布
+Redis中有原生的命令publish channel message
+以及subscribe channel来订阅消息
+### 
+## 消息队列
+
 ## 分布式缓存
+
