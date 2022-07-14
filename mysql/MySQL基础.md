@@ -116,6 +116,8 @@
 - [第十七章 组合查询](#第十七章-组合查询)
 	- [1.组合查询](#1组合查询)
 	- [2.创建组合查询](#2创建组合查询)
+		- [1.使用union](#1使用union)
+		- [2.union规则](#2union规则)
 - [第十八章 全文本搜索](#第十八章-全文本搜索)
 - [第十九章 插入数据](#第十九章-插入数据)
 	- [1.数据插入](#1数据插入)
@@ -1116,9 +1118,8 @@ where order_num in (20005,20007)
 ```mysql
 select cust_id
 from orders
-where order_num in (select order_num
-                   from orderitems
-                   where prod_id='TNT2');
+where order_num in (select order_num from orderitems
+where prod_id='TNT2');
 ```
 
 ## 2.作为计算字段使用子查询
@@ -1146,11 +1147,8 @@ where orders.custid=customers.custid
 只要有多义性就必须使用这种语法。
 
 # 第十五章 联结表
-
 ## 1.联结
-
 ### 1.关系表
-
 **外键**:某个表中的某一列,它包含另一个表的主键值,定义了两个表之间的关系。
 
 好处:
@@ -1165,7 +1163,7 @@ where orders.custid=customers.custid
 
 将数据分为多个表能更有效地存储,更方便的处理,并且具有更大的可伸缩性。
 
-但是代价就是检索多个列时更加负责,所以有了联结。
+但是代价就是检索多个列时更加复杂,所以有了联结。
 
 联结是一种机制,用来在一条select语句中关联表。
 
@@ -1227,8 +1225,8 @@ from customers as c...
 select prod_id,prod_name
 form products
 where vend_id=(select vend_id
-              from products
-              where prod_id='DTNTR');
+from products
+where prod_id='DTNTR');
 ```
 
 ### 2.自然联结
@@ -1251,8 +1249,7 @@ where vend_id=(select vend_id
 select customers.cust_name
 	customers.cust_id,
 	count(orders.order_num) as num_ord
-	from customers inner join orders
-	on customers.cust_id=orders.cust_id
+	from customers inner join orders on customers.cust_id=orders.cust_id
 	group by customers.cust_id;
 ```
 
@@ -1277,29 +1274,26 @@ select customers.cust_name
 2.对单个表执行多个查询,按单个查询返回数据。
 
 ## 2.创建组合查询
-
-###　1.使用union
+### 1.使用union
 
 ```mysql
-select ..
+select vend_id,pro_id,pro_price
+from products
+where prod_price<=5
 union
-select...
+select vend_id,prod_ic,prod_price
+from products
+where vend_id in (1001,1002)
+order by vend_id,prod_price;
 ```
-
-###　2.union规则
-
-1.必须两条或者两条以上的select语句构成
-
-2.每个查询中必须包括相同的列
-
-3.每个查询的列必须兼容。
+### 2.union规则
+1.必须两条或者**两条以上**的select语句构成
+2.每个查询中必须**包括相同的列**
+3.每个**查询的列必须兼容**
 
 # 第十八章 全文本搜索
-
 # 第十九章 插入数据
-
 ## 1.数据插入
-
 # 第二十章 更新和删除数据
 ## 更新
 ## 删除
