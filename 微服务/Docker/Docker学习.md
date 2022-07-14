@@ -56,4 +56,4 @@ docker rmi xxx
 #### 创建Dockerfile文件
 #### 使用docker build来构建镜像
 #### 使用docker images来查看镜像列表
-#### 设置镜像标签
+#### 设置镜像标签docker tag 860c279d2fec runoob/centos:dev
