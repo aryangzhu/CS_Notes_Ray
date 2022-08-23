@@ -57,3 +57,11 @@ docker rmi xxx
 #### 使用docker build来构建镜像
 #### 使用docker images来查看镜像列表
 #### 设置镜像标签docker tag 860c279d2fec runoob/centos:dev
+# 容器连接
+创建一个docker网络，将多个docker容器添加到网络中
+# 仓库管理
+DockerHub
+# Dockerfile
+# Docker Compose
+用于定义和运行多容器Docker应用程序的工具。通过Compose可以提前设置好所需的服务，然后用命令一键启动。
+
