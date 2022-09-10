@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.13.5/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@6.7.0"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.13.5"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.13.5/dist/index.umd.min.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const toolbar = new markmap.Toolbar();
+  toolbar.attach(mm);
+  const el = toolbar.render();
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root, jsonOptions) => {
+        const markmap = getMarkmap();
+        window.mm = markmap.Markmap.create('svg#mindmap', (getOptions || markmap.deriveOptions)(jsonOptions), root);
+      })(() => window.markmap,null,{"type":"root","depth":0,"content":"","children":[{"type":"heading","depth":1,"payload":{"lines":[0,1]},"content":"一、了解Web及网络基础","children":[{"type":"heading","depth":2,"payload":{"lines":[2,3]},"content":"使用HttP协议访问web"},{"type":"heading","depth":2,"payload":{"lines":[4,5]},"content":"HTTP的诞生"},{"type":"heading","depth":2,"payload":{"lines":[7,8]},"content":"网络基础TCP/IP-重点","children":[{"type":"heading","depth":3,"payload":{"lines":[8,9]},"content":"TCP/IP协议族"},{"type":"heading","depth":3,"payload":{"lines":[10,11]},"content":"TCP/IP的分层管理","children":[{"type":"heading","depth":4,"payload":{"lines":[12,13]},"content":"应用层"},{"type":"heading","depth":4,"payload":{"lines":[15,16]},"content":"传输层"},{"type":"heading","depth":4,"payload":{"lines":[18,19]},"content":"网络层"},{"type":"heading","depth":4,"payload":{"lines":[20,21]},"content":"链路层"}]},{"type":"heading","depth":3,"payload":{"lines":[22,23]},"content":"TCP/IP的通信传输流"}]},{"type":"heading","depth":2,"payload":{"lines":[39,40]},"content":"与HTTP关系密切的协议：IP、TCP&amp;DNS","children":[{"type":"heading","depth":3,"payload":{"lines":[41,42]},"content":"负责传输的IP协议"},{"type":"heading","depth":3,"payload":{"lines":[55,56]},"content":"负责确保可靠性的TCP协议","children":[{"type":"heading","depth":4,"payload":{"lines":[59,60]},"content":"三次握手策略"}]}]},{"type":"heading","depth":2,"payload":{"lines":[65,66]},"content":"负责域名解析的DNS服务"},{"type":"heading","depth":2,"payload":{"lines":[69,70]},"content":"各种协议与HTTP协议的关系"},{"type":"heading","depth":2,"payload":{"lines":[75,76]},"content":"URI和URL","children":[{"type":"heading","depth":3,"payload":{"lines":[83,84]},"content":"绝对URI"},{"type":"heading","depth":3,"payload":{"lines":[103,104]},"content":"绝对URL"},{"type":"heading","depth":3,"payload":{"lines":[105,106]},"content":"相对URL"}]}]},{"type":"heading","depth":1,"payload":{"lines":[109,110]},"content":"二、简单的HTTP协议","children":[{"type":"heading","depth":2,"payload":{"lines":[111,112]},"content":"HTTP协议用于客户端和服务端之间的通信"},{"type":"heading","depth":2,"payload":{"lines":[113,114]},"content":"通过请求和响应的交换达成通信","children":[{"type":"heading","depth":3,"payload":{"lines":[117,118]},"content":"请求报文结构"},{"type":"heading","depth":3,"payload":{"lines":[131,132]},"content":"响应报文结构"}]},{"type":"heading","depth":2,"payload":{"lines":[141,142]},"content":"HTTP不保存状态"},{"type":"heading","depth":2,"payload":{"lines":[145,146]},"content":"请求URI定位资源"},{"type":"heading","depth":2,"payload":{"lines":[147,148]},"content":"告知服务器意图的HTTP方法"},{"type":"heading","depth":2,"payload":{"lines":[149,150]},"content":"使用方法下达命令"},{"type":"heading","depth":2,"payload":{"lines":[167,168]},"content":"持久连接节省通信量","children":[{"type":"heading","depth":3,"payload":{"lines":[171,172]},"content":"持久连接"},{"type":"heading","depth":3,"payload":{"lines":[175,176]},"content":"管线化"}]},{"type":"heading","depth":2,"payload":{"lines":[179,180]},"content":"使用Cookie的状态管理"}]},{"type":"heading","depth":1,"payload":{"lines":[185,186]},"content":"三、HTTP内的HTTP信息","children":[{"type":"heading","depth":2,"payload":{"lines":[187,188]},"content":"HTTP报文"},{"type":"heading","depth":2,"payload":{"lines":[193,194]},"content":"请求报文和响应报文的结构"},{"type":"heading","depth":2,"payload":{"lines":[213,214]},"content":"编码提升传输速率-重点","children":[{"type":"heading","depth":3,"payload":{"lines":[217,218]},"content":"报文主体和实体主体的差异"},{"type":"heading","depth":3,"payload":{"lines":[227,228]},"content":"压缩传输的内容编码"},{"type":"heading","depth":3,"payload":{"lines":[231,232]},"content":"分割发送的分块传输编码"},{"type":"heading","depth":3,"payload":{"lines":[235,236]},"content":"发送多种数据的多部分集合"},{"type":"heading","depth":3,"payload":{"lines":[253,254]},"content":"获取部分内容的范围请求"},{"type":"heading","depth":3,"payload":{"lines":[265,266]},"content":"内容协商"}]}]},{"type":"heading","depth":1,"payload":{"lines":[273,274]},"content":"四、返回结果的HTTP状态码","children":[{"type":"heading","depth":2,"payload":{"lines":[275,276]},"content":"2xx成功"},{"type":"heading","depth":2,"payload":{"lines":[279,280]},"content":"3xx重定向","children":[{"type":"fence","depth":3,"content":"<pre><code>http://example.com/sample\n</code></pre>\n"}]},{"type":"heading","depth":2,"payload":{"lines":[289,290]},"content":"4xx 客户端错误"},{"type":"heading","depth":2,"payload":{"lines":[293,294]},"content":"5xx 服务端错误"}]},{"type":"heading","depth":1,"payload":{"lines":[297,298]},"content":"五、与HTTP协作的web服务器","children":[{"type":"heading","depth":2,"payload":{"lines":[299,300]},"content":"单台虚拟主体实现了多个域名"},{"type":"heading","depth":2,"payload":{"lines":[305,306]},"content":"通信数据转发程序：代理、网关和隧道","children":[{"type":"heading","depth":3,"payload":{"lines":[307,308]},"content":"网关"},{"type":"heading","depth":3,"payload":{"lines":[313,314]},"content":"代理","children":[{"type":"heading","depth":4,"payload":{"lines":[321,322]},"content":"缓存代理-Cache Proxy"},{"type":"heading","depth":4,"payload":{"lines":[325,326]},"content":"透明代理-Transparent Proxy"}]},{"type":"heading","depth":3,"payload":{"lines":[329,330]},"content":"隧道"}]},{"type":"heading","depth":2,"payload":{"lines":[333,334]},"content":"保存资源的缓存","children":[{"type":"heading","depth":3,"payload":{"lines":[337,338]},"content":"资源的有效期"},{"type":"heading","depth":3,"payload":{"lines":[341,342]},"content":"客户端的缓存"}]}]},{"type":"heading","depth":1,"payload":{"lines":[345,346]},"content":"六、报文首部","children":[{"type":"heading","depth":2,"payload":{"lines":[347,348]},"content":"HTTP报文首部"},{"type":"heading","depth":2,"payload":{"lines":[349,350]},"content":"HTTP首部字段","children":[{"type":"heading","depth":3,"payload":{"lines":[351,352]},"content":"首部字段传递重要信息"},{"type":"heading","depth":3,"payload":{"lines":[355,356]},"content":"HTTP首部字段结构"},{"type":"heading","depth":3,"payload":{"lines":[359,360]},"content":"4种HTTP首部字段类型","children":[{"type":"heading","depth":4,"payload":{"lines":[361,362]},"content":"通用首部字段"},{"type":"heading","depth":4,"payload":{"lines":[363,364]},"content":"请求首部字段-重点"},{"type":"heading","depth":4,"payload":{"lines":[365,366]},"content":"响应首部字段-重点"},{"type":"heading","depth":4,"payload":{"lines":[367,368]},"content":"实体首部字段"}]}]}]}],"payload":{}},{})</script>
+</body>
+</html>
