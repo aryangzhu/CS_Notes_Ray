@@ -1,3 +1,41 @@
+- [介绍](#介绍)
+- [快速上手](#快速上手)
+  - [创建项目与模板](#创建项目与模板)
+  - [项目目录结构展示](#项目目录结构展示)
+  - [OutLine元素列表](#outline元素列表)
+  - [基本元素](#基本元素)
+  - [<font color="red">模板参数(常用)</font>](#font-colorred模板参数常用font)
+    - [Page Format:报表格式化](#page-format报表格式化)
+- [简单报表](#简单报表)
+  - [新建模板](#新建模板)
+- [<font color="red">主报表与子报表相互传参</font>](#font-colorred主报表与子报表相互传参font)
+  - [主报表配置](#主报表配置)
+  - [子报表配置](#子报表配置)
+  - [在主报表中配置SubReport组件](#在主报表中配置subreport组件)
+  - [<font color="red">细节调整</font>](#font-colorred细节调整font)
+  - [主报表的表格动态高度设置](#主报表的表格动态高度设置)
+- [<font color="red">合并行内容的第二种方案:使用CrossTable组件</font>](#font-colorred合并行内容的第二种方案使用crosstable组件font)
+  - [使用sql语句查询的时候多放置一个字段](#使用sql语句查询的时候多放置一个字段)
+  - [设置横列](#设置横列)
+  - [设置竖列](#设置竖列)
+  - [设置交叉值](#设置交叉值)
+  - [设置Cloumn group高度](#设置cloumn-group高度)
+  - [设置水平居中、垂直居中](#设置水平居中垂直居中)
+- [合并行的第三种方案:取消属性Print Repeated Values(不推荐)](#合并行的第三种方案取消属性print-repeated-values不推荐)
+  - [报表样式配置](#报表样式配置)
+  - [设置属性](#设置属性)
+  - [加入一个Line组件](#加入一个line组件)
+- [<font color="red">使用Table组件</font>](#font-colorred使用table组件font)
+  - [细节调整](#细节调整)
+- [柱状图和饼图](#柱状图和饼图)
+  - [柱状图](#柱状图)
+  - [饼图](#饼图)
+- [](#)
+- [报表平台上传模板文件](#报表平台上传模板文件)
+- [SpringBoot中集成Jaspersoft](#springboot中集成jaspersoft)
+  - [新建SpringBoot项目](#新建springboot项目)
+  - [导入依赖](#导入依赖)
+  - [添加模板的静态资源](#添加模板的静态资源)
 # 介绍
 Jaspersoft：这是基于Eclipse软件开发的图形化报表设计工具。
 # 快速上手
@@ -64,16 +102,22 @@ ___
 # <font color="red">主报表与子报表相互传参</font>
 ## 主报表配置
 **为什么使用主报表和子报表？**  
-因为Detail1代表一条数据,所以需要展示一对多的样式时只凭一张报表无法胜任
+因为Detail1代表一条数据,所以需要展示一对多的样式时只凭一张报表无法胜任,这个时候使用subreport组件就是解决方案之一,但是编译的时候会将子报表也进行编译。
 1. 样式配置  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E4%B8%BB%E8%A1%A8%E6%A0%B7%E5%BC%8F.png)
 2. 配置数据源
 ## 子报表配置
 1. 样式配置  
+只需要保留Detail即可  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E5%AD%90%E6%8A%A5%E8%A1%A8%E6%A0%B7%E5%BC%8F.png)
-2. 创建参数
-需要和主报表传过来的参数保持一致
+根据报表的格式进行设置,**将Detail的宽度和高度和里面的元素大小保持一致**
+2. 创建参数  
+需要和主报表传过来的参数保持一致,主报表中的参数后面会讲到如何设置。  
+将子报表配置放在前面是因为在拖拽subreport时需要选择已存在模板。  
 3. 配置数据源和查询条件
+右键OutLine中当前报表,选择 DataSet and Query...
+选项
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E6%BA%90%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5.png)
 4. 预览
 ## 在主报表中配置SubReport组件
 1. 拖拽SubReport组件至主报表中  
@@ -93,12 +137,73 @@ ___
 如图  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E4%B8%BB%E8%A1%A8%E5%8D%95%E5%85%83%E6%A0%BC%E5%8F%82%E6%95%B0.png)
 ## 主报表的表格动态高度设置
+# <font color="red">合并行内容的第二种方案:使用CrossTable组件</font>
+## 使用sql语句查询的时候多放置一个字段
+```mysql
+select uname,itemname,insure,insurepor,opermoney,extramoney,opermorate,1 a  from insure where   opermoney >$P{condition}
+order by uname
+```
+## 设置横列
+用多余的就可以,注意是否需要total
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E8%AE%BE%E7%BD%AE%E6%A8%AA%E5%88%97.png)
+## 设置竖列
+展示多少个属性
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E8%AE%BE%E7%BD%AE%E7%AB%96%E5%88%97.png)
+## 设置交叉值
+用竖列的其中一个属性就可以
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E8%AE%BE%E7%BD%AE%E4%BA%A4%E5%8F%89%E5%80%BC.png)
+## 设置Cloumn group高度
+设置高度为0px
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E8%AE%BE%E7%BD%AEColumnGroup%E9%AB%98%E5%BA%A6.png)
+## 设置水平居中、垂直居中
+# 合并行的第三种方案:取消属性Print Repeated Values(不推荐)
+这种方案只是提供一种思路,建议还是通过subreport或者crosstable组件来实现行的合并
+## 报表样式配置
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E5%8F%96%E6%B6%88%E9%87%8D%E5%A4%8D%E5%86%85%E5%AE%B9.png)
+一般来说需要合并的都会展示在最左边
+## 设置属性
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-09-16%20%E4%B8%8B%E5%8D%882.30.45.png)
+将Print Pepeated Values这一项设置取消勾选
+## 加入一个Line组件
+由于左侧会取消打印重复的行,所以这个时候的左侧除第一行外会空出来一部分,所以需要加入一个Line组件并设置location和size为float和ContainerBottom。
 # <font color="red">使用Table组件</font>
 1. 拖拽Table组件  
 2. 配置数据源
+右键DataSet1和主报表中设置数据源的方式一致。
 3. 合并单元格
 ## 细节调整
 1. table组件的detail不能超过主报表中的高度,否则会报错
+2. 设置variable变量来进行聚合运算的时候将表达式转换为数值型,否则可能不会生效
+# 柱状图和饼图
+## 柱状图
+1. 使用Chart组件,选择BarChart  
+2. 设置四维参数 Series、Value、Category和Label  
+与常见统计的highchart和echart类似  
+假设我要统计1991年到2021年各产业的GDP，Value就是只GDP的具体数值，Category就是指年份[1991~ 2021]，而Series就是指第一产业到第三产业。
+注:label一般来说不需要关注,如果只显示最后一个值的话那么就将Lable和Category设置成一样的。
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%9F%B1%E7%8A%B6%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
+3. 如果是单柱状图,则不需要Series,将Properties中的Show Legend设置为false。
+注意:value为数值类型如Long、Double等,否则预览时会出错。
+## 饼图
+1. 使用Chart组件,选择PieChart
+2. 设置Series、Key、Lable、Value
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E9%A5%BC%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
+3. 设置DataSet
+# 
+# 报表平台上传模板文件
+1. 配置数据源
+2. 复制粘贴报表模板
+3. 报表平台上传
+4. 实例化
+5. 预览
+# SpringBoot中集成Jaspersoft
+## 新建SpringBoot项目
+## 导入依赖
+## 添加模板的静态资源
+在生成pdf时可能会有乱码的问题出现,所以需要添加字体的静态资源
+
+
+
 
 
 

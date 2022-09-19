@@ -1015,9 +1015,7 @@ from products;
 ```
 
 # 第十三章 分组数据
-
 ## 1.数据分组
-
 为什么有数据分组？
 
 ```mysql
@@ -1025,44 +1023,29 @@ select count(*) as num_prods
 from products
 where vend_id=1003;
 ```
-
 但是如果要返回每个供应商提供的产品数目怎么办?或者返回提供10个产品以上的供应商怎么办?
-
 这就是数据分组的意义所在。
-
 ## 2.创建分组
-
 数据分组通过select语句下的order by子句建立。
-
 ```mysql
 select vend_id,count(*) as num_prods
 from products
 group by vend_id;
 ```
-
 使用group by的规定
-
 group by子句中可以包含任意数量的列。
-
 ## 3.过滤分组
-
 MySQL允许过滤分组,规定包括哪些分组,排除哪些分组。
-
 使用的是**having**子句
-
 ```mysql
 select cust_id,count(*) as orders
 from orders
 group by cust_id
 having count(*)>=2;
 ```
-
 ### **where和having的区别**
-
 where过滤的是行而不是分组,where没有分组的概念。
-
 过滤价格>=10,超过两个以上的产品的供应商
-
 ```mysql
 select vend_id,count(*) as num_prods
 from products
@@ -1070,19 +1053,12 @@ where prod_price>=10
 group by vend_id
 having count(*)>=2;
 ```
-
 ## 4.分组和排序
-
 ### order by与group by的区别
-
-1.order by排序,而group分组行之后输出不一定是分组的顺序。
-
-2.任意列都可以使用order by;而group by只可能使用选择列或表达式列,而且必须使用每个选择列表达式(???)
-
-3.order by不一定需要;但是group by和聚集函数一起使用列(表达式),则一定需要。
-
+1.order by排序,而group分组行之后输出不一定是分组的顺序。  
+2.任意列都可以使用order by;而group by只可能使用选择列或表达式列,而且必须使用每个选择列表达式(???)  
+3.order by不一定需要;但是group by和聚集函数一起使用列(表达式),则一定需要。  
 ## 5.select子句顺序
-
 | 子句     | 说明 | 是否必需               |
 | -------- | ---- | ---------------------- |
 | select   |      | 是                     |
@@ -1094,36 +1070,27 @@ having count(*)>=2;
 | limit    |      | 否                     |
 
 # 第十四章 使用子查询
-
 ## 1.子查询
-
-什么需要子查询?
-
-书上的例子两张表中有共有列(订单编号),所以通过两次查询来得到检索结果。
-
+什么需要子查询?  
+书上的例子两张表中有共有列(订单编号),所以通过两次查询来得到检索结果。  
 ```mysql
 select order_num
 from oderitems
 where prod_id="TNT2";
-```
-
+```  
 ```mysql
 select cust_id
 from orders
 where order_num in (20005,20007)
-```
-
-现在可以使用子查询将其进行合并
-
+```  
+现在可以使用子查询将其进行合并  
 ```mysql
 select cust_id
 from orders
 where order_num in (select order_num from orderitems
 where prod_id='TNT2');
-```
-
-## 2.作为计算字段使用子查询
-
+```  
+## 2.作为计算字段使用子查询  
 ```mysql
 select cust_name,
 	cust_states,
@@ -1132,20 +1099,14 @@ select cust_name,
     where orders.custid=customers.custid) as orders
     from customers
     order by cust_name;
-```
-
-这条select语句对customers表中每个客户返回3列。
-
-### 相关子查询
-
+```  
+这条select语句对customers表中每个客户返回3列。  
+### 相关子查询  
 涉及外部查询的子查询。
-
 ```mysql
 where orders.custid=customers.custid
-```
-
-只要有多义性就必须使用这种语法。
-
+```  
+只要有多义性就必须使用这种语法。    
 # 第十五章 联结表
 ## 1.联结
 ### 1.关系表
