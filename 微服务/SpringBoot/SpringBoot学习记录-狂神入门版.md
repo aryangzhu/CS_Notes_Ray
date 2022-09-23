@@ -40,7 +40,7 @@
 		- [Shiro中经常使用的三个类](#shiro中经常使用的三个类)
 			- [Subject](#subject)
 			- [SubjectManager](#subjectmanager)
-			- [Relm](#relm)
+			- [Realm](#realm)
 		- [常用API](#常用api)
 		- [项目使用](#项目使用)
 			- [1.配置Shiro相关的类即ShrioConfig](#1配置shiro相关的类即shrioconfig)
@@ -258,9 +258,9 @@ protected void configure(AuthenticationManagerBuilder auth)throws Exception{
 #### Subject
 我们正在进行的认证和授权的对象,通过subject.getPrinpal()获取。
 #### SubjectManager
-#### Relm
+安全管理器,所有与安全有关的操作都会与SecruityManager,与Subject的所有交互都会委托给SecruityManager;可以把Subject认为是一个**门面(???)**;
+#### Realm
 真正连接数据库并进行认证和授权的类。
-
 ### 常用API
 Subject currentUser=SecurityUtils.getSubject();  
 Session session=currentUser.getSession();  

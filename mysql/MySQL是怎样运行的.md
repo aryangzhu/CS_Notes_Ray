@@ -98,4 +98,30 @@ https://draveness.me/mysql-innodb/
 ## 行溢出数据
 当InnoDB使用Compact或者Redundant格式**存储极长的VARCHAR或者BLOB这类大对象时**,我们**并不会直接将所有的内容都存放在数据页节点中**,而是将行数据中的前768个字节存储在数据页中,后面会通过偏移量指向溢出页。  
 当使用新的记录格式Compressed或者Dynamic时都会只在行记录中保存20个子节的指针,**实际的数据都会存放在溢出页面中**。
-# 
+# InnoDB数据页结构
+## 不同类型的页
+为了不同的目的设计了许多种不同类型的页,比如存放头部信息的页,存放Insert Buffer信息的,存放index信息的页,存放undo日志信息的页等
+## 数据页结构的快速浏览
+数据页代表的这块16KB大小的存储空间可以被划分多个部分,不同的部分有不同的功能  
+1. File Header
+2. Page Header
+3. Infimum+supremum 两个虚拟的行记录 最大记录和最小记录
+4. User Records 真实存储行记录内容
+5. Free Space
+6. Page Directory 页中的某些记录的相对位置  
+7. File Tailer
+## 记录在页中的存储
+### 记录头的构成
+1. 预留位1
+2. 预留位2
+3. delete_mask 标记该记录是否被删除  
+4. min_rec_mask B+树的每层非叶子结点的最小记录
+5. n_owned 表示当前拥有的记录数
+6. heap_no 表示当前记录在记录堆中的位置
+7. record_type 表示当前记录的类型
+8. next_record 表示下一条记录的相对位置 
+## Page Directory(页目录)
+## Page Header(页面头部)
+## File Header(文件头部)
+## File Trailer(文件尾部)
+## 总结

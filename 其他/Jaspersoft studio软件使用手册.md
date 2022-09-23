@@ -30,12 +30,12 @@
 - [柱状图和饼图](#柱状图和饼图)
   - [柱状图](#柱状图)
   - [饼图](#饼图)
-- [](#)
 - [报表平台上传模板文件](#报表平台上传模板文件)
 - [SpringBoot中集成Jaspersoft](#springboot中集成jaspersoft)
   - [新建SpringBoot项目](#新建springboot项目)
   - [导入依赖](#导入依赖)
   - [添加模板的静态资源](#添加模板的静态资源)
+- [使用Jaspersoft开发](#使用jaspersoft开发)
 # 介绍
 Jaspersoft：这是基于Eclipse软件开发的图形化报表设计工具。
 # 快速上手
@@ -102,7 +102,7 @@ ___
 # <font color="red">主报表与子报表相互传参</font>
 ## 主报表配置
 **为什么使用主报表和子报表？**  
-因为Detail1代表一条数据,所以需要展示一对多的样式时只凭一张报表无法胜任,这个时候使用subreport组件就是解决方案之一,但是编译的时候会将子报表也进行编译。
+因为Detail1代表一条数据,所以需要展示一对多的样式(要求居中垂直)时只凭一张报表无法胜任,这个时候使用subreport组件就是解决方案之一,但是编译的时候会将子报表也进行编译。
 1. 样式配置  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E4%B8%BB%E8%A1%A8%E6%A0%B7%E5%BC%8F.png)
 2. 配置数据源
@@ -138,6 +138,8 @@ ___
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E4%B8%BB%E8%A1%A8%E5%8D%95%E5%85%83%E6%A0%BC%E5%8F%82%E6%95%B0.png)
 ## 主报表的表格动态高度设置
 # <font color="red">合并行内容的第二种方案:使用CrossTable组件</font>
+使用crosstable的需要提前设计好表格的样式(需要展示多少个属性,展示在什么地方)  
+**CrossTab需要放在Summry的Band中**
 ## 使用sql语句查询的时候多放置一个字段
 ```mysql
 select uname,itemname,insure,insurepor,opermoney,extramoney,opermorate,1 a  from insure where   opermoney >$P{condition}
@@ -182,25 +184,31 @@ order by uname
 假设我要统计1991年到2021年各产业的GDP，Value就是只GDP的具体数值，Category就是指年份[1991~ 2021]，而Series就是指第一产业到第三产业。
 注:label一般来说不需要关注,如果只显示最后一个值的话那么就将Lable和Category设置成一样的。
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%9F%B1%E7%8A%B6%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
-3. 如果是单柱状图,则不需要Series,将Properties中的Show Legend设置为false。
 注意:value为数值类型如Long、Double等,否则预览时会出错。
+3. 创建DataSet并传递参数
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/SubDataSet.png) 
+点击上一步的DataSet中的parameters就可以设置参数  
+需要向当前的SubDataSet中传入参数,可以是Main DataSet中的Fields中的其中一个属性。  
+4. 如果是单柱状图,则不需要Series,将Properties中的Show Legend设置为false。
 ## 饼图
 1. 使用Chart组件,选择PieChart
 2. 设置Series、Key、Lable、Value
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E9%A5%BC%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
 3. 设置DataSet
-# 
+和柱状图一样根据需要传递参数
 # 报表平台上传模板文件
-1. 配置数据源
-2. 复制粘贴报表模板
-3. 报表平台上传
-4. 实例化
-5. 预览
+1. 检查是否有对应数据源,如果没有需要新建
+2. 报表管理中上传
+3. 实例化
+4. 预览
 # SpringBoot中集成Jaspersoft
 ## 新建SpringBoot项目
 ## 导入依赖
 ## 添加模板的静态资源
 在生成pdf时可能会有乱码的问题出现,所以需要添加字体的静态资源
+# 使用Jaspersoft开发
+
+
 
 
 
