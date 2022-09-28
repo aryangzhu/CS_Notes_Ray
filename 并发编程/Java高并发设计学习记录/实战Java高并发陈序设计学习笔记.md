@@ -1,3 +1,13 @@
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 第一章 走入并行
 ## 必须知道的几个概念
 ### 同步和异步
@@ -238,7 +248,7 @@ ThreadPoolExecutor.Worker是ThreadPoolExecutor的**内部类**,它是一个**实
 ### 优化线程池线程数量
 ### 线程池中的堆栈
 对于我们查看多线程程序的运行情况的了解非常有帮助。
-使用execute()或者Future的返沪类型,如:  
+使用execute()或者Future类型,如:  
 Future re=pools.submit(new DivTask(100,i));
 re.get();
 更进一步,我们可以找到任务是在哪里提交的,这就需要我们来动手扩展线程池
