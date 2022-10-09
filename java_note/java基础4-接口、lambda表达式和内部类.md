@@ -1,70 +1,15 @@
-- [接口](#接口)
-  - [接口的概念](#接口的概念)
-      - [常用API](#常用api)
-  - [接口的属性](#接口的属性)
-  - [接口与抽象类](#接口与抽象类)
-    - [共同点](#共同点)
-    - [区别](#区别)
-  - [静态和私有方法](#静态和私有方法)
-  - [默认方法](#默认方法)
-  - [默认方法解决冲突](#默认方法解决冲突)
-  - [接口与回调](#接口与回调)
-  - [Comparator接口](#comparator接口)
-  - [对象克隆Cloneable](#对象克隆cloneable)
-- [lamda表达式](#lamda表达式)
-  - [为什么引入lamba表达式](#为什么引入lamba表达式)
-  - [lamba表达式的语法](#lamba表达式的语法)
-    - [几种常见的用法](#几种常见的用法)
-    - [函数式接口](#函数式接口)
-      - [Java API在java.util.function包中定义的通用的函数式接口](#java-api在javautilfunction包中定义的通用的函数式接口)
-        - [Predicate接口](#predicate接口)
-  - [方法引用](#方法引用)
-    - [使用::运算符的三种情况](#使用运算符的三种情况)
-      - [1.object::instanceMethod](#1objectinstancemethod)
-      - [2.Class::instanceMethod](#2classinstancemethod)
-      - [3.Class:StaticMethod](#3classstaticmethod)
-  - [引用构造](#引用构造)
-  - [变量的作用域](#变量的作用域)
-  - [处理lambda表达式](#处理lambda表达式)
-  - [再谈Comparator](#再谈comparator)
-- [内部类](#内部类)
-  - [使用内部类访问对象状态](#使用内部类访问对象状态)
-  - [内部类的特殊语法规则](#内部类的特殊语法规则)
-    - [1.OuterClass.this](#1outerclassthis)
-    - [2.outerObject.new innerClass(construction parameters)](#2outerobjectnew-innerclassconstruction-parameters)
-    - [3.几个注意的点](#3几个注意的点)
-      - [1.外围类的作用域之外调用内部类](#1外围类的作用域之外调用内部类)
-      - [2.内部类中的静态字段都必须是final,并初始化为一个编译时常量](#2内部类中的静态字段都必须是final并初始化为一个编译时常量)
-      - [3.内部类中不允许有static方法](#3内部类中不允许有static方法)
-  - [内部类是否有用、必要和安全](#内部类是否有用必要和安全)
-  - [内部局部类](#内部局部类)
-  - [由外部方法访问变量](#由外部方法访问变量)
-  - [匿名内部类](#匿名内部类)
-  - [静态内部类](#静态内部类)
-    - [注意](#注意)
-- [服务加载器](#服务加载器)
-    - [常用API](#常用api-1)
-      - [java.util.ServiceLoader\<S>](#javautilserviceloaders)
-      - [java.util.ServiceLoader.Provider\<S>](#javautilserviceloaderproviders)
-- [JDK动态代理](#jdk动态代理)
-  - [何时使用代理](#何时使用代理)
-  - [InvocationHandler接口](#invocationhandler接口)
-  - [创建代理对象](#创建代理对象)
-  - [JDK动态代理的使用步骤](#jdk动态代理的使用步骤)
-    - [两个需要解决的问题:](#两个需要解决的问题)
-      - [如何定义处理器？](#如何定义处理器)
-      - [对于得到的代理对象能够做些什么？](#对于得到的代理对象能够做些什么)
-  - [代理类的特性](#代理类的特性)
-    - [常用API](#常用api-2)
-      - [java.lang.refelt.InvocationHandler](#javalangrefeltinvocationhandler)
-      - [java.lang.refelt.Proxy](#javalangrefeltproxy)
-- [CGLIB动态代理机制](#cglib动态代理机制)
-  - [介绍](#介绍)
-  - [使用步骤](#使用步骤)
-  - [JavaGuide示例](#javaguide示例)
-  接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
-
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 接口
+接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
 ## 接口的概念
 接口不是类，而是希望实现它的所要完成的一组需求。
 例如Comparable接口的代码

@@ -1,105 +1,15 @@
-- [历史发展](#历史发展)
-  - [MySQL单机演变](#mysql单机演变)
-  - [当今企业架构](#当今企业架构)
-  - [NoSQL](#nosql)
-    - [键值](#键值)
-    - [文档](#文档)
-    - [图](#图)
-    - [列数据](#列数据)
-  - [阿里巴巴的架构演进](#阿里巴巴的架构演进)
-- [Redis简介](#redis简介)
-  - [特点](#特点)
-- [安装Redis](#安装redis)
-  - [ubuntu18.04安装](#ubuntu1804安装)
-  - [Redis下的配置文件redis.conf](#redis下的配置文件redisconf)
-  - [性能测试redis-benchmark](#性能测试redis-benchmark)
-  - [远程连接](#远程连接)
-- [Redis 数据类型](#redis-数据类型)
-  - [键](#键)
-    - [选择数据库](#选择数据库)
-    - [查看当前数据库大小](#查看当前数据库大小)
-    - [清楚当前数据库](#清楚当前数据库)
-    - [检查是否存在](#检查是否存在)
-    - [查看所有键](#查看所有键)
-    - [删除key](#删除key)
-    - [设置失效时间](#设置失效时间)
-    - [查看当前key的剩余时间](#查看当前key的剩余时间)
-    - [查看指定key的类型](#查看指定key的类型)
-  - [String](#string)
-    - [使用场景](#使用场景)
-    - [设置值](#设置值)
-    - [获得值](#获得值)
-    - [追加字符串](#追加字符串)
-    - [获取字符串长度](#获取字符串长度)
-    - [自增和自减](#自增和自减)
-    - [设置步长自增自减](#设置步长自增自减)
-    - [截取字符串](#截取字符串)
-    - [替换指定位置开始的字符串](#替换指定位置开始的字符串)
-    - [设置过期时间(set with expire)](#设置过期时间set-with-expire)
-    - [不存在在设置(set if not exist),分布式锁经常会用到](#不存在在设置set-if-not-exist分布式锁经常会用到)
-    - [批量设置多个值(mulit set)](#批量设置多个值mulit-set)
-    - [批量获取多个值](#批量获取多个值)
-    - [批量设置原子操作(并发中的情况)](#批量设置原子操作并发中的情况)
-    - [设置对象](#设置对象)
-    - [getset 先获取再存储](#getset-先获取再存储)
-  - [List](#list)
-    - [lpush 添加一个或者多个值](#lpush-添加一个或者多个值)
-    - [rpush 从右边插入](#rpush-从右边插入)
-    - [lrange 获取区间的值](#lrange-获取区间的值)
-      - [lrange 0 -1 获取所有的值](#lrange-0--1-获取所有的值)
-      - [lrange 0 3 指定区间](#lrange-0-3-指定区间)
-    - [lpop 移出list的第一个元素](#lpop-移出list的第一个元素)
-    - [rpop 从右边移出list的最后一个元素](#rpop-从右边移出list的最后一个元素)
-    - [lindex list 根据下标获取元素](#lindex-list-根据下标获取元素)
-    - [llen list 获取长度](#llen-list-获取长度)
-    - [lrem 删除指定个数的value](#lrem-删除指定个数的value)
-    - [ltrim 截取指定长度的元素](#ltrim-截取指定长度的元素)
-    - [rpoplpush list1 list2 移除列表的最后一个元素，将他移动到新的列表中](#rpoplpush-list1-list2-移除列表的最后一个元素将他移动到新的列表中)
-    - [lset 更新list当中存在的元素](#lset-更新list当中存在的元素)
-    - [insert list before b xxx指定位置插入](#insert-list-before-b-xxx指定位置插入)
-  - [Set](#set)
-    - [添加元素](#添加元素)
-    - [查看集合中元素 smembers](#查看集合中元素-smembers)
-    - [查看个数](#查看个数)
-    - [随机获取集合中的元素](#随机获取集合中的元素)
-    - [随机删除集合中的元素](#随机删除集合中的元素)
-    - [移动指定元素](#移动指定元素)
-    - [差集/交集/并集SDIFF/SINTER/SUNION](#差集交集并集sdiffsintersunion)
-  - [zset(sorted set)](#zsetsorted-set)
-    - [添加元素](#添加元素-1)
-    - [获取所有元素](#获取所有元素)
-    - [排序](#排序)
-      - [从大到小](#从大到小)
-      - [显示全部用户并且附带成绩](#显示全部用户并且附带成绩)
-    - [升/降序](#升降序)
-    - [获取指定区间元素个数](#获取指定区间元素个数)
-  - [哈希(Hash)](#哈希hash)
-    - [设置字段值](#设置字段值)
-      - [设置多个字段值](#设置多个字段值)
-    - [获取多个指定的字段值](#获取多个指定的字段值)
-    - [获取全部的值](#获取全部的值)
-    - [删除指定的键](#删除指定的键)
-    - [获取键值对的个数](#获取键值对的个数)
-    - [判断hash中指定字段是否存在](#判断hash中指定字段是否存在)
-    - [获取所有的key/value](#获取所有的keyvalue)
-  - [3种特殊的数据结构](#3种特殊的数据结构)
-    - [geospatial地理位置](#geospatial地理位置)
-    - [Hyperloger基数统计](#hyperloger基数统计)
-    - [Bitmaps位存储](#bitmaps位存储)
-  - [事务](#事务)
-    - [开启与执行](#开启与执行)
-    - [开启与取消](#开启与取消)
-  - [Redis实现乐观锁](#redis实现乐观锁)
-    - [乐观锁](#乐观锁)
-    - [悲观锁](#悲观锁)
-  - [redis.conf](#redisconf)
-    - [基本配置](#基本配置)
-    - [快照配置](#快照配置)
-    - [主从配置](#主从配置)
-  - [持久化操作](#持久化操作)
-    - [RDB(Redis Database)](#rdbredis-database)
-    - [触发机制](#触发机制)
-    - [](#)
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
 # 历史发展
 ## MySQL单机演变
 单机读写压力，主要是读压力，所以需要多台服务器。
@@ -261,7 +171,7 @@ hkeys/hvals
 用途:网站的UV
 ### Bitmaps位存储
 用途:统计用户信息，活跃/不活跃等。本质上就是以二进制0和1来进行判断。
-## 事务
+# 事务
 Redis没有事务的隔离级别这个概念。Redis单条命令是原子性的但是事务并不是原子性的。
 ### 开启与执行
 multi 开启
@@ -273,16 +183,16 @@ set ...
 discard 取消
 编译型异常(代码本身有问题) 事务不会执行
 运行时异常 异常的这一行不会执行，其他的照常执行
-## Redis实现乐观锁
+# Redis实现乐观锁
 ### 乐观锁
 1. 认为什么时候都不会有问题,更新数据的时候去判断一下,在此期间是否有人修改过这个数据
 2. 获取version
 3. 更新的时候比较version
 ### 悲观锁
-## redis.conf
-### 基本配置
-### 快照配置
-### 主从配置
+# redis.conf配置
+## 基本配置
+## 快照配置
+## 主从配置
 ## 持久化操作
 ### RDB(Redis Database)
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/RDB.png)
@@ -292,7 +202,6 @@ flushall触发rdb规则
 退出redis触发rdb规则
 备份的快照 dump.rdb
 **恢复时只需要将备份放在redis的启动目录下就可以**
-
 ### 
 
 

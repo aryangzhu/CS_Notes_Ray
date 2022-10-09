@@ -1,0 +1,599 @@
+<!DOCTYPE html><html><head>
+      <title>MySQL&#x662F;&#x600E;&#x6837;&#x8FD0;&#x884C;&#x7684;</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////Users/liulei/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.6.3/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <div class="code-chunk" data-id="code-chunk-id-0" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>&#x25B6;&#xFE0E;</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><h1 class="mume-header" id="%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86mysql">&#x91CD;&#x65B0;&#x8BA4;&#x8BC6;MySQL</h1>
+
+<h2 class="mume-header" id="%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9E%B6%E6%9E%84">&#x5BA2;&#x6237;&#x7AEF;/&#x670D;&#x52A1;&#x5668;&#x67B6;&#x6784;</h2>
+
+<h2 class="mume-header" id="mysql%E7%9A%84%E5%AE%89%E8%A3%85">MySQL&#x7684;&#x5B89;&#x88C5;</h2>
+
+<h3 class="mume-header" id="bin%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6">bin&#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x53EF;&#x6267;&#x884C;&#x6587;&#x4EF6;</h3>
+
+<h2 class="mume-header" id="%E5%90%AF%E5%8A%A8mysql%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F">&#x542F;&#x52A8;MySQL&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;</h2>
+
+<h3 class="mume-header" id="unix%E9%87%8C%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F">UNIX&#x91CC;&#x542F;&#x52A8;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;</h3>
+
+<ol>
+<li>mysqld &#x53EF;&#x4EE5;&#x542F;&#x52A8;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;</li>
+<li>mysqld_safe  &#x542F;&#x52A8;&#x811A;&#x672C;,&#x95F4;&#x63A5;&#x8C03;&#x7528;mysqld,&#x987A;&#x4FBF;&#x542F;&#x52A8;&#x4E00;&#x4E2A;&#x76D1;&#x63A7;&#x7EBF;&#x7A0B;,&#x5728;&#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;&#x6302;&#x4E86;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5E2E;&#x52A9;&#x91CD;&#x542F;&#x3002;</li>
+<li>mysql.server &#x542F;&#x52A8;&#x811A;&#x672C;,&#x95F4;&#x63A5;&#x8C03;&#x7528;mysql_safe,&#x5728;&#x8C03;&#x7528;mysql.server&#x65F6;&#x5728;&#x540E;&#x8FB9;&#x6307;&#x5B9A;start&#x53C2;&#x6570;&#x5C31;&#x53EF;&#x4EE5;&#x542F;&#x52A8;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;&#x3002; mysql.server start</li>
+<li>mysqld_multi &#x5BF9;&#x6BCF;&#x4E00;&#x4E2A;&#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;&#x7684;&#x542F;&#x52A8;&#x548C;&#x505C;&#x6B62;&#x8FDB;&#x884C;&#x76D1;&#x63A7;</li>
+</ol>
+<h2 class="mume-header" id="%E5%90%AF%E5%8A%A8mysql%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%A8%8B%E5%BA%8F">&#x542F;&#x52A8;MySQL&#x5BA2;&#x6237;&#x7AEF;&#x7A0B;&#x5E8F;</h2>
+
+<pre data-role="codeBlock" data-info="shell" class="language-shell">mysql -h&#x4E3B;&#x673A;&#x540D; -u&#x7528;&#x6237;&#x540D; -p&#x5BC6;&#x7801;
+</pre><p>&#x672C;&#x4E0A;&#x662F;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x95F4;&#x901A;&#x4FE1;&#x7684;&#x8FC7;&#x7A0B;</p>
+<h2 class="mume-header" id="%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E6%8E%A5%E7%9A%84%E8%BF%87%E7%A8%8B">&#x5BA2;&#x6237;&#x7AEF;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x8FDE;&#x63A5;&#x7684;&#x8FC7;&#x7A0B;</h2>
+
+<h3 class="mume-header" id="tcpip">TCP/IP</h3>
+
+<p>&#x5982;&#x679C;&#x4F7F;&#x7528;TCP/IP&#x7F51;&#x7EDC;&#x6765;&#x8FDE;&#x63A5;&#x5230;&#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;,&#x5C31;&#x9700;&#x8981;&#x5728;&#x542F;&#x52A8;&#x5BA2;&#x6237;&#x7AEF;&#x7A0B;&#x5E8F;&#x65F6;&#x5728;-h&#x540E;&#x9762;&#x4F7F;&#x7528;IP&#x5730;&#x5740;&#x6765;&#x4F5C;&#x4E3A;&#x9700;&#x8981;&#x8FDE;&#x63A5;&#x7684;&#x670D;&#x52A1;&#x5668;&#x8FDB;&#x7A0B;&#x6240;&#x5728;&#x4E3B;&#x673A;&#x7684;&#x4E3B;&#x673A;&#x540D;&#x3002;</p>
+<h2 class="mume-header" id="%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E8%AF%B7%E6%B1%82">&#x670D;&#x52A1;&#x5668;&#x5904;&#x7406;&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x8BF7;&#x6C42;</h2>
+
+<h1 class="mume-header" id="%E5%90%AF%E5%8A%A8%E9%80%89%E9%A1%B9%E5%92%8C%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x542F;&#x52A8;&#x9009;&#x9879;&#x548C;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</h1>
+
+<h2 class="mume-header" id="%E5%90%AF%E5%8A%A8%E9%80%89%E9%A1%B9%E5%92%8C%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">&#x542F;&#x52A8;&#x9009;&#x9879;&#x548C;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</h2>
+
+<h3 class="mume-header" id="%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8A%E4%BD%BF%E7%94%A8%E9%80%89%E9%A1%B9">&#x5728;&#x547D;&#x4EE4;&#x884C;&#x4E0A;&#x4F7F;&#x7528;&#x9009;&#x9879;</h3>
+
+<p>&#x4F8B;&#x5982;,&#x542F;&#x52A8;&#x65F6;&#x7981;&#x6B62;&#x4F7F;&#x7528;TCP/IP&#x7F51;&#x7EDC;&#x901A;&#x4FE1;&#x3002;</p>
+<pre data-role="codeBlock" data-info="shell" class="language-shell">mysql --skip-networking
+</pre><p>&#x6307;&#x5B9A;&#x542F;&#x52A8;&#x9009;&#x9879;&#x65F6;&#x9700;&#x8981;&#x52A0;&#x4E0A;--&#x524D;&#x7F00;&#x3002;&#x53E6;&#x5916;&#x5982;&#x679C;&#x9009;&#x9879;&#x540D;&#x662F;&#x7531;&#x591A;&#x4E2A;&#x5355;&#x8BCD;&#x6784;&#x6210;&#x7684;,&#x4ED6;&#x4EEC;&#x4E4B;&#x95F4;&#x53EF;&#x4EE5;&#x7531;&#x77ED;&#x5212;&#x7EBF;-&#x8FDE;&#x63A5;&#x8D77;&#x6765;&#x3002;&#x6BD4;&#x5982;,skip-networking&#x548C;skip_networking&#x8868;&#x793A;&#x7684;&#x542B;&#x4E49;&#x662F;&#x76F8;&#x540C;&#x7684;&#x3002;<br>
+&#x8FD8;&#x6709;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;&#x662F;&#x542F;&#x52A8;&#x65F6;&#x8BBE;&#x7F6E;&#x8868;&#x7684;&#x5B58;&#x50A8;&#x5F15;&#x64CE;<br>
+&#x4E66;&#x4E0A;&#x8FD8;&#x5F3A;&#x8C03;&#x4E86;&#x4E00;&#x4E0B;&#x9009;&#x9879;&#x7684;&#x957F;&#x5F62;&#x5F0F;&#x548C;&#x77ED;&#x5F62;&#x5F0F;,&#x4F8B;&#x5982;--host -h&#x4E3B;&#x673A;&#x540D;&#x8FD9;&#x6837;&#x5F0F;&#x513F;&#x7684;</p>
+<h3 class="mume-header" id="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BD%BF%E7%94%A8%E9%80%89%E9%A1%B9">&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4F7F;&#x7528;&#x9009;&#x9879;</h3>
+
+<p>&#x56E0;&#x4E3A;&#x542F;&#x52A8;&#x65F6;&#x547D;&#x4EE4;&#x884C;&#x9009;&#x9879;&#x53EA;&#x5728;&#x672C;&#x6B21;&#x8D77;&#x4F5C;&#x7528;,&#x6240;&#x4EE5;&#x653E;&#x5728;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x6C38;&#x4E45;&#x751F;&#x6548;</p>
+<h4 class="mume-header" id="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84">&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x8DEF;&#x5F84;</h4>
+
+<p>&#x8FD9;&#x5757;&#x5BF9;&#x4E8E;&#x7C7B;unix&#x7684;&#x8DEF;&#x5F84;&#x8FDB;&#x884C;&#x63CF;&#x8FF0;</p>
+<h4 class="mume-header" id="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9">&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x5185;&#x5BB9;</h4>
+
+<p>&#x5206;&#x7EC4;&#x8FDB;&#x884C;&#x914D;&#x7F6E;,&#x5404;&#x4E2A;&#x542F;&#x52A8;&#x547D;&#x4EE4;&#x4E5F;&#x6709;&#x80FD;&#x8BFB;&#x53D6;&#x7684;&#x7EC4;&#x7684;&#x9650;&#x5236;&#x3002;<br>
+&#x6CE8;:&#x5982;&#x679C;&#x540C;&#x4E00;&#x4E2A;&#x542F;&#x52A8;&#x9009;&#x9879;&#x5373;&#x51FA;&#x73B0;&#x5728;&#x547D;&#x4EE4;&#x884C;&#x4E2D;,&#x53C8;&#x51FA;&#x73B0;&#x5728;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;,&#x90A3;&#x4E48;&#x4EE5;&#x547D;&#x4EE4;&#x884C;&#x7684;&#x542F;&#x52A8;&#x9009;&#x9879;&#x4E3A;&#x51C6;&#x3002;</p>
+<h1 class="mume-header" id="%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</h1>
+
+<h2 class="mume-header" id="%E7%AE%80%E4%BB%8B">&#x7B80;&#x4ECB;</h2>
+
+<p>&#x5728;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;&#x8FD0;&#x884C;&#x8FC7;&#x7A0B;&#x4E2D;&#x80FD;&#x5BF9;&#x5176;&#x9020;&#x6210;&#x5F71;&#x54CD;&#x7684;&#x53D8;&#x91CF;&#x3002;</p>
+<h2 class="mume-header" id="%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x67E5;&#x770B;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</h2>
+
+<pre data-role="codeBlock" data-info="shell" class="language-shell">show variables like <span class="token string">&apos;default_storage_engine&apos;</span>
+</pre><h2 class="mume-header" id="%E8%AE%BE%E7%BD%AE%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x8BBE;&#x7F6E;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</h2>
+
+<h3 class="mume-header" id="%E9%80%9A%E8%BF%87%E5%90%AF%E5%8A%A8%E9%80%89%E9%A1%B9%E8%AE%BE%E7%BD%AE">&#x901A;&#x8FC7;&#x542F;&#x52A8;&#x9009;&#x9879;&#x8BBE;&#x7F6E;</h3>
+
+<h3 class="mume-header" id="%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%AE%BE%E7%BD%AE">&#x670D;&#x52A1;&#x5668;&#x8FD0;&#x884C;&#x8FC7;&#x7A0B;&#x4E2D;&#x8BBE;&#x7F6E;</h3>
+
+<h4 class="mume-header" id="%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%90%8C%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x8BBE;&#x7F6E;&#x4E0D;&#x540C;&#x4F5C;&#x7528;&#x8303;&#x56F4;&#x7684;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</h4>
+
+<p>&#x4E66;&#x4E0A;&#x63D0;&#x5230;&#x4E86;&#x4E24;&#x4E2A;&#x6982;&#x5FF5;&#x6216;&#x8005;&#x8BF4;&#x662F;&#x4E24;&#x4E2A;&#x8303;&#x56F4;,&#x4E00;&#x4E2A;&#x662F;global,&#x53E6;&#x4E00;&#x4E2A;&#x662F;session&#x3002;</p>
+<ol>
+<li>GLOBL:&#x5168;&#x5C40;&#x53D8;&#x91CF;,&#x5F71;&#x54CD;&#x670D;&#x52A1;&#x5668;&#x7684;&#x6574;&#x4F53;&#x64CD;&#x4F5C;</li>
+<li>SESSION:&#x4F1A;&#x8BDD;&#x53D8;&#x91CF;,&#x5F71;&#x54CD;&#x67D0;&#x4E2A;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;&#x7684;&#x64CD;&#x4F5C;<br>
+&#x670D;&#x52A1;&#x5668;&#x542F;&#x52A8;&#x65F6;,&#x4F1A;&#x5C06;&#x6BCF;&#x4E2A;&#x5168;&#x5C40;&#x53D8;&#x91CF;&#x521D;&#x59CB;&#x5316;&#x4E3A;&#x5176;&#x9ED8;&#x8BA4;&#x503C;&#x3002;&#x670D;&#x52A1;&#x5668;&#x4F1A;&#x4E3A;&#x6BCF;&#x4E2A;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;&#x7EF4;&#x62A4;&#x4E00;&#x7EC4;&#x4F1A;&#x8BDD;&#x53D8;&#x91CF;,&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x4F1A;&#x8BDD;&#x53D8;&#x91CF;&#x5728;&#x8FDE;&#x63A5;&#x65F6;&#x4F7F;&#x7528;&#x76F8;&#x5E94;&#x5168;&#x5C40;&#x53D8;&#x91CF;&#x7684;&#x5F53;&#x524D;&#x503C;&#x521D;&#x59CB;&#x5316;&#x3002;<br>
+&#x5982;&#x679C;&#x5728;&#x8BBE;&#x7F6E;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;&#x7684;&#x8BED;&#x53E5;&#x4E2D;&#x7701;&#x7565;&#x4E86;&#x4F5C;&#x7528;&#x8303;&#x56F4;,<strong>&#x9ED8;&#x8BA4;&#x7684;&#x4F5C;&#x7528;&#x8303;&#x56F4;&#x5C31;&#x662F;SESSION</strong>(&#x8FD9;&#x6B21;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;)&#x3002;</li>
+</ol>
+<h4 class="mume-header" id="%E6%9F%A5%E7%9C%8B%E4%B8%8D%E5%90%8C%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x67E5;&#x770B;&#x4E0D;&#x540C;&#x4F5C;&#x7528;&#x8303;&#x56F4;&#x7684;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</h4>
+
+<p>&#x540C;&#x6837;&#x4E5F;&#x662F;&#x4F7F;&#x7528;show varaibles like &apos;default_storage_engine&apos;</p>
+<h2 class="mume-header" id="%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F">&#x72B6;&#x6001;&#x53D8;&#x91CF;</h2>
+
+<p>&#x4E3A;&#x4E86;&#x68C0;&#x6D4B;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;&#x7684;&#x8FD0;&#x884C;&#x60C5;&#x51B5;&#x800C;&#x5B58;&#x5728;&#x7684;&#x53D8;&#x91CF;,&#x7531;&#x6B64;&#x800C;&#x77E5;,&#x5B83;&#x4EEC;&#x7684;&#x503C;&#x662F;&#x7531;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;&#x6765;&#x8BBE;&#x7F6E;&#x7684;&#x3002;<br>
+show status like &apos;thread%&apos;<br>
+&#x72B6;&#x6001;&#x53D8;&#x91CF;&#x4E5F;&#x6709;global&#x548C;session&#x4E24;&#x4E2A;&#x4F5C;&#x7528;&#x8303;&#x56F4;&#x3002;</p>
+<h1 class="mume-header" id="%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99">&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;</h1>
+
+<h2 class="mume-header" id="%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E4%BB%8B%E7%BB%8D">&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x4ECB;&#x7ECD;</h2>
+
+<h3 class="mume-header" id="%E5%AD%97%E7%AC%A6%E9%9B%86%E7%AE%80%E4%BB%8B">&#x5B57;&#x7B26;&#x96C6;&#x7B80;&#x4ECB;</h3>
+
+<p>&#x5C06;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#x636E;&#x8F6C;&#x6362;&#x4E3A;&#x5B57;&#x7B26;&#x6240;&#x7528;&#x7684;&#x8FD9;&#x5957;&#x8F6C;&#x6362;&#x89C4;&#x5219;&#x5C31;&#x662F;&#x5B57;&#x7B26;&#x96C6;</p>
+<h3 class="mume-header" id="%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E7%AE%80%E4%BB%8B">&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7B80;&#x4ECB;</h3>
+
+<p>a-0x01 b-0x02<br>
+&#x4E0A;&#x9762;&#x7684;&#x5B57;&#x7B26;&#x5982;&#x679C;&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#x636E;&#x81EA;&#x8EAB;&#x7684;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x6765;&#x8FDB;&#x884C;&#x6BD4;&#x8F83;&#x7684;&#x8BDD;,&#x90A3;&#x4E48;&#x5927;&#x591A;&#x6570;&#x65F6;&#x5019;&#x662F;&#x4E0D;&#x7B26;&#x5408;&#x573A;&#x666F;&#x9700;&#x6C42;&#x7684;&#x3002;<br>
+&apos;a&apos;&#x548C;&apos;A&apos;&#x8FDB;&#x884C;&#x6BD4;&#x8F83;&#x65F6;:</p>
+<ol>
+<li>&#x5C06;&#x4E24;&#x4E2A;&#x5927;&#x5C0F;&#x5199;&#x4E0D;&#x540C;&#x7684;&#x5B57;&#x7B26;&#x5168;&#x90E8;&#x8F6C;&#x6362;&#x4E3A;&#x5927;&#x5199;&#x6216;&#x8005;&#x5C0F;&#x5199;</li>
+<li>&#x518D;&#x6BD4;&#x8F83;&#x8FD9;&#x4E24;&#x4E2A;&#x5B57;&#x7B26;&#x5BF9;&#x5E94;&#x7684;&#x4E8C;&#x8FDB;&#x5236;&#x6570;&#x636E;&#x3002;</li>
+</ol>
+<h2 class="mume-header" id="%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E7%9A%84%E5%BA%94%E7%94%A8">&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7684;&#x5E94;&#x7528;</h2>
+
+<h3 class="mume-header" id="%E5%90%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99">&#x5404;&#x7EA7;&#x522B;&#x7684;&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;</h3>
+
+<h3 class="mume-header" id="%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%92%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86">&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x901A;&#x4FE1;&#x8FC7;&#x7A0B;&#x4E2D;&#x4F7F;&#x7528;&#x7684;&#x5B57;&#x7B26;&#x96C6;</h3>
+
+<h3 class="mume-header" id="%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E7%9A%84%E5%BA%94%E7%94%A8">&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7684;&#x5E94;&#x7528;</h3>
+
+<h2 class="mume-header" id="%E6%80%BB%E7%BB%93">&#x603B;&#x7ED3;</h2>
+
+<ol>
+<li>&#x5B57;&#x7B26;&#x96C6;</li>
+<li>&#x6BD4;&#x8F83;&#x89C4;&#x5219;</li>
+<li>&#x5728;MySQL&#x4E2D;,&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#x96C6;&#x53EF;&#x4EE5;&#x6709;&#x82E5;&#x5E72;&#x79CD;&#x6BD4;&#x8F83;&#x89C4;&#x5219;,&#x5176;&#x4E2D;&#x6709;&#x4E00;&#x4E2A;&#x9ED8;&#x8BA4;&#x7684;&#x6BD4;&#x8F83;&#x89C4;&#x5219;,&#x4E00;&#x4E2A;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x5FC5;&#x987B;&#x5BF9;&#x5E94;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#x96C6;</li>
+<li>&#x67E5;&#x770B;MySQL&#x652F;&#x6301;&#x7684;&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x8BED;&#x53E5;:<br>
+show (charcter set|charset)[like &#x5339;&#x914D;&#x7684;&#x6A21;&#x5F0F;]<br>
+show collation [like &#x5339;&#x914D;&#x7684;&#x6A21;&#x5F0F;]</li>
+<li>MySQL&#x6709;&#x56DB;&#x4E2A;&#x7EA7;&#x522B;&#x7684;&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;
+<ul>
+<li>1 &#x670D;&#x52A1;&#x5668;&#x7EA7;&#x522B;</li>
+<li>2 &#x6570;&#x636E;&#x5E93;&#x7EA7;&#x522B;</li>
+<li>3 &#x8868;&#x7EA7;&#x522B;</li>
+<li>4 &#x5217;&#x7EA7;&#x522B;</li>
+</ul>
+</li>
+</ol>
+<hr>
+<ol start="6">
+<li>&#x4ECE;&#x53D1;&#x9001;&#x8BF7;&#x6C42;&#x5230;&#x63A5;&#x6536;&#x7ED3;&#x679C;&#x8FC7;&#x7A0B;&#x4E2D;&#x53D1;&#x751F;&#x7684;&#x5B57;&#x7B26;&#x96C6;&#x8F6C;&#x6362;</li>
+<li>&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7684;&#x4F5C;&#x7528;&#x901A;&#x5E38;&#x4F53;&#x73B0;&#x5728;&#x6BD4;&#x8F83;&#x5B57;&#x7B26;&#x4E32;&#x5927;&#x5C0F;&#x7684;&#x8868;&#x8FBE;&#x5F0F;&#x548C;&#x5BF9;&#x67D0;&#x4E2A;&#x5B57;&#x7B26;&#x4E32;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x4E2D;</li>
+</ol>
+<h1 class="mume-header" id="innodb%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84">InnoDB&#x8BB0;&#x5F55;&#x5B58;&#x50A8;&#x7ED3;&#x6784;</h1>
+
+<p>&#x867D;&#x7136;&#x4E66;&#x4E0A;&#x5DF2;&#x7ECF;&#x8BB2;&#x5F97;&#x5341;&#x5206;&#x901A;&#x4FD7;&#x4E86;,&#x5948;&#x4F55;&#x6211;&#x5B66;&#x7684;&#x8FD8;&#x662F;&#x975E;&#x5E38;&#x5403;&#x529B;,&#x627E;&#x4E86;&#x4E00;&#x7BC7;&#x535A;&#x5BA2;,&#x89C9;&#x5F97;&#x8FD8;&#x4E0D;&#x9519;&#x3002;<br>
+<a href="https://draveness.me/mysql-innodb/">https://draveness.me/mysql-innodb/</a></p>
+<h2 class="mume-header" id="%E7%AE%80%E4%BB%8B-1">&#x7B80;&#x4ECB;</h2>
+
+<p>&#x5C06;&#x6570;&#x636E;&#x5212;&#x5206;&#x4E3A;&#x82E5;&#x5E72;&#x4E2A;&#x9875;,&#x4EE5;&#x9875;&#x4F5C;&#x4E3A;&#x78C1;&#x76D8;&#x548C;&#x5185;&#x5B58;&#x4E4B;&#x95F4;&#x4EA4;&#x4E92;&#x7684;&#x5DE5;&#x4F5C;&#x5355;&#x4F4D;,InnoDB&#x4E2D;&#x9875;&#x7684;&#x5927;&#x5C0F;&#x4E00;&#x822C;&#x4E3A;16KB.</p>
+<h2 class="mume-header" id="compact%E6%A0%BC%E5%BC%8F">Compact&#x683C;&#x5F0F;</h2>
+
+<h2 class="mume-header" id="redundant%E8%A1%8C%E6%A0%BC%E5%BC%8F">Redundant&#x884C;&#x683C;&#x5F0F;</h2>
+
+<h2 class="mume-header" id="%E4%B8%A4%E8%80%85%E7%9A%84%E5%BC%82%E5%90%8C">&#x4E24;&#x8005;&#x7684;&#x5F02;&#x540C;</h2>
+
+<p>&#x6700;&#x5927;&#x7684;&#x4E0D;&#x540C;&#x5C31;&#x662F;compact&#x5728;&#x884C;&#x8BB0;&#x5F55;&#x7684;&#x7B2C;&#x4E00;&#x90E8;&#x5206;&#x5012;&#x5E8F;&#x5B58;&#x653E;&#x4E86;&#x4E00;&#x884C;&#x6570;&#x636E;&#x4E2D;&#x5217;&#x7684;&#x957F;&#x5EA6;(Length),&#x800C;Redundant&#x4E2D;&#x5B58;&#x7684;&#x662F;&#x6BCF;&#x4E00;&#x5217;&#x7684;&#x504F;&#x79FB;&#x91CF;(Offset)</p>
+<h2 class="mume-header" id="%E8%A1%8C%E6%BA%A2%E5%87%BA%E6%95%B0%E6%8D%AE">&#x884C;&#x6EA2;&#x51FA;&#x6570;&#x636E;</h2>
+
+<p>&#x5F53;InnoDB&#x4F7F;&#x7528;Compact&#x6216;&#x8005;Redundant&#x683C;&#x5F0F;<strong>&#x5B58;&#x50A8;&#x6781;&#x957F;&#x7684;VARCHAR&#x6216;&#x8005;BLOB&#x8FD9;&#x7C7B;&#x5927;&#x5BF9;&#x8C61;&#x65F6;</strong>,&#x6211;&#x4EEC;<strong>&#x5E76;&#x4E0D;&#x4F1A;&#x76F4;&#x63A5;&#x5C06;&#x6240;&#x6709;&#x7684;&#x5185;&#x5BB9;&#x90FD;&#x5B58;&#x653E;&#x5728;&#x6570;&#x636E;&#x9875;&#x8282;&#x70B9;&#x4E2D;</strong>,&#x800C;&#x662F;&#x5C06;&#x884C;&#x6570;&#x636E;&#x4E2D;&#x7684;&#x524D;768&#x4E2A;&#x5B57;&#x8282;&#x5B58;&#x50A8;&#x5728;&#x6570;&#x636E;&#x9875;&#x4E2D;,&#x540E;&#x9762;&#x4F1A;&#x901A;&#x8FC7;&#x504F;&#x79FB;&#x91CF;&#x6307;&#x5411;&#x6EA2;&#x51FA;&#x9875;&#x3002;<br>
+&#x5F53;&#x4F7F;&#x7528;&#x65B0;&#x7684;&#x8BB0;&#x5F55;&#x683C;&#x5F0F;Compressed&#x6216;&#x8005;Dynamic&#x65F6;&#x90FD;&#x4F1A;&#x53EA;&#x5728;&#x884C;&#x8BB0;&#x5F55;&#x4E2D;&#x4FDD;&#x5B58;20&#x4E2A;&#x5B50;&#x8282;&#x7684;&#x6307;&#x9488;,<strong>&#x5B9E;&#x9645;&#x7684;&#x6570;&#x636E;&#x90FD;&#x4F1A;&#x5B58;&#x653E;&#x5728;&#x6EA2;&#x51FA;&#x9875;&#x9762;&#x4E2D;</strong>&#x3002;</p>
+<h1 class="mume-header" id="innodb%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%BB%93%E6%9E%84">InnoDB&#x6570;&#x636E;&#x9875;&#x7ED3;&#x6784;</h1>
+
+<h2 class="mume-header" id="%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%A1%B5">&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x7684;&#x9875;</h2>
+
+<p>&#x4E3A;&#x4E86;&#x4E0D;&#x540C;&#x7684;&#x76EE;&#x7684;&#x8BBE;&#x8BA1;&#x4E86;&#x8BB8;&#x591A;&#x79CD;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x7684;&#x9875;,&#x6BD4;&#x5982;&#x5B58;&#x653E;&#x5934;&#x90E8;&#x4FE1;&#x606F;&#x7684;&#x9875;,&#x5B58;&#x653E;Insert Buffer&#x4FE1;&#x606F;&#x7684;,&#x5B58;&#x653E;index&#x4FE1;&#x606F;&#x7684;&#x9875;,&#x5B58;&#x653E;undo&#x65E5;&#x5FD7;&#x4FE1;&#x606F;&#x7684;&#x9875;&#x7B49;</p>
+<h2 class="mume-header" id="%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%BB%93%E6%9E%84%E7%9A%84%E5%BF%AB%E9%80%9F%E6%B5%8F%E8%A7%88">&#x6570;&#x636E;&#x9875;&#x7ED3;&#x6784;&#x7684;&#x5FEB;&#x901F;&#x6D4F;&#x89C8;</h2>
+
+<p>&#x6570;&#x636E;&#x9875;&#x4EE3;&#x8868;&#x7684;&#x8FD9;&#x5757;16KB&#x5927;&#x5C0F;&#x7684;&#x5B58;&#x50A8;&#x7A7A;&#x95F4;&#x53EF;&#x4EE5;&#x88AB;&#x5212;&#x5206;&#x591A;&#x4E2A;&#x90E8;&#x5206;,&#x4E0D;&#x540C;&#x7684;&#x90E8;&#x5206;&#x6709;&#x4E0D;&#x540C;&#x7684;&#x529F;&#x80FD;</p>
+<ol>
+<li>File Header</li>
+<li>Page Header</li>
+<li>Infimum+supremum &#x4E24;&#x4E2A;&#x865A;&#x62DF;&#x7684;&#x884C;&#x8BB0;&#x5F55; &#x6700;&#x5927;&#x8BB0;&#x5F55;&#x548C;&#x6700;&#x5C0F;&#x8BB0;&#x5F55;</li>
+<li>User Records &#x771F;&#x5B9E;&#x5B58;&#x50A8;&#x884C;&#x8BB0;&#x5F55;&#x5185;&#x5BB9;</li>
+<li>Free Space</li>
+<li>Page Directory &#x9875;&#x4E2D;&#x7684;&#x67D0;&#x4E9B;&#x8BB0;&#x5F55;&#x7684;&#x76F8;&#x5BF9;&#x4F4D;&#x7F6E;</li>
+<li>File Tailer</li>
+</ol>
+<h2 class="mume-header" id="%E8%AE%B0%E5%BD%95%E5%9C%A8%E9%A1%B5%E4%B8%AD%E7%9A%84%E5%AD%98%E5%82%A8">&#x8BB0;&#x5F55;&#x5728;&#x9875;&#x4E2D;&#x7684;&#x5B58;&#x50A8;</h2>
+
+<p>&#x4E0D;&#x5F97;&#x4E0D;&#x518D;&#x63D0;&#x53CA;&#x4E00;&#x4E0B;&#x8BB0;&#x5F55;&#x7684;&#x6784;&#x6210;,&#x4E0B;&#x9762;&#x5C55;&#x793A;&#x4E86;&#x884C;&#x8BB0;&#x5F55;&#x7684;&#x8BB0;&#x5F55;&#x5934;&#x683C;&#x5F0F;</p>
+<h3 class="mume-header" id="%E8%AE%B0%E5%BD%95%E5%A4%B4%E7%9A%84%E6%9E%84%E6%88%90">&#x8BB0;&#x5F55;&#x5934;&#x7684;&#x6784;&#x6210;</h3>
+
+<ol>
+<li>&#x9884;&#x7559;&#x4F4D;1</li>
+<li>&#x9884;&#x7559;&#x4F4D;2</li>
+<li>delete_mask &#x6807;&#x8BB0;&#x8BE5;&#x8BB0;&#x5F55;&#x662F;&#x5426;&#x88AB;&#x5220;&#x9664;</li>
+<li>min_rec_mask B+&#x6811;&#x7684;&#x6BCF;&#x5C42;&#x975E;&#x53F6;&#x5B50;&#x7ED3;&#x70B9;&#x7684;&#x6700;&#x5C0F;&#x8BB0;&#x5F55;</li>
+<li>n_owned &#x8868;&#x793A;&#x5F53;&#x524D;&#x62E5;&#x6709;&#x7684;&#x8BB0;&#x5F55;&#x6570;</li>
+<li>heap_no &#x8868;&#x793A;&#x5F53;&#x524D;&#x8BB0;&#x5F55;&#x5728;&#x8BB0;&#x5F55;&#x5806;&#x4E2D;&#x7684;&#x4F4D;&#x7F6E;</li>
+<li>record_type &#x8868;&#x793A;&#x5F53;&#x524D;&#x8BB0;&#x5F55;&#x7684;&#x7C7B;&#x578B;</li>
+<li>next_record &#x8868;&#x793A;&#x4E0B;&#x4E00;&#x6761;&#x8BB0;&#x5F55;&#x7684;&#x76F8;&#x5BF9;&#x4F4D;&#x7F6E;<br>
+&#x5176;&#x4E2D;&#x6BD4;&#x8F83;&#x91CD;&#x8981;&#x7684;3&#x4E2A;&#x5B57;&#x6BB5;n_owned&#x3001;heap_no&#x548C;next_record&#x4E66;&#x4E0A;&#x8BB2;&#x7684;&#x975E;&#x5E38;&#x7684;&#x8BE6;&#x7EC6;</li>
+</ol>
+<h2 class="mume-header" id="page-directory%E9%A1%B5%E7%9B%AE%E5%BD%95">Page Directory(&#x9875;&#x76EE;&#x5F55;)</h2>
+
+<h2 class="mume-header" id="page-header%E9%A1%B5%E9%9D%A2%E5%A4%B4%E9%83%A8">Page Header(&#x9875;&#x9762;&#x5934;&#x90E8;)</h2>
+
+<h2 class="mume-header" id="file-header%E6%96%87%E4%BB%B6%E5%A4%B4%E9%83%A8">File Header(&#x6587;&#x4EF6;&#x5934;&#x90E8;)</h2>
+
+<h2 class="mume-header" id="file-trailer%E6%96%87%E4%BB%B6%E5%B0%BE%E9%83%A8">File Trailer(&#x6587;&#x4EF6;&#x5C3E;&#x90E8;)</h2>
+
+<h2 class="mume-header" id="%E6%80%BB%E7%BB%93-1">&#x603B;&#x7ED3;</h2>
+
+<ol>
+<li>InnoDB&#x4E3A;&#x4E86;&#x4E0D;&#x540C;&#x7684;&#x76EE;&#x7684;&#x8BBE;&#x8BA1;&#x4E86;&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x7684;&#x9875;,&#x6211;&#x4EEC;&#x628A;&#x7528;&#x4E8E;&#x5B58;&#x653E;&#x8BB0;&#x5F55;&#x7684;&#x9875;&#x53EB;&#x505A;&#x6570;&#x636E;&#x9875;</li>
+<li>&#x6570;&#x636E;&#x9875;&#x5927;&#x81F4;&#x88AB;&#x5206;&#x4E3A;7&#x4E2A;&#x90E8;&#x5206;:</li>
+</ol>
+<ul>
+<li>File Header &#x8868;&#x793A;&#x9875;&#x7684;&#x4E00;&#x4E9B;&#x901A;&#x7528;&#x4FE1;&#x606F;,&#x5360;&#x56FA;&#x5B9A;&#x7684;38&#x5B57;&#x8282;</li>
+<li>PageHeader &#x8868;&#x793A;&#x6570;&#x636E;&#x9875;&#x4E13;&#x6709;&#x7684;&#x4E00;&#x4E9B;&#x4FE1;&#x606F;,&#x5360;&#x56FA;&#x5B9A;&#x7684;56&#x4E2A;&#x5B57;&#x8282;</li>
+<li>Infimum+Supremum &#x4E24;&#x4E2A;&#x865A;&#x62DF;&#x7684;&#x4F2A;&#x8BB0;&#x5F55;,&#x5206;&#x522B;&#x8868;&#x793A;&#x9875;&#x4E2D;&#x7684;&#x6700;&#x5C0F;&#x548C;&#x6700;&#x5927;&#x8BB0;&#x5F55;,&#x5360;26&#x4E2A;&#x5B50;&#x8282;</li>
+<li>User Records &#x771F;&#x5B9E;&#x5B58;&#x50A8;&#x6211;&#x4EEC;&#x63D2;&#x5165;&#x7684;&#x8BB0;&#x5F55;&#x7684;&#x90E8;&#x5206;,&#x5927;&#x5C0F;&#x4E0D;&#x56FA;&#x5B9A;</li>
+<li>Free Space &#x9875;&#x4E2D;&#x5C1A;&#x672A;&#x4F7F;&#x7528;&#x7684;&#x90E8;&#x5206;</li>
+<li>Page Diretory &#x9875;&#x4E2D;&#x67D0;&#x4E9B;&#x8BB0;&#x5F55;&#x7684;&#x4F4D;&#x7F6E;,&#x5BF9;&#x4E8E;&#x6570;&#x636E;&#x9875;&#x6765;&#x8BF4;&#x662F;&#x6BCF;&#x4E00;&#x7EC4;&#x7684;&#x6700;&#x540E;&#x4E00;&#x6761;&#x8BB0;&#x5F55;</li>
+<li>File Trailer &#x7528;&#x4E8E;&#x68C0;&#x9A8C;&#x6570;&#x636E;&#x9875;&#x662F;&#x5426;&#x5B8C;&#x6574;(&#x5907;&#x4EFD;&#x5230;&#x78C1;&#x76D8;&#x8FC7;&#x7A0B;&#x65AD;&#x7535;&#x7684;&#x68C0;&#x9A8C;)</li>
+</ul>
+<ol start="3">
+<li>&#x8BB0;&#x5F55;&#x4F1A;&#x5F62;&#x6210;&#x5355;&#x94FE;&#x8868;</li>
+<li>&#x67E5;&#x627E;&#x8BB0;&#x5F55;&#x7684;&#x8FC7;&#x7A0B;(&#x5FC5;&#x987B;&#x5B8C;&#x5168;&#x7406;&#x89E3;)<br>
+&#x63D0;&#x793A;:Page Directory+&#x4E8C;&#x5206;+next_record</li>
+<li>FileHeader&#x4F1A;&#x4F7F;&#x5F97;&#x6240;&#x6709;&#x6570;&#x636E;&#x9875;&#x7EC4;&#x6210;&#x4E00;&#x4E2A;<strong>&#x53CC;&#x94FE;&#x8868;</strong></li>
+<li>&#x6821;&#x9A8C;&#x548C;&#x4EE5;&#x53CA;LSN&#x503C;</li>
+</ol>
+
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#%E9%87%8D%E6%96%B0%E8%AE%A4%E8%AF%86mysql">&#x91CD;&#x65B0;&#x8BA4;&#x8BC6;MySQL</a>
+<ul>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9E%B6%E6%9E%84">&#x5BA2;&#x6237;&#x7AEF;/&#x670D;&#x52A1;&#x5668;&#x67B6;&#x6784;</a></li>
+<li><a href="#mysql%E7%9A%84%E5%AE%89%E8%A3%85">MySQL&#x7684;&#x5B89;&#x88C5;</a>
+<ul>
+<li><a href="#bin%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6">bin&#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x53EF;&#x6267;&#x884C;&#x6587;&#x4EF6;</a></li>
+</ul>
+</li>
+<li><a href="#%E5%90%AF%E5%8A%A8mysql%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F">&#x542F;&#x52A8;MySQL&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;</a>
+<ul>
+<li><a href="#unix%E9%87%8C%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F">UNIX&#x91CC;&#x542F;&#x52A8;&#x670D;&#x52A1;&#x5668;&#x7A0B;&#x5E8F;</a></li>
+</ul>
+</li>
+<li><a href="#%E5%90%AF%E5%8A%A8mysql%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%A8%8B%E5%BA%8F">&#x542F;&#x52A8;MySQL&#x5BA2;&#x6237;&#x7AEF;&#x7A0B;&#x5E8F;</a></li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9E%E6%8E%A5%E7%9A%84%E8%BF%87%E7%A8%8B">&#x5BA2;&#x6237;&#x7AEF;&#x4E0E;&#x670D;&#x52A1;&#x5668;&#x8FDE;&#x63A5;&#x7684;&#x8FC7;&#x7A0B;</a>
+<ul>
+<li><a href="#tcpip">TCP/IP</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E8%AF%B7%E6%B1%82">&#x670D;&#x52A1;&#x5668;&#x5904;&#x7406;&#x5BA2;&#x6237;&#x7AEF;&#x7684;&#x8BF7;&#x6C42;</a></li>
+</ul>
+</li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%80%89%E9%A1%B9%E5%92%8C%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x542F;&#x52A8;&#x9009;&#x9879;&#x548C;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</a>
+<ul>
+<li><a href="#%E5%90%AF%E5%8A%A8%E9%80%89%E9%A1%B9%E5%92%8C%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">&#x542F;&#x52A8;&#x9009;&#x9879;&#x548C;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</a>
+<ul>
+<li><a href="#%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8A%E4%BD%BF%E7%94%A8%E9%80%89%E9%A1%B9">&#x5728;&#x547D;&#x4EE4;&#x884C;&#x4E0A;&#x4F7F;&#x7528;&#x9009;&#x9879;</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E4%BD%BF%E7%94%A8%E9%80%89%E9%A1%B9">&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4F7F;&#x7528;&#x9009;&#x9879;</a>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84">&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x8DEF;&#x5F84;</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9">&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x5185;&#x5BB9;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</a>
+<ul>
+<li><a href="#%E7%AE%80%E4%BB%8B">&#x7B80;&#x4ECB;</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x67E5;&#x770B;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x8BBE;&#x7F6E;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</a>
+<ul>
+<li><a href="#%E9%80%9A%E8%BF%87%E5%90%AF%E5%8A%A8%E9%80%89%E9%A1%B9%E8%AE%BE%E7%BD%AE">&#x901A;&#x8FC7;&#x542F;&#x52A8;&#x9009;&#x9879;&#x8BBE;&#x7F6E;</a></li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%AE%BE%E7%BD%AE">&#x670D;&#x52A1;&#x5668;&#x8FD0;&#x884C;&#x8FC7;&#x7A0B;&#x4E2D;&#x8BBE;&#x7F6E;</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%90%8C%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x8BBE;&#x7F6E;&#x4E0D;&#x540C;&#x4F5C;&#x7528;&#x8303;&#x56F4;&#x7684;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E4%B8%8D%E5%90%8C%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F">&#x67E5;&#x770B;&#x4E0D;&#x540C;&#x4F5C;&#x7528;&#x8303;&#x56F4;&#x7684;&#x7CFB;&#x7EDF;&#x53D8;&#x91CF;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F">&#x72B6;&#x6001;&#x53D8;&#x91CF;</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99">&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E4%BB%8B%E7%BB%8D">&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x4ECB;&#x7ECD;</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E7%AE%80%E4%BB%8B">&#x5B57;&#x7B26;&#x96C6;&#x7B80;&#x4ECB;</a></li>
+<li><a href="#%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E7%AE%80%E4%BB%8B">&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7B80;&#x4ECB;</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E7%9A%84%E5%BA%94%E7%94%A8">&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7684;&#x5E94;&#x7528;</a>
+<ul>
+<li><a href="#%E5%90%84%E7%BA%A7%E5%88%AB%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86%E5%92%8C%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99">&#x5404;&#x7EA7;&#x522B;&#x7684;&#x5B57;&#x7B26;&#x96C6;&#x548C;&#x6BD4;&#x8F83;&#x89C4;&#x5219;</a></li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%92%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AD%97%E7%AC%A6%E9%9B%86">&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x5668;&#x901A;&#x4FE1;&#x8FC7;&#x7A0B;&#x4E2D;&#x4F7F;&#x7528;&#x7684;&#x5B57;&#x7B26;&#x96C6;</a></li>
+<li><a href="#%E6%AF%94%E8%BE%83%E8%A7%84%E5%88%99%E7%9A%84%E5%BA%94%E7%94%A8">&#x6BD4;&#x8F83;&#x89C4;&#x5219;&#x7684;&#x5E94;&#x7528;</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">&#x603B;&#x7ED3;</a></li>
+</ul>
+</li>
+<li><a href="#innodb%E8%AE%B0%E5%BD%95%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84">InnoDB&#x8BB0;&#x5F55;&#x5B58;&#x50A8;&#x7ED3;&#x6784;</a>
+<ul>
+<li><a href="#%E7%AE%80%E4%BB%8B-1">&#x7B80;&#x4ECB;</a></li>
+<li><a href="#compact%E6%A0%BC%E5%BC%8F">Compact&#x683C;&#x5F0F;</a></li>
+<li><a href="#redundant%E8%A1%8C%E6%A0%BC%E5%BC%8F">Redundant&#x884C;&#x683C;&#x5F0F;</a></li>
+<li><a href="#%E4%B8%A4%E8%80%85%E7%9A%84%E5%BC%82%E5%90%8C">&#x4E24;&#x8005;&#x7684;&#x5F02;&#x540C;</a></li>
+<li><a href="#%E8%A1%8C%E6%BA%A2%E5%87%BA%E6%95%B0%E6%8D%AE">&#x884C;&#x6EA2;&#x51FA;&#x6570;&#x636E;</a></li>
+</ul>
+</li>
+<li><a href="#innodb%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%BB%93%E6%9E%84">InnoDB&#x6570;&#x636E;&#x9875;&#x7ED3;&#x6784;</a>
+<ul>
+<li><a href="#%E4%B8%8D%E5%90%8C%E7%B1%BB%E5%9E%8B%E7%9A%84%E9%A1%B5">&#x4E0D;&#x540C;&#x7C7B;&#x578B;&#x7684;&#x9875;</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%BB%93%E6%9E%84%E7%9A%84%E5%BF%AB%E9%80%9F%E6%B5%8F%E8%A7%88">&#x6570;&#x636E;&#x9875;&#x7ED3;&#x6784;&#x7684;&#x5FEB;&#x901F;&#x6D4F;&#x89C8;</a></li>
+<li><a href="#%E8%AE%B0%E5%BD%95%E5%9C%A8%E9%A1%B5%E4%B8%AD%E7%9A%84%E5%AD%98%E5%82%A8">&#x8BB0;&#x5F55;&#x5728;&#x9875;&#x4E2D;&#x7684;&#x5B58;&#x50A8;</a>
+<ul>
+<li><a href="#%E8%AE%B0%E5%BD%95%E5%A4%B4%E7%9A%84%E6%9E%84%E6%88%90">&#x8BB0;&#x5F55;&#x5934;&#x7684;&#x6784;&#x6210;</a></li>
+</ul>
+</li>
+<li><a href="#page-directory%E9%A1%B5%E7%9B%AE%E5%BD%95">Page Directory(&#x9875;&#x76EE;&#x5F55;)</a></li>
+<li><a href="#page-header%E9%A1%B5%E9%9D%A2%E5%A4%B4%E9%83%A8">Page Header(&#x9875;&#x9762;&#x5934;&#x90E8;)</a></li>
+<li><a href="#file-header%E6%96%87%E4%BB%B6%E5%A4%B4%E9%83%A8">File Header(&#x6587;&#x4EF6;&#x5934;&#x90E8;)</a></li>
+<li><a href="#file-trailer%E6%96%87%E4%BB%B6%E5%B0%BE%E9%83%A8">File Trailer(&#x6587;&#x4EF6;&#x5C3E;&#x90E8;)</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93-1">&#x603B;&#x7ED3;</a></li>
+</ul>
+</li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">&#x2261;</a>
+    
+    
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  
+    </body></html>

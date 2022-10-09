@@ -1,8 +1,18 @@
-
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 重新认识MySQL
 ## 客户端/服务器架构
 ## MySQL的安装
 ### bin目录下的可执行文件
+bin目录下有好几种启动MySQL的可执行文件
 ## 启动MySQL服务器程序
 ### UNIX里启动服务器程序
 1. mysqld 可以启动一个服务器进程
@@ -111,6 +121,7 @@ https://draveness.me/mysql-innodb/
 6. Page Directory 页中的某些记录的相对位置  
 7. File Tailer
 ## 记录在页中的存储
+不得不再提及一下记录的构成,下面展示了行记录的记录头格式
 ### 记录头的构成
 1. 预留位1
 2. 预留位2
@@ -119,9 +130,30 @@ https://draveness.me/mysql-innodb/
 5. n_owned 表示当前拥有的记录数
 6. heap_no 表示当前记录在记录堆中的位置
 7. record_type 表示当前记录的类型
-8. next_record 表示下一条记录的相对位置 
+8. next_record 表示下一条记录的相对位置   
+其中比较重要的3个字段n_owned、heap_no和next_record书上讲的非常的详细
 ## Page Directory(页目录)
 ## Page Header(页面头部)
 ## File Header(文件头部)
 ## File Trailer(文件尾部)
 ## 总结
+1. InnoDB为了不同的目的设计了不同类型的页,我们把用于存放记录的页叫做数据页
+2. 数据页大致被分为7个部分:
+- File Header 表示页的一些通用信息,占固定的38字节
+- PageHeader 表示数据页专有的一些信息,占固定的56个字节
+- Infimum+Supremum 两个虚拟的伪记录,分别表示页中的最小和最大记录,占26个子节
+- User Records 真实存储我们插入的记录的部分,大小不固定
+- Free Space 页中尚未使用的部分
+- Page Diretory 页中某些记录的位置,对于数据页来说是每一组的最后一条记录
+- File Trailer 用于检验数据页是否完整(备份到磁盘过程断电的检验)
+3. 记录会形成单链表
+4. 查找记录的过程(必须完全理解)  
+提示:Page Directory+二分+next_record
+5. FileHeader会使得所有数据页组成一个**双链表**
+6. 校验和以及LSN值
+# B+树索引
+通过前面的学习我们知道查询到记录是存放在数据页中的,通过FileHeader和FileTrail将其连接为一个双向链表。数据记录是next_record指针连接起来的链表。
+## 为什么需要索引
+暴力遍历:从最小记录开始遍历  
+二分法:根据数据页记录槽中的数据来快速定位到(这是在数据页中快速查找)  
+如何快速找到是哪个数据页

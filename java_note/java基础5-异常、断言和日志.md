@@ -1,4 +1,16 @@
-对于异常情况，例如，可能造成程序崩溃的错误输入，Java使用了一种称为**异常处理**(exception handing)。
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
 - [处理错误](#处理错误)
   - [异常分类](#异常分类)
   - [声明检查型异常](#声明检查型异常)
@@ -118,8 +130,11 @@
       - [java.util.logging.Formatter](#javautilloggingformatter)
         - [abstract String format(LogRecord record)](#abstract-string-formatlogrecord-record)
   - [调试技巧](#调试技巧)
-# 处理错误
 
+<!-- /code_chunk_output -->
+
+# 处理错误
+对于异常情况，例如，可能造成程序崩溃的错误输入，Java使用了一种称为**异常处理**(exception handing)。  
 假设程序运行期间出现了一个用户并不想见到的错误。用户希望程序能够合理地处理这个错误。如果某些操作没有完成，程序应该:
 
 1.返回到一种安全状态，并能够让用户执行其他的命令;或者

@@ -1,41 +1,13 @@
-- [介绍](#介绍)
-- [快速上手](#快速上手)
-  - [创建项目与模板](#创建项目与模板)
-  - [项目目录结构展示](#项目目录结构展示)
-  - [OutLine元素列表](#outline元素列表)
-  - [基本元素](#基本元素)
-  - [<font color="red">模板参数(常用)</font>](#font-colorred模板参数常用font)
-    - [Page Format:报表格式化](#page-format报表格式化)
-- [简单报表](#简单报表)
-  - [新建模板](#新建模板)
-- [<font color="red">主报表与子报表相互传参</font>](#font-colorred主报表与子报表相互传参font)
-  - [主报表配置](#主报表配置)
-  - [子报表配置](#子报表配置)
-  - [在主报表中配置SubReport组件](#在主报表中配置subreport组件)
-  - [<font color="red">细节调整</font>](#font-colorred细节调整font)
-  - [主报表的表格动态高度设置](#主报表的表格动态高度设置)
-- [<font color="red">合并行内容的第二种方案:使用CrossTable组件</font>](#font-colorred合并行内容的第二种方案使用crosstable组件font)
-  - [使用sql语句查询的时候多放置一个字段](#使用sql语句查询的时候多放置一个字段)
-  - [设置横列](#设置横列)
-  - [设置竖列](#设置竖列)
-  - [设置交叉值](#设置交叉值)
-  - [设置Cloumn group高度](#设置cloumn-group高度)
-  - [设置水平居中、垂直居中](#设置水平居中垂直居中)
-- [合并行的第三种方案:取消属性Print Repeated Values(不推荐)](#合并行的第三种方案取消属性print-repeated-values不推荐)
-  - [报表样式配置](#报表样式配置)
-  - [设置属性](#设置属性)
-  - [加入一个Line组件](#加入一个line组件)
-- [<font color="red">使用Table组件</font>](#font-colorred使用table组件font)
-  - [细节调整](#细节调整)
-- [柱状图和饼图](#柱状图和饼图)
-  - [柱状图](#柱状图)
-  - [饼图](#饼图)
-- [报表平台上传模板文件](#报表平台上传模板文件)
-- [SpringBoot中集成Jaspersoft](#springboot中集成jaspersoft)
-  - [新建SpringBoot项目](#新建springboot项目)
-  - [导入依赖](#导入依赖)
-  - [添加模板的静态资源](#添加模板的静态资源)
-- [使用Jaspersoft开发](#使用jaspersoft开发)
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 介绍
 Jaspersoft：这是基于Eclipse软件开发的图形化报表设计工具。
 # 快速上手
@@ -206,7 +178,11 @@ order by uname
 ## 导入依赖
 ## 添加模板的静态资源
 在生成pdf时可能会有乱码的问题出现,所以需要添加字体的静态资源
-# 使用Jaspersoft开发
+### 在使用Jaspersoft软件的过程中也需要设置字体
+1. 将字体文件添加到字体库中
+2. 修改模板格式
+3. 调用export方法生成html或者pdf
+
 
 
 

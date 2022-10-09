@@ -1,5 +1,4 @@
 # day01
-
 ## 1.文件和文件夹(目录)都用File表示
 ​1.根据绝对路径来创建一个File实例（注意如果是linux系统的话那么根目录从home开始）
 ​    	例如        File file1=new File("/home/leiliu/IdeaProjects/file");
@@ -21,7 +20,6 @@ renameto(File test)重命名　
 遍历/home的所有文件，并打印出最大长度和最小长度的文件
 ​    
 # day02
-
 ## １．流的概述
 流就是一系列数据  
 当不同的介质之间有数据交互的时候，Java就是用流来实现。数据源可以是文件，还可以是数据库，网络甚至是其他的程序。  
