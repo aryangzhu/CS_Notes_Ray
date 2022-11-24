@@ -167,7 +167,9 @@ order by uname
 2. 设置Series、Key、Lable、Value
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E9%A5%BC%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
 3. 设置DataSet
-和柱状图一样根据需要传递参数
+和柱状图一样根据需要传递参数  
+<font color="red">一定要设置图表的字体,当前电脑的字体和与服务器支持的字体不一致,所以需要手动设置字体</font> 
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-11-01%20%E4%B8%8B%E5%8D%882.11.35.png)
 # 报表平台上传模板文件
 1. 检查是否有对应数据源,如果没有需要新建
 2. 报表管理中上传

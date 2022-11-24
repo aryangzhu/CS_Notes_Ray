@@ -1,13 +1,13 @@
-- [Rest服务通信](#rest服务通信)
-- [Eureka服务注册中心](#eureka服务注册中心)
-- [Ribbon负载均衡](#ribbon负载均衡)
-- [Feign](#feign)
-- [Hystrix服务熔断、降级和监视](#hystrix服务熔断降级和监视)
-  - [服务熔断](#服务熔断)
-  - [服务降级](#服务降级)
-  - [监视](#监视)
-- [zuul网关](#zuul网关)
-- [SpringCloud-Config配置中心](#springcloud-config配置中心)
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
+# 出现的问题
 SpringCloud提供了一个完整的微服务生态下的解决方案
 在使用微服务之后，会面临以下四个方面的问题:
 1.如何发现服务?(网关)
@@ -269,8 +269,8 @@ public class ZuulApplication_9223 {
 1. 首先需要github新建仓库pull到本地
 2. 然后编写相关配置，push到远程仓库
 3. 在自己的服务中编写
-   1. 编写bootstrap.yml文件(系统级别文件)
-   ```yml
+   1.  编写bootstrap.yml文件(系统级别文件)
+```yml
   spring:
   cloud:
     config:
@@ -278,12 +278,12 @@ public class ZuulApplication_9223 {
       label: master
       profile: dev
       uri: http://localhost:3344/ # 服务器的地址
-   ```
-   2. 编写applcation.yml文件]
-   ```yml
+```
+   2. 编写applcation.yml文件
+```yml
   # 用户级别的配置
   spring:
   application:
     name: springcloud-config-eureka-7001
-   ```
+```
    

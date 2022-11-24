@@ -1,65 +1,14 @@
+---
+html:
+    toc: true
+    # number_sections: true
+    toc_depth: 6
+    toc_float: true
+        collapsed: true
+        smooth_scroll: true
+--- 
 基本思想是可以**基于已有的类创建新的类，因为这样做的话(继承)就可以复用已创建的类的方法，而且可以增加一些新的方法和字段，使新类能够适应新的情况**
 **反射，反射是指在程序运行期间更多地了解类及其属性的能力**，反射是一个功能强大的特性，也是成为高阶程序员的必经之路
-- [类、超类和子类](#类超类和子类)
-  - [定义子类](#定义子类)
-  - [覆盖方法](#覆盖方法)
-    - [方法重写和方法重载的区别](#方法重写和方法重载的区别)
-      - [为什么重写的子类方法的权限要大于父类方法](#为什么重写的子类方法的权限要大于父类方法)
-  - [子类构造器](#子类构造器)
-  - [继承层次](#继承层次)
-  - [多态](#多态)
-  - [理解方法调用](#理解方法调用)
-  - [阻止继承:final类和方法](#阻止继承final类和方法)
-  - [强制类型转换](#强制类型转换)
-  - [抽象类](#抽象类)
-  - [受保护访问](#受保护访问)
-- [Object:所有类的超类](#object所有类的超类)
-  - [Oject类型变量](#oject类型变量)
-  - [equals方法](#equals方法)
-  - [相等测试与继承](#相等测试与继承)
-  - [hashcode方法](#hashcode方法)
-    - [常用API](#常用api)
-      - [java.lang.Object](#javalangobject)
-  - [toString方法](#tostring方法)
-    - [常用API](#常用api-1)
-      - [java.lang.Object](#javalangobject-1)
-- [泛型数组列表](#泛型数组列表)
-  - [声明数组列表](#声明数组列表)
-    - [常用API](#常用api-2)
-      - [java.util.ArrayList\<E>](#javautilarrayliste)
-  - [访问数组列表元素](#访问数组列表元素)
-    - [常用API](#常用api-3)
-      - [java.util.ArrayList\<E>](#javautilarrayliste-1)
-  - [类型化与原始数组的兼容性](#类型化与原始数组的兼容性)
-- [对象包装器和自动装箱](#对象包装器和自动装箱)
-    - [常用API](#常用api-4)
-      - [java.lang.Integer](#javalanginteger)
-        - [int intValue()](#int-intvalue)
-- [参数数量和可变的方法](#参数数量和可变的方法)
-- [枚举类](#枚举类)
-- [反射](#反射)
-  - [Class类](#class类)
-    - [常用API](#常用api-5)
-      - [java.lang.Class](#javalangclass)
-      - [java.lang.reflect.Constructor](#javalangreflectconstructor)
-      - [java.lang.Throwable](#javalangthrowable)
-  - [声明异常入门](#声明异常入门)
-  - [资源](#资源)
-  - [利用反射分析类的能力](#利用反射分析类的能力)
-    - [常用API](#常用api-6)
-      - [java.lang.Class](#javalangclass-1)
-      - [java.lang.reflect.Constructor](#javalangreflectconstructor-1)
-      - [java.lang.reflect.Modifer](#javalangreflectmodifer)
-  - [使用反射在运行时分析对象](#使用反射在运行时分析对象)
-  - [使用反射编写泛型数组代码](#使用反射编写泛型数组代码)
-  - [调用任意方法和构造器](#调用任意方法和构造器)
-- [继承设计的技巧](#继承设计的技巧)
-    - [1.将公共操作放在超类中。](#1将公共操作放在超类中)
-    - [2.不要使用受保护的字段](#2不要使用受保护的字段)
-    - [3.思考继承有没有被滥用](#3思考继承有没有被滥用)
-    - [4.除非继承的方法有意义，否则不要继承。](#4除非继承的方法有意义否则不要继承)
-    - [5.在覆盖方法时，不要更改预期的行为。](#5在覆盖方法时不要更改预期的行为)
-    - [6.使用多态，而不要使用类型信息。](#6使用多态而不要使用类型信息)
 # 类、超类和子类
 Employee只需要领薪水，而Manager完成业绩之后还可以领取奖金，所以我们需要拓展程序功能，但是又要复用原来的类。
 关键字**extends**相当于C++的**:**(冒号)
@@ -441,37 +390,33 @@ list.add(Integer.ValueOf(3));
 ​##### static Integer valueOf(String s)
 ​##### static Integer valueOf(String s,int radix)
 ​返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
-
 # 参数数量和可变的方法
 # 枚举类
 ```java
 public enum Size{SMALL,MEDIUM,LARGE,EXTA_LARGE}
 ```
-
 **声明的时候用的enum**
 实际上，**这个声明定义的类型是一个类，它刚好有4个实例**,不可能构造新的对象。枚举的构造器总是私有的，如果使用其他修饰符那么就会出现语法错误。
 枚举类型下有一个静态的values方法，它将返回一个包含全部枚举值的数组。
-Size[] values=Size.values();
+Size[] values=Size.values();  
 **常用API**
-java.lang.Enum\<E>
-	static Enum valueOf(Class enumClass,String name)
-	返回给定类中有指定名字的枚举常量
-	String toString()
-	返回枚举常量名
-	int ordinal()
-	返回枚举常量在enum声明中的位置,位置从0开始计数。
-	int compareTo(E other)
-	如果枚举常量出现在other之前，返回一个负整数;如果this==other，则返回0;否则,返回一个正整数。枚举常量的出现次序在enum声明中给出。
-
+java.lang.Enum\<E>  
+	static Enum valueOf(Class enumClass,String name)  
+	返回给定类中有指定名字的枚举常量  
+	String toString()  
+	返回枚举常量名  
+	int ordinal()  
+	返回枚举常量在enum声明中的位置,位置从0开始计数。  
+	int compareTo(E other)  
+	如果枚举常量出现在other之前，返回一个负整数;如果this==other，则返回0;否则,返回一个正整数。枚举常量的出现次序在enum声明中给出。  
 # 反射
-**反射库(reflection library)提供了一个丰富且精巧的工具集，可以用来编写能够动态操作Java代码的程序。
-能够分析类能力的程序称为反射**
-在运行时分析类的能力,在运行时检查对象，例如，编写一个适用于所有类的toString方法 实现泛型数组操作代码
-利用Method对象，**这个对象很像C++中的函数指针**
-总结来说反射是一种功能强大且复杂的机制。
-
+**反射库(reflection library)提供了一个丰富且精巧的工具集，可以用来编写能够动态操作Java代码的程序。  
+**能够分析类能力的程序称为反射**  
+在运行时分析类的能力,在运行时检查对象，例如，编写一个适用于所有类的toString方法 实现泛型数组操作代码  
+利用Method对象，**这个对象很像C++中的函数指针**   
+总结来说反射是一种功能强大且复杂的机制。  
 ## Class类
-Java运行时系统为每个对象维护**一个运行时类标识**，这个信息会跟踪对象所属的类，虚拟机利用运行时类型信息选择要执行的正确方法。
+Java运行时系统为每个对象维护**一个运行时类标识**，这个信息会跟踪对象所属的类，虚拟机利用运行时类型信息选择要执行的正确方法。  
 
 Java中有一个特殊的类访问这些信息，要保存这些信息的类名为Class，这个名字可能让然有些困惑。
 
