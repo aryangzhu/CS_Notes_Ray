@@ -429,9 +429,332 @@ alter table 表名 Engine=InnoDB,STATS_PERSISTENT=0
 实际上将这些统计数据存储到了两个表里:  
 **innodb_table_stasts**  每一条记录对应着一个表的统计数据   
 **innobb_index_stats**  每一条记录对应着一个索引的统计项的统计数据  
+# MySQL基于规则的优化
+## 条件化简
+### 去除多余的括号
+### 常量传递
+### 等值传递
+### 移除没用的条件
+### 表达式计算
+注意:表达式中是常量时才会生效
+### HAVING子句和WHERE子句的合并
+如果查询语句中没有出现诸如sum、max等等的聚集函数时,那么优化器就会将where和having子句进行合并
+### 常量表检测
+针对主键索引和唯一二级索引的等值匹配查询时生效,如下
+```mysql
+select * from table1 inner join table2 on table1.column1=table2.column2
+where table1.primary_key=1;
+```  
+将会做如下优化  
+```mysql
+select table1表记录的各个字段的常量值,table2.* from table1 inner join table2 on table1表column1列的常量值=table2.column2;
+```
+## 外连接消除
+首先外连接和内连接和区别是什么不用多说。通过where条件不允许被驱动表的列为空,这样就和内连接查询的结果一致。
+## 子查询优化
+### 子查询语法
+#### 子查询类型
+##### 按返回的结果集区分子查询
+1. 标量子查询
+返回单一值的子查询称之为**标量子查询**,一行一列的数据
+2. 行子查询
+一条记录
+3. 列子查询
+4. 表子查询
+多条记录
+##### 按与外层查询关系来区分子查询
+1. 不相关子查询
+子查询单独可以出结果
+2. 相关子查询
+#### 子查询在布尔表达式中使用
+#### 子查询语法注意事项
+### 子查询在MySQL中如何执行
+讲在前面,书上先讲了猜想的执行的真实样子 
+1. 如果是不相关子查询的话,那么就是先执行子查询中的语句，将结果集作为外层查询可能将要用到的数据集。
+2. 如果是相关查询，那么先从外层查询中拿出一条数据，用对应的值和子查询的列做关联。
+事实也正是如此,但是MySQL会在此基础上进行优化  
+#### IN子查询优化
+**不直接将不相关子查询的结果集当作外层查询的参数,而是将该结果集写入到一个临时表里**。  
+1. 该临时表的列就是子查询结果集中的列。  
+2. 写入临时表的记录会被去重。  
+3. 如果数据不是大的离谱,那么就会建立基于内存的使用Memory存储引擎的临时表,而且会为该表建立哈希索引;如果过大就会建立基于磁盘的存储引擎。      
+上面这种方案被称之为**物化表**,可以将物化表转换为连接  
+MySQL设计者又提出**半连接**(semi-join),这是**MySQL内部的一种查询方式**,下面是书上对于半连接的详细描述
+对于s1表的某条记录来说,我们只关心在s2表中是否存在与之匹配的记录，而不关心具体有多少条记录与之匹配,最终的结果集中只保留s1表的记录。
+有5种实现semi-join的策略  
+##### 总结
+1. 如果in子查询符合转换semi-join的条件,查询优化器会优先把该子查询为semi-join,然后从5种执行策略中选择成本更低的一种。
+2. 如果in子查询不符合转换为semi-join的条件,那么查询优化器会从下边两种策略选择一种成本更低的方式
+* 先将子查询物化之后再查询
+* 执行in to exists
+#### [NOT] EXISTS子查询的执行
+1. 如果不相关,会用true或者false来替换掉exists条件;
+2. 如果相关,就只能用一开始的方式来执行，但是会用索引加快
+#### 对于派生表的优化
+1. 将派生表物化
+2. 将派生表和外层的表合并,就是将查询重写为没有派生表的形式
+# Explain
+## 执行计划输出各列详解
+1. table 表名 
+2. id 每出现一个select就会分配一个id,<font color="blue">在连接查询的执行计划中,每个表都会对应一条记录,这些记录的id的值是相同的,出现子在前边的表表示驱动表，后边的表表示被驱动表</font>   
+3. select_type 在整个大查询中扮演了什么角色
+4. partitions
+5. type 对应的是之前的访问方法是哪种
+6. possible_keys和key 可能用到的索引
+7. key_len 当优化器决定使用某个索引进行查询时,该索引记录的最大长度
+8. ref 当使用索引列等值匹配的条件去执行查询时,ref列展示的就是与索引列作等值匹配的是什么,比如一个常数或者某个列。
+9. rows 当全表扫描的方式对某个表执行查询,预计要扫描的索引记录行数。
+10. filtered 计算扇出(驱动表中的记录条数)时的一个策略,通过百分比来预测。
+11. extra 提供一些额外信息
+## Json格式的执行计划
+使用时只需要在原来的语句中加入FORMAT=JSON 
+EXPLAIN <font color="green">FORMAT=JSON</font> SELECT * FROM s1 INNER JOIN s2 ON s1.key1 = s2.key2 WHERE s1.co 
+## Extend EXPLAIN
+执行计划的扩展信息 
+# Optimizer trace 
+explain只提供了部分信息,如果想要查看更加详细的优化过程就得借助optimizer_ trace表
+查看变量  
+show variables like 'optimizer_trace';  
+enable默认是off,所以需要打开  
+set optimizer_trace="enabled=on";  
+//执行自己的查询语句
+select * from s1 where 
+key1 > 'z' and  
+key2 > 1000000 and
+key3 in ('a','b','c') and 
+common_field='abc';  
+然后查看optimizer表来观察优化过程
+select * from information_schema.OPTIMIZER_TRACE\G . 
+# InnoDB的Buffer Pool
+## 缓存的重要性
+即使访问一条记录也要把整个页的数据加载到内存中,读写访问之后不会立即释放内存。
+## InnoDB的Buffer Pool概览
+### Buffer Pool介绍
+MySQL服务器在启动的时候向操作系统申请了一片连续的内存,这块内存就叫做Buffer Pool(缓冲池)。
+### Buffer Pool内部组成
+InnoDB设计者为每一个缓存页都创建了**控制信息**,书中将每一个页对应的控制信息占用的内存称为一个**控制块**。  
+<font color="blue">控制块和缓存页是一一对应的,它们都被存放到Buffer Pool中,其中控制快被存放到前面,缓存页被放在后边</font>   
 
-   
+### free链表的管理
+<font>用来记录Buffer Pool中哪些缓存页是可用的</font>,可以将所有的空闲页对应的控制块作为一个节点放到一个链表中。  
+同时有一个**基节点**用来统计free链表的数据,里面包含着头节点地址,尾节点地址和链表中的节点数量等信息。  
 
+### 缓存页的哈希处理
+哈希key-value
+key就是**表空间号+页号**,value就是对应的**缓存页**;
+### flush链表的管理
+将修改的缓存页(脏页)的对应的控制块信息所构成的链表,和free链表相似。
+### LRU链表的管理
+#### 缓存不够用
+缓存页太多,内存肯定是不够用的
+#### 简单的LRU链表
+LRU:Least Recently Used  
+1. 如果该页不在Buffer Pool中,把该页从磁盘加载到Buffer Pool的缓存页时,就把该缓存页对应的**控制块**作为节点塞到链表的头部
+2. 如果该页已经缓存在Buffer Pool中,则将页对应的控制块移动到LRU链表的头部。
+#### 划分区域的LRU链表
+##### LRU面临的问题: 
+1. 预读  
+可能用到的页面,加载到Buffer Pool中。
+- 线性预读
+  连续(顺序访问)读取某个区的指定数量(系统变量)的页面,就会触发异步读取下一个区的全部页面到Buffer Pool中,异步不会影响当前工作线程的正常运行。
+- 随机预读
+如果缓存了某个区的13个连续的页面,会读取本区中的所有其他页面到Buffer Pool中,是否开启可由系统变量配置。
+2. 全表扫描
+上面两种情况都会导致Buffer Pool中大量的页被替换掉
+##### 解决方案
+将LRU链表分为两部分  
+Yong区域和Old区域  
+innodb_old_blocks_pct系统变量来配置old区域在链表中所占比例。
+1. 针对预读的优化
+当磁盘上的某个页面在初次加载到Buffer Pool中的某个缓存页时,该缓存页对应的控制块会被放到old区域的头部
+2. 针对全表扫描的优化
+全表扫描的特点是执行频率特别低 
+对某个处在old区域内第一次访问会有一个访问时间,后面再次访问时的时间与首次访问时间的差值如果超过某个值就会将其移动至yong区域首部。
+3. 更进一步优化
+yong区域中也不是每次访问都会将对应的控制块移动到首部,而是后3/4处的控制块才会移动至首部。
+### 刷新脏页到磁盘
+1. 从**LRU链表**的冷数据(old)中刷新一部分页面到磁盘。  
+2. 从**flush链表**中刷新一部分页面到磁盘。  
+### 多个Buffer Pool实例
+多线程情况下Buffer Pool的各种链表需要加锁,单一的Buffer Pool可能会影响请求的处理速度。
+### innodb_buffer_pool_chunk_size
+Buffer Pool的实例是由若干个chunk(一片连续的内存空间)组成,<font>innodb_buffer_pool_size的值只能在服务器启动的时候指定,在服务器运行过程中不可以修改</font>
+### 配置Buffer Pool注意事项
+innodb_buffer_pool_size 必须是 innodb_buffer_pool_chunk_size × innodb_buffer_pool_instances 的
+倍数(这主要是想保证每一个 Buffer Pool 实例中包含的 chunk 数量相同)
+### 查看Buffer Pool的状态信息
+show engine innodb status\G;
+常见的几个值    
+Total memory allocated 向操作系统申请的连续内存空间大小,包括全部控制块、缓存页和碎片的大小  
+Buffer pool size 代表Buffer pool可以容纳多少缓存页
+Free buffers 代表LRU链表中页的数量
+### 总结
+1. 磁盘太慢,内存作为缓存很有必要
+2. Buffer Pool本质上是InnoDB向操作系统申请的**一段连续的内存空间**
+3. Buffer Pool向操作系统申请的连续内存由控制块和缓存页组成,每个控制块和缓存页都是一一对应的,在填充足够多的控制块和缓存页的组合后,Buffer Pool剩余的空间可能不够填充一组控制块和缓存页,这部分空间不能被使用,也被称为**碎片**。
+4. InnoDB使用了许多链表来管理Buffer Pool。LRU、Free、Flush
+5. free链表中每一个节点都代表一个空闲的缓存页
+6. 为了快速定位到某个页是否被加载到Buffer Pool,使用**表空间号+页号**作为key,缓存页作为value,建立哈希表 
+7. Buffer Pool中被修改的页称为脏页,不是立即刷新，而是加入到flush链表
+8. yong区域与old区域,可以通过innodb_old_blocks_pct来调节old区域所占的比例。
+9. 通过指定innodb_buffer_pool_instance来控制Buffer Pool实例的个数
+10. 5.7.5之后,可以在服务器运行过程中调整Buffer Pool的大小。
+11. 查看Buffer Pool状态命令:show engine innodb status\G;
+# 事务
+## ACID
+原子性
+隔离性
+一致性 符合现实世界的约束(书上是这么说的,我还没有看其他的)
+持久性
+## 事务的概念
+一组数据库操作,满足上面4个特性。
+## 事务的语法
+### 开启事务
+两种方式  
+1. begin
+2. start transaction
+### 提交事务
+commit
+### 手动中止事务
+rollback
+### 支持事务的存储引擎
+InnoDB和NDB存储引擎
+### 自动提交
+SHOW VARIABLES LIKE 'autocommit';
+默认值是ON,每一条语句都是独立的一个事务。
+1. 显式的使用start transaction或者begin开启一个事务
+2. 把系统变量autocommit的值设置为OFF
+### 隐式提交
+1. 定义或者修改数据库对象的数据定义语言(Data definition language)
+2. 隐式使用或修改mysql数据库中的表
+还有其他,这里只要知道某些语句或者操作会触发事务的隐式提交
+### 保存点
+savepoint 保存点名称
+在事务中添加这条语句即可
+# redo日志
+## 事先说明
+因为一条记录刷新一个页面到磁盘有点过于浪费,所以将这个修改操作记录一下。  
+例如,更新操作 
+将第0号表空间的100号页面的偏移量为1000处的值更新为2。这就是一条完整的记录,称为redo log。
+## redo日志格式
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-03%20%E4%B8%8B%E5%8D%886.09.07.png)
+各个部分释义 
+1. type 日志类型
+2. space ID 表空间ID
+3. page number 页号
+4. 该条日志的具体内容
 
+上面这些只是所有redo日志共有的,下面还有一些不同类型redo日志特有的属性。
+### 简单的redo日志类型
+说在前面,InnoDB会维护一个**全局变量**,每当向某个包含隐藏的row_id列(没有主键或者唯一索引的时候会有这个列)的表中插入一条记录时,就会把该变量的值当作新新纪录的row_id列的值。  
+每当这个变量的值为**256的倍数**时,就会把该变量的值刷新到**系统表空间的页号为7**的页面中一个称之为**Max Row ID**的属性处。  
+redo log的类型
+- MLOG_1BYTE:表示在页面的某个偏移量处写入1个字节的redo日志。
+- MLOG_2BYTE:表示在页面的某个偏移量处写入2个字节的redo日志
+后面还有4个字节和8个字节的redo日志。
+不出意外的话肯定还有多个字节的,
+- MLOG_WRITE_STRING 表示在页面的某个偏移量处写入一串数据。  
 
+**属性**
+1. **offset**,上面提到了那么多次偏移量,那么redo日志中肯定还有偏移量的属性。
+2. 1字节2字节4字节的还有一个属性就是len,表示具体数据占用的字节数。  
+总而言之,redo日志会把事务在执行过程中对数据库所做的修改都记录下来,在之后系统崩溃重启后可以把事务所做的任何修改都恢复出来。  
+## Mini-Transaction
+### 以组的形式写入redo日志
+**页面更改产生的redo相应的日志被记录下来,这些redo日志被InnoDB设计者划分成为了若干个不可分割的组**
+1. 更新Max Row ID属性时产生的redo日志时不可分割的
+2. 向聚簇索引对应的B+树的页面中插入一条记录时产生的redo日志是不可分割的
+3. 向某个二级索引对应的B+树的页面中插入一条记录时产生的redo日志是不可分割的
+4. 还有其他的一些对页面的访问操作时产生的redo日志是不可分割的  
+上面的不可分割的意思是插入的时候可能会出现页分裂(悲观插入)的情况,所以一个操作会产生多条记录。  
+通过MLOG_MULTI_REC_END标志来代表当前redo日志是否为一组redo日志的结尾。  
+## redo日志的写入过程
+### redo log block
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-05%20%E4%B8%8A%E5%8D%8810.05.51.png)
+是不是有点像页的结构,只不过没有那么复杂
+### redo日志缓冲区
+写入redo日志时也不能直接写到磁盘上,实际上服务启动时就向操作系统申请了一大片称之为redo log bufferr的连续内存空间。这片内存空间被划分为若干个连续的redo log block,可以通过启动参数innodb_log_buffer_size来指定log buffer的大小。  
+### redo日志写入到log buffer
+写入的第一个问题就是写入到哪个block的哪个偏移量处 
+InnoDB提供了一个称之为buf_free的全局变量,该变量指明后续写入的redo日志应该写入到log buffer中的哪个位置  
+**不同事务可能是并发执行的,所以T1、T2之间的mtr可能是交替执行的**。mtr产生的log buffer交替写入到log buffer
+## redo日志文件
+### 刷盘时机
+1. log buffer空间不足
+2. 事务提交时
+3. 后台线程刷
+4. 正常关闭服务器时
+5. check point
+### redo日志文件组
+我的数据库中没有书上的两个文件ib_logfile0和ib_logfile1
+1. innodb_log_group_home_dir
+该参数指定了redo日志文件所在的目录,默认值就是当前的数据目录
+1. innodb_log_file_size
+指定每个redo日志文件的大小
+2. innodb_log_files_in_group
+该参数指定redo日志文件的个数,,默认值为2,最大值为1000
+### redo日志文件格式
+前2048个字节,即前4个block用来存储一些管理信息    
+从2048字节往后用来存储log buffer中的block镜像  
+## Log Sequeue Number日志序列号】
+LSN从8704开始,header+trailer+body的日志序列号会成为新的值。
+### flushed_to_disk_lsn
+buf_next_to_write标记当前log buffer中已经有哪些日志被刷新到了磁盘中,书上还提到了flush_to_disk_lsn表示刷新到磁盘的lsn,这个才是重点。
+### lsn值和redo日志偏移量的关系
+lsn从8704开始,redo日志偏移量从body开始(跳过header2048) 
+### flush链表中的LSN
+说在前面,mtr结束时还有一件非常重要的事情要做,就是把在mtr执行过程中可能修改过的页面加入到Buffer Pool的flush链表。
+控制块有两个属性oldest_modification(第一次修改该页面mtr开始的lsn值写入这个属性)和newest_modification(每修改一次页面,都会将修改该页面的mtr结束时对应的lsn值写入这个属性) 。
+## checkpoint
+**redo日志只是为了系统崩溃后恢复用的**,如果对应的脏页已经刷新到了磁盘,那么redo日志也用不到了。
+比如说页a被刷新到了磁盘,mtr_1生成的redo日志就可以被覆盖了,所以我们可以进行一个增加checkpoint_lsn的操作,这个过程被称为一次checkpoint。
+1. flush链表尾节点,oldest_modification赋值给checkpoint_lsn(之前的都可以删掉);
+2. 将checkpoint_lsn和**对应的redo日志文件组偏移量**以及**此次checkpoint的编号写到日志文件的管理信息**。
+每完成一次checkpoint就会有个全局变量checkpoint_no的变量值加1,同时会有一个checkpoint_offset来表示在日志文件组中的偏移量。  
+存储到check_point1中还是2中取决于checkpoint_no的值。
+### 批量从flush链表中刷出脏页
+### 查看系统中的各种LSN值
+## 崩溃恢复
+### 确定恢复的起点
+比较checkpoint1和checkpoint2的checkpoint_no,哪个更大就说明哪个更加接近，作为起点。
+### 确定恢复的终点
+使用页中的某个属性来表示当前页中使用了多少字节的空间。
+### 怎么恢复
+1. 使用哈希表
+SpaceID+PageNumber
+2. 跳过已经刷新到磁盘的
+File Header中有个属性FIlE_PAGE_LSN,就是new_modification的值。
+# undo日志
+## 事务回滚的需求
+懂的都懂 
+把回滚时所需的东西都记录下来
+## 事务id
+### 分配时机
+事务分为只读事务和读写事务  
+只读事务可以修改临时表而读写事务可以修改普通表,这个时候会分配事务id
+### 如何生成
+和row_id类似,全局变量,每次加1,当这个值是256的倍数时就会跟新到系统表空间的页号为5的一个称之为Max Trx ID的属性处
+### trx_id隐藏列
+和之前的格式串起来了
+roll_point指向undo日志版本链
+## undo日志格式
+undo日志在操作之前生成  
+undo_no来保证唯一性,存放在系统表空间中
+insert、delete和update对应的日志格式不相同
+事务提交之后就无法恢复了 
+书上的例子非常详细  
+### insert
+### delete
+1. 阶段一 delete_mark
+2. 阶段二 加入垃圾链表
+### update 
+#### 不更新主键
+1. 更新列所占用的空间不变
+就地更新 
+2. 更新列占用空间变化
+删除掉,这里说的删除是直接加入垃圾链表
+#### 更新主键
+1. 如果更新主键的话,那么就像delete一样做delete_mark操作(MVCC,为了其他事务能够正常访问)
+2. 根据更新后各列的值创建一条新纪录,并将其插入到聚簇索引中  
+## 通用链表结构
 
