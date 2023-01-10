@@ -5,6 +5,7 @@
 - [安装](#安装)
   - [ubuntu18.04安装MongoDB](#ubuntu1804安装mongodb)
     - [踩坑](#踩坑)
+  - [MacOS](#macos)
 - [MongoDB术语解析](#mongodb术语解析)
   - [数据库](#数据库)
   - [文档](#文档)
@@ -73,6 +74,10 @@ libcurl.so.4: version `CURL_OPENSSL_3’ not found (required by ./bin/mongod)
 解决方案:
 sudo apt-get install libgconf-2-4
 sudo apt-get install libcurl3
+## MacOS
+使用homebrew安装  
+服务启动时可以指定数据库路径  
+  
 # MongoDB术语解析
 SQL术语   MongoDB术语   解释
 table          collection           数据库表/集合

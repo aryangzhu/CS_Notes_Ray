@@ -989,57 +989,39 @@ Path resolve(Path other)
 ```java
 byte[] bytes=Files.readAllBytes(path);
 ```
-
 还可以利用下面的方法来读取文件内容:
-
 ```
 var content=Files.readString(path,charset);
 ```
-
 将文件当做行序列读入:
-
 ```java
 List<String> lines=Files.readAllBytes(path,charset);
 ```
-
 相反,如果希望写出一个字符串到文件中,可以调用:
-
 ```java
 Files.writeString(path,content.char);
 ```
-
 向指定文件追加内容:
 
 ```java
 Files.write(path,content.getBytes(charset),StandardOpenOption.APPEND);
 ```
-
 将一个行的集合写出到文件中:
-
 ```java
 Files.write(path,lines,charset);
 ```
-
 虽然上面的代码很方便,还是推荐使用输入/输出流(因为更加专业)。
-
 ### 常用API
-
 #### java.nio.file.Files
-
 ##### static List\<String> readAllLines(Path path,Charset charset)
 
 读入文件的内容。
 
 ##### staic Path write(Path path,Iterable<? extends CharSequence> contents,OpenOption options)
-
 将给定内容写出到文件中,并返回path。
-
 ##### static BufferedWriter newBufferedWriter(Path path,Charset charset,OpenOption... options)
-
 打开一个文件,用于读入或这写出。
-
 ## 创建文件和目录
-
 **创建新目录**可以调用
 
 ```java
@@ -1053,13 +1035,10 @@ Files.createDirectory(path);
 ```
 Files.createDirectories(path);
 ```
-
 如果需要创建一个空文件:
-
 ```java
 Fiels.creatFile(path);
 ```
-
 如果文件已经存在,那么这个调用就会抛出异常。检查文件是否存在和创建文件是**原子性**的。如果文件不存在,那么该文件就会被创建,并且其**他程序在此过程中是无法执行文件创建操作的**。
 
 有些便捷方法在给定位置湖泽系统指定的位置创建临时文件或者临时目录。
@@ -1095,31 +1074,21 @@ Files.copy(fromPath,toPath,StanddardCopyOption.REPLACE_EXISTING,StandardCopyOpti
 ```
 
 你可以将移动操作定义为原子性(要成功都成功)的,这样就**保证要么移动操作完成,要么源文件继续保持在原来位置**。
-
 ```java
 Files.move(fromPath,toPath,StandardCopyOption.AIOMIC_MOVE);
 ```
-
 还可以将一个输出流复制到Path中,这表示想要将输入流存储到硬盘上。
-
 ```java
 Files.copy(inputStream,toPath);
 ```
-
 删除文件:
-
 ```java
 Files.delete(path);
 ```
-
 用于文件操作的标准选项可以看书上的表格,非常的详细。
-
 ### 常用API
-
 #### java.nio.file.Files
-
 ##### static Path move(Path from,Path to,CopyOption...options)
-
 ##### static long copy(Path from,OutputStream to,CopyOption ...options)
 
 从文件复制到输入流中,返回复的字节数。
@@ -1335,19 +1304,12 @@ Files.walkTree(fs.getPath("/"),new SimpleFileVisitor<Path>()
 ```
 
 ### 常用API
-
 #### java.nio.file.FileSystems
-
-对所安装到的文件系统提供者进行迭代,并且如果loader不为null,那么就还会迭代给定的类加载器能够加载加载的文件系统,返回由第一个可以接受给定路径的文件系统提供者创建的文件系统。
-
+对所安装到的文件系统提供者进行迭代,并且如果loader不为null,那么就还会迭代给定的类加载器能够加载加载的文件系统,返回由第一个可以接受给定路径的文件系统提供者创建的文件系统。  
 # 内存映射文件
-
 大多数操作系统都可以利用**虚拟内存** 实现来将**一个文件或者文件的一部分**"映射"到内存中。然后,**这个文件就可以被当做内存数组一样地访问**,这比传统的文件操作还要快的多。
-
 ## 内存映射文件的性能
-
-书上的例子比较了JDK下的jre/lib目录中的37MB的rt.jar文件用不同的方式来计算校验和。
-
+书上的例子比较了JDK下的jre/lib目录中的37MB的rt.jar文件用不同的方式来计算校验和。  
 在特定的机器上,内存映射比使用带缓冲的顺序输入还要稍微快一点,但是比使用RandomAccessFile快很多。
 
 首先,**从文件中获得一个通道(channel),通道是专门用于磁盘文件的一种抽象**,它使我们可以访问诸如**内存映射、文件加锁机制以及文件间快速数据传递等操作系统**的特性。
@@ -1355,21 +1317,13 @@ Files.walkTree(fs.getPath("/"),new SimpleFileVisitor<Path>()
 ```java
 FileChannel channel=FileChannel.open(path,options);
 ```
-
 然后,通过调用FileChannel类的**map**方法从这个通道中获得一个**ByteBuffer**。你可以指定想要的**映射的文件区域与映射模式**,支持的模式有三种:
-
 1.FileChannel.MapMode.READ_ONLY:所产生的缓冲区是只读的,任何对该缓冲区写入的尝试都会导致ReadOnlyBufferException异常。
-
-2.FileChannel.MapMode.READ_WRITE:所产生的缓冲区是可写的,任何修改都会在某个时刻写会到文件中。
-
-注意:其他映射同一个文件的程序**可能不能立即看到这些修改**,多个程序同时进行文件映射的确切行为是依赖于操作系统的。
-
-3.FileChannel.MapMode.PRIVATE:所产生的缓冲区是可写的,但是任何修改对这个缓冲来说是私有的,不会传播到文件中。
-
-一旦有了ByteBuffer,就可以用它和它的超类的方法来读写数据了。
-
-缓冲区支持顺序和随机数据访问，它有一个可以通过get和put操作来移动的**位置**(RandomAccessFile类的文件指针)。例如,下面的方法顺序遍历缓冲区素有字节
-
+2.FileChannel.MapMode.READ_WRITE:所产生的缓冲区是可写的,任何修改都会在某个时刻写会到文件中。 
+注意:其他映射同一个文件的程序**可能不能立即看到这些修改**,多个程序同时进行文件映射的确切行为是依赖于操作系统的。  
+3.FileChannel.MapMode.PRIVATE:所产生的缓冲区是可写的,但是任何修改对这个缓冲来说是私有的,不会传播到文件中。  
+一旦有了ByteBuffer,就可以用它和它的超类的方法来读写数据了。 
+缓冲区支持顺序和随机数据访问，它有一个可以通过get和put操作来移动的**位置**(RandomAccessFile类的文件指针)。例如,下面的方法顺序遍历缓冲区素有字节  
 ```java
 while(buffer.hasRemaing()){
     byte b=buffe.get();
@@ -1503,16 +1457,11 @@ Xxx getXXX(int index)
 
 在实践中,最常用的是ByteBuffer和CharBuffer。每个缓冲区都具有:
 
-1.一个容量,它永远不能改变。
-
-2.一个读写位置,下一个值将在此进行读写。
-
-3.一个界限(之其说过,它是第一个不可用位置,至于在容量之中为什么不可用我也很疑惑),超过它进行读写是没有意义的。
-
+1.一个容量,它永远不能改变。  
+2.一个读写位置,下一个值将在此进行读写。 
+3.一个界限(之其说过,它是第一个不可用位置,至于在容量之中为什么不可用我也很疑惑),超过它进行读写是没有意义的。  
 4.一个可选的标记,用于重复读入或写出操作。
-
 这些值满足下面的条件:
-
 ​              **0<=标记<=读写位置<=界限<=容量**
 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/%E4%B8%80%E4%B8%AA%E7%BC%93%E5%86%B2%E5%8C%BA.jpg)
@@ -1576,8 +1525,7 @@ int position()
 
 # 文件加锁机制
 
-现实中的场景:**多个同时执行的程序需要修改同一个文件**的情形,很明显,**这些程序需要以某种方式进行通信,不然这个文件很容易被损坏(由此引出了进程间的通信)**。文件锁可以解决这个问题,它可以**控制对文件或文件中某个范围的字节的访问**。
-
+现实中的场景:**多个同时执行的程序需要修改同一个文件**的情形,很明显,**这些程序需要以某种方式进行通信,不然这个文件很容易被损坏(由此引出了进程间的通信)**。文件锁可以解决这个问题,它可以**控制对文件或文件中某个范围的字节的访问**。  
 ​	假设你的应用程序将用户的偏好存储在一个配置文件中,当用户调用这个应用的两个实例时,这两个实例就有可能会同时希望写配置文件。在这种情况下,第一个实例应该锁定文件,当第二个实例发现文件被锁定时,**它必须决策是等待直至文件解锁,还是直接跳过这个写操作过程**。
 
 ​	要锁定一个文件,可以调用FileChannel类的lock或tryLock方法:
@@ -1725,4 +1673,30 @@ Pattern pattern=Pattern.complile("[0-9]+");
 Matcher matcher=pattern.matcher(input);
 String output=matcher.replaceAll("#");
 ```
+# NIO
+之前只是将书上的知识摘抄了一遍而已,NIO的知识在好几个部分散落开来
+## 5种I/O模型
+阻塞
+非阻塞(轮询)
+I/O复用(事件驱动模型)
+和非阻塞I/O的区别就是委托黄牛
+select/poll
+epoll
+信号驱动
+和I/O复用模型的区别就是委托黄牛变成了电话
+异步I/O
+和上面的区别是操作系统会完成数据拷贝到用户内核空间这一步的操作
+## JDK中3个重要的类
+其实上面的nio包的api基本上就是介绍的这3个类
+Buffer、Channel和Selector  
+Buffer与Channel不必多说  
+Selector可以理解为I/O多路复用模型的实现,个人猜测底层还是玩的select/poll这些函数,多路复用是通过监听事件(事件驱动模型不是白来的)来实现的,那么java肯定也会有几个方法形如select和poll函数  
+selector.open();  
+channel.register(slector,XXXX);
+XXXX就是要监听的事件  
+select() 
+selectNow()  
+select(long timeout)  
+wakeup()  
+
 

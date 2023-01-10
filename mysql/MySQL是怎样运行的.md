@@ -733,28 +733,172 @@ File Header中有个属性FIlE_PAGE_LSN,就是new_modification的值。
 事务分为只读事务和读写事务  
 只读事务可以修改临时表而读写事务可以修改普通表,这个时候会分配事务id
 ### 如何生成
-和row_id类似,全局变量,每次加1,当这个值是256的倍数时就会跟新到系统表空间的页号为5的一个称之为Max Trx ID的属性处
+和row_id类似,全局变量,每次加1,当这个值是256的倍数时就会跟新到系统表空间的页号为5的一个称之为Max Trx ID的属性处  
 ### trx_id隐藏列
-和之前的格式串起来了
-roll_point指向undo日志版本链
+和之前的格式串起来了  
+roll_point指向undo日志版本链  
 ## undo日志格式
 undo日志在操作之前生成  
-undo_no来保证唯一性,存放在系统表空间中
-insert、delete和update对应的日志格式不相同
-事务提交之后就无法恢复了 
-书上的例子非常详细  
+undo_no来保证唯一性,存放在系统表空间中  
+insert、delete和update对应的日志格式不相同  
+事务提交之后就无法恢复了  
+书上的例子非常详细   
 ### insert
 ### delete
-1. 阶段一 delete_mark
-2. 阶段二 加入垃圾链表
+1. 阶段一 delete_mark  
+2. 阶段二 加入垃圾链表  
 ### update 
 #### 不更新主键
-1. 更新列所占用的空间不变
+1. 更新列所占用的空间不变  
 就地更新 
 2. 更新列占用空间变化
-删除掉,这里说的删除是直接加入垃圾链表
+删除掉,这里说的删除是直接加入垃圾链表  
 #### 更新主键
-1. 如果更新主键的话,那么就像delete一样做delete_mark操作(MVCC,为了其他事务能够正常访问)
-2. 根据更新后各列的值创建一条新纪录,并将其插入到聚簇索引中  
+1. 如果更新主键的话,那么就像delete一样做delete_mark操作(MVCC,为了其他事务能够正常访问)  
+2. 根据更新后各列的值创建一条新纪录,并将其插入到聚簇索引中   
 ## 通用链表结构
-
+在写入undo日志的时候会使用到许多链表结构,这些列表的节点有通用的属性  
+Pre Node PageNumber和Pre Node offset指向上一个节点  
+Next Node PageNumber和Next Node offset指向下一个节点  
+除此之外,还会有一个基节点,这个结构里面多了个count,表示当前链表的个数  
+## FILE_PAGE_UNDO_LOG(Undo页面)
+由于insert日志和update日志的差别,所以这两种日志记录也是分别存储在不同类型的页中。  
+那么页面中还会有什么属性呢?(猜测redo页面是否也有这些属性只不过我之前没有注意过)  
+PAGE_TYPE:页面类型
+PAGE_START:页面的什么地方开始存储日志记录,个人觉得是通过offset(页面偏移量)来表示的
+PAGE_FREE:可用的日志记录的偏移量
+## Undo页面链表
+### 单事务Undo页面链表
+按需创建,只有真正用到的时候才会创建
+### 多事务Undo页面链表
+InnoDB设计者规定,有4种链表类型
+普通表的Insert类型的链表
+普通表的Update类型的链表
+临时表的Insert类型的链表
+临时表的Update类型的链表
+那么头节点的位置肯定会有关于整个链表的属性,例如,Segment ID段(每个段对应一个INODE ENTRY结构,通过Segment Header(表空间的时候有提到过)来确定)的id等等。这些属性存放在undo页链表的首个节点。  
+## Undo日志的写入过程
+### Unod Log Segment Header
+页链表首个节点中Segment Header属性,所有的页面在申请的时候都是从这个段中去申请的
+### Undo Log Header
+每一次minitranscation都会产生一组undo日志,这些undo日志加入到Undo链表中的时候需要有地方来记录一下这个组的属性,Undo Log Header的作用就在于此。  
+#### 几个重要的属性
+1. trx_undo_trx_id: 事务id
+2. trx_undo_trx_no: 事务提交时的顺序号
+其他一些属性就是常见的例如上一组下一组的偏移量
+## 重用undo日志
+为了实现并发执行(提高效率),会为每个事务都创建链表,如此一来便会产生许多额外数据,浪费空间不说,维护起来也相当麻烦,所以有了重用这个妙手
+1. 页链表中只有一个页的链表能重用
+2. Insert类型在事务提交之后就可以重用
+3. Update类型的会在原来的undo页面后面继续加,这里说的是事务提交之后,原来的记录不能删除是为了保证MVCC
+## 回滚段-RollBack Segment
+为了管理Undo页链表(数量过多),需要有个地方来集中统一的展示这些信息,于是就有了这么一个概念。
+### RollBack Segment Header页面
+undoslot指向页链表的首个页节点
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-16%20%E4%B8%8A%E5%8D%8811.59.09.png)
+### RollBack Segment的分类
+通过上面的描述可以知道其实回滚段就是这些RollBack Segment Header页,一个页面只有1024个undoslot,所以会有很多的这种页面  
+分为系统、普通、临时表(临时表不需要redo日志,但是会有undo日志)   
+### 为事务分配Undo日志的详细过程
+1. 首先为事务分配一个RollBackHeader页  
+2. 检查RollBack页中是否有可重用的页链表(放在Insert Undo Cache和Update Unddo Cache中)
+   * 如果有的话,那么就将undoslot分配给事务
+   * 如果没有的话IS_FILL,那么就新创建一个段,将段的First Page Number给事务
+### 回滚段配置
+#### 配置回滚段的数量
+#### 配置回滚段的空间
+# MVCC
+## 遇到的问题
+脏写: A事务修改了a字段,B事务rollback,A事务的操作数据不见了,这就是脏写  
+脏读: A事务读到了B事务未提交的数据
+不可重复读: A事务针对a执行了几次查询操作,B事务修改了a几次,A事务每次的查询结果都不一样
+幻读: A事务同一个查询条件查询了几次,B事务新增了记录,结果每次都能查到新的记录
+## 4种隔离级别
+有人设计一套SQL标准
+read uncommited
+read commited
+repeated read
+serilizable 
+## MVCC版本链
+每次对于数据的操作都会有一条undo日志,记录中用roll_pointer指向最新的一条undo日志
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-16%20%E4%B8%8B%E5%8D%883.55.54.png)
+从上面的图中能看出来,每条undo日志中也有roll_pointer这个属性,指向上一条的undo日志。
+下面看一下针对各个隔离级别MySQL是如何实现的
+### ReadUncommited
+直接读取最新的记录就可以
+### Read Committed
+首先需要了解一个概念ReadView,这是版本链中一个非常重要的数据结构,有几个重要的属性(可能名称不一定准确):  
+1. m_ids
+生成ReadView时活跃的事务id列表
+2. min_trx_id
+活跃的最小事务id
+3. max_trx_id
+再次生成ReadView时应该分配的事务id
+4. creator_trx_id 
+生成当前ReadView的trxid  
+#### 比较规则
+1. 如果访问的trx_id和creator_id相等,说明访问的就是当前版本,可以访问  
+2. 如果trx_id小于min_trxid,说明之前已经提交,可以访问  
+3. 如果trx_id大于max_traxid,说明当前记录版本在创建事务之后,可以访问  
+4. 如果trx_id在[min,max]之间,trx_id是否在m_ids列表中,如果在的话说明事务trx_id还是活跃的,没有提交,所以不能被反问
+#### Select之前生成一个ReadView
+trx_id只有在insert,update,delete的时候才会被分配。
+### Repeated Read
+#### 只有第一次查询的时候生成一个ReadView
+### Serilizalbe 
+采用锁的方式
+# 锁
+上面提到了Serilizable这个隔离级别,就不得不提到锁了
+## 几个概念
+**锁的结构** trx_id+is_waiting
+1. 不加锁
+不在内存中生成锁
+2. 获取锁成功
+为记录在内存中创建一个锁,is_waiting为true
+3. 获取锁失败
+为记录在内存中创建一个锁,is_waiting为false
+**如何解决上面事务中存在的问题**
+1. 通过MVCC读和锁写
+2. 读写都加锁
+### 一致性读
+指的就是不加锁的读的方式
+### 共享锁和排他锁
+共享锁S-shared
+拍他锁X-exclude
+1. 读操作
+    * 对读记录加S锁
+    * 对读记录加X锁
+2. 写操作
+转换成为对记录加X锁的读操作
+## 多粒度锁
+提出了**表锁和行锁**的概念,当然这是通用的概念,下面会将MySQL如何实现
+有个问题就是加表X锁的时候要求行没有锁,所以InnoDB就提出了IS和IX锁,即意向锁。我们只需要知道事务执行对行加锁前一定会有表锁(意向锁)。
+## 细说MySQL的表锁和行锁
+不同的存储引擎采用的锁的实现方案是不一样的,下面来看一下InnoDB的锁设计
+### 表锁
+1. S锁
+2. X锁
+上面的两个锁非常鸡肋,基本上不用到
+3. IS锁和IX锁
+上面有提到过,用来判断当前表的记录是否上锁
+4. Auto-Inic锁
+新增的时候会设置自增,所以需要保证id的唯一性,也就是说当插入一条记录的时候会将记录加锁从而阻塞别的线程的更改。
+### 行锁
+1. Record Locks
+书上给的名称是正经记录锁,我的理解是针对某条记录(Record)的锁,所以会有S锁和X锁
+2. Gap Locks
+不允许在当前记录和上一条记录的区间内插入
+这个锁的提出是为了防止幻影读(从根上解决,不让你插入) 
+3. Next-Key Locks
+相当于Record Locks+Gap Locks的功能
+4. Insert intention Locks
+插入意向锁,说的是事务在插入记录时会先生成一个插入意向锁,如果记录此时有之前的Gap锁或者Next-key锁,那么is_waiting=true
+5. 隐式锁
+新增一条记录之后,其他事务可以对其做修改,这样会产生脏读和脏写的问题  
+这个时候隐藏的trx_id事物id就发挥了作用  
+    * 修改的是聚簇索引的记录时(事务B修改),事务A新增,那么B事务会检查记录的trx_id,如果属于活跃事务就会为记录加事务A的锁,然后再加自己的锁并处于等待状态
+    * 修改的二级索引, 会使用页里面的某个属性来做判断检查trx_id是否活跃,否则就只能回表执行上面的步骤
+### InnoDB的锁的内存结构
+1条记录针对一个事务生成一个锁结构,这样有点过于浪费,所以锁是可以重用的
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-18%20%E4%B8%8A%E5%8D%8810.04.14.png)
+ 

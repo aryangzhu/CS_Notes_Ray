@@ -11,6 +11,10 @@
 docker pull ubuntu
 ## 启动容器
 docker run xxx(name/id)
+## 运行交互的容器
+docker run -i -t ubuntu15.10 /bin/bash   
+-t:在新容器内指定一个伪终端或终端
+-i:允许对容器内的标准输入进行交互
 ## 启动容器(后台模式)
 docker run -d
 -t:在新容器内指定一个终端或者伪终端
@@ -41,7 +45,8 @@ docker logs -f bf08b7f2cd89
 ## 查看web应用程序容器的进程
 docker top wizardly_chandrasekhar
 ## 查看容器实例
-docker ps -a
+<font color="red">docker ps -a</font>    
+
 # 镜像使用
 ## 拉取镜像
 ## 查找镜像
@@ -59,9 +64,26 @@ docker rmi xxx
 #### 设置镜像标签docker tag 860c279d2fec runoob/centos:dev
 # 容器连接
 创建一个docker网络，将多个docker容器添加到网络中
+## 网络端口映射
+docker run -d -P training/webapp python app.py 
+-P:容器内部随机映射到主机端口
+-p:容器内部映射到指定主机端口
+同时也可以修改网络地址,上面的命令修改为  
+docker run -d -p 127.0.0.1:5001:5000 training/webapp python app.py
+## Docker容器互联
+docker有一个连接系统允许将多个容器连接在一起,共享连接信息
+### 容器命名
+-name  
+docker ps -l  
+### 新建网络
+ docker network create -d bridge test-net 
+### 连接容器
+docker run -itd --name test1 --network test-net ubuntu /bin/bash  
+docker run -itd --name test2 --network test-net ubuntu /bin/bash 
 # 仓库管理
 DockerHub
 # Dockerfile
+Dockerfile是一个用来构建镜像的文件
 # Docker Compose
 用于定义和运行多容器Docker应用程序的工具。通过Compose可以提前设置好所需的服务，然后用命令一键启动。
 

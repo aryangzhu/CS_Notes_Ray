@@ -1,83 +1,8 @@
-- [创建一个springboot项目(非官方文档)](#创建一个springboot项目非官方文档)
-- [yml文件](#yml文件)
-	- [配置文件](#配置文件)
-	- [yml描述](#yml描述)
-		- [xml](#xml)
-		- [yaml](#yaml)
-	- [yml基础语法](#yml基础语法)
-		- [注意事项](#注意事项)
-		- [字面量[数字,布尔值,字符串]](#字面量数字布尔值字符串)
-			- [注意](#注意)
-		- [对象、Map(键值对)shi](#对象map键值对shi)
-		- [数组](#数组)
-		- [注入配置](#注入配置)
-- [多环境切换](#多环境切换)
-- [数据校验](#数据校验)
-- [Web开发](#web开发)
-	- [静态资源导入](#静态资源导入)
-	- [首页和图标定制](#首页和图标定制)
-- [如何写一个网站](#如何写一个网站)
-	- [尽量用前端模板](#尽量用前端模板)
-		- [栅格](#栅格)
-		- [导航栏](#导航栏)
-		- [侧边栏](#侧边栏)
-		- [表单](#表单)
-		- [尾部](#尾部)
-	- [设计数据库(难点!)](#设计数据库难点)
-	- [前端让它能够自动运行,独立化工程](#前端让它能够自动运行独立化工程)
-	- [数据接口对接](#数据接口对接)
-		- [json](#json)
-		- [前后端联调](#前后端联调)
-- [整合持久层](#整合持久层)
-	- [整合JDBC](#整合jdbc)
-	- [整合Druid](#整合druid)
-	- [整合Mybatis(重点)](#整合mybatis重点)
-- [权限&认证](#权限认证)
-	- [整合SpringSecurity](#整合springsecurity)
-		- [1.授权](#1授权)
-		- [2.认证](#2认证)
-	- [整合Shiro](#整合shiro)
-		- [Shiro中经常使用的三个类](#shiro中经常使用的三个类)
-			- [Subject](#subject)
-			- [SubjectManager](#subjectmanager)
-			- [Realm](#realm)
-		- [常用API](#常用api)
-		- [项目使用](#项目使用)
-			- [1.配置Shiro相关的类即ShrioConfig](#1配置shiro相关的类即shrioconfig)
-			- [2.Realm](#2realm)
-- [SpringBoot集成Swagger](#springboot集成swagger)
-	- [详细配置](#详细配置)
-- [异步任务](#异步任务)
-- [发送邮件](#发送邮件)
-- [定时任务](#定时任务)
-- [Redis缓存](#redis缓存)
-	- [本地缓存](#本地缓存)
-		- [RedisTemplate](#redistemplate)
-		- [RedisTemplate与StringRedisTemplate](#redistemplate与stringredistemplate)
-		- [RedisConfig](#redisconfig)
-			- [配置工厂](#配置工厂)
-			- [实例化RedisTemplate组件，注入到容器中](#实例化redistemplate组件注入到容器中)
-			- [设置Redis的序列化方式，并开启事务](#设置redis的序列化方式并开启事务)
-		- [注入封装的RedisUtil](#注入封装的redisutil)
-	- [订阅和发布](#订阅和发布)
-		- [SpringBoot项目中实现Redis的订阅与发布](#springboot项目中实现redis的订阅与发布)
-			- [RedisConfig配置](#redisconfig配置)
-				- [实例化RedisMessageListenerXContainer组件并注入到容器中](#实例化redismessagelistenerxcontainer组件并注入到容器中)
-			- [实例化两个监听方法](#实例化两个监听方法)
-	- [消息队列](#消息队列)
-		- [生产者lpush](#生产者lpush)
-		- [消费这rpop](#消费这rpop)
-	- [分布式缓存](#分布式缓存)
 # 创建一个springboot项目(非官方文档)
-
 选择SpringBoot Intlizer然后选择Java Web组件
-
 # yml文件
-
 目的是作为配置文件来使用
-
 ## 配置文件
-
 作用:修改SpringBoot自动配置的默认值,因为SpringBoot在底层给我们配置好了。
 
 例如
@@ -476,4 +401,24 @@ MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
 ### 生产者lpush
 ### 消费这rpop
 ## 分布式缓存
-
+# SpringBoot自定义包
+1. 创建maven项目  
+2. pom文件中需要引入autoconfigure的依赖和maven打包插件,这两个是最基础的
+其他的可以按需引入依赖  
+3. 编写业务代码
+4. mvn install打包到仓库，如果有需要的话上传至镜像仓库
+5. 其他项目中pom中引入依赖
+原理在另一篇文章中有提及到
+# 整合RabbiMq
+# SpringAop使用
+今天看了公司的项目和mall项目,发现aop的两种使用方式
+## 针对某个包的切点
+@Pointcut("execution(public * com.macro.mall.tiny.controller.*.*(..))")
+    public void webLog() {
+}  
+从上面可以看出,这种方案针对的是某个包下的类来进行切面处理
+## 针对某个注解的切点
+@Pointcut("@annotation(com.xxx.core.anno.LogOption)")
+    public void logPointCut() {
+}
+这种方案需要先定义一个LogOption的注解,此后所有使用这个注解的方法都会引入切面  

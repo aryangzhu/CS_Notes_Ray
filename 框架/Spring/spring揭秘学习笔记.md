@@ -73,8 +73,9 @@ public static BeanFactory bindFile(BeanRegistry registry){
 }
 ```
 #### 注解方式
-@Autowired是最重要的一个注解。
+@Autowired是最重要的一个注解(也是项目中用的最多的一种方式,虽然书上花费大量篇章去描述XML,奈何大人时代变了)。
 ### BeanFatory的xml(配置文件方式详细)
+可能作者真的觉得XML配置依赖关系会成为主流,所以才会讲的这么详细
 #### \<beans>和 \<bean>
 \<beans>下面包含许多\<bean>,也包含许多属性
 例如default-lazy-init、default-autowire、default-dependency-check等等。
@@ -275,7 +276,7 @@ Resource[] getResource(String)
 ###### 实现类org.springframework.core.io.support.PathMatchingResourcePatternResolover
 classpath:*/
 #### ApplicationContext与ResourceLoader
-首先我们来看先面的图  
+首先我们来看下面的图  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/ApplicationContext%E4%B8%8EResourceLoader.png)  
 ##### Application扮演ResourceLoader的角色
 ##### ResourceLoader类型的注入
@@ -284,3 +285,10 @@ classpath:*/
 Spring提供了针对Resource类型的PropertyEditor的实现到容器中。
 ##### ClassPathXmlApplication和FileSystemXmlApplication
 两者的区别就是ClassPathXmlApplication及时pattern没有标明为classpath:,它也会到classpath下去找。
+
+Resource
+ReosourceLoader 
+ResourceResolver
+继承与实现关系
+扮演角色
+应用场景
