@@ -15,11 +15,9 @@ object
 typeof Math.abs
 function
 typeof undefined 
-undefined
-
+undefined  
 ### 1.Date
 #### 基本使用
-
 ```js
   var now=new Date(); //Mon Mar 08 2021 14:51:20 GMT+0800 (中国标准时间)
         console.log(now);
@@ -35,7 +33,6 @@ undefined
         console.log(new Date(1615186280742)); //时间戳转换为时间格式
 ```
 #### 转换
-
 ```js
 now.toLocaleString()
 "2021/3/8 下午2:56:22"

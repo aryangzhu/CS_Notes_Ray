@@ -51,22 +51,22 @@ console.log(a);  //ReferenceError: a is not defined
 let a = "apple";
 console.log(b);  //undefined
 var b = "banana";
-变量 b 用 var 声明存在变量提升，所以当脚本开始运行的时候，b 已经存在了，但是还没有赋值，所以会输出 undefined。
-变量 a 用 let 声明不存在变量提升，在声明变量 a 之前，a 不存在，所以会报错。
+变量 b 用 var 声明存在变量提升，所以当脚本开始运行的时候，b 已经存在了，但是还没有赋值，所以会输出 undefined  
+变量 a 用 let 声明不存在变量提升，在声明变量 a 之前，a 不存在，所以会报错  
 ## const
-const定义常量，常量的值不能再修改。
-const PI = "3.1415926";
-PI  // 3.1415926
-const MY_AGE;  // SyntaxError: Missing initializer in const declaration   
+const定义常量，常量的值不能再修改  
+const PI = "3.1415926";  
+PI  // 3.1415926  
+const MY_AGE;  // SyntaxError: Missing initializer in const declaration     
 # 解构赋值
-对数组或者对象进行赋值
+对数组或者对象进行赋值  
 ## 数组
 ## 字符串
 ## Object对象
 # Symbol对象
-在js的Number、String、boolean、null和undefined基础上增加的一种数据类型
-用来标识唯一属性
-Symbol("OK")//不能new
+在js的Number、String、boolean、null和undefined基础上增加的一种数据类型  
+用来标识唯一属性  
+Symbol("OK")//不能new  
 # Map和Set
 ## Map
 ### key是字符串
@@ -101,7 +101,6 @@ for (var value of myMap.values()) {
 var myMap = new Map();
 myMap.set(0, "zero");
 myMap.set(1, "one");
- 
 // 将会显示两个 logs。 一个是 "0 = zero" 另一个是 "1 = one"
 myMap.forEach(function(value, key) {
   console.log(key + " = " + value);
@@ -110,13 +109,11 @@ myMap.forEach(function(value, key) {
 ### Map对象常见操作
 #### Map与数组转换
 ```js
-var kvArray = [["key1", "value1"], ["key2", "value2"]];
- 
+var kvArray = [["key1", "value1"], ["key2", "value2"]];  
 // Map 构造函数可以将一个 二维 键值对数组转换成一个 Map 对象
-var myMap = new Map(kvArray);
- 
+var myMap = new Map(kvArray);  
 // 使用 Array.from 函数可以将一个 Map 对象转换成一个二维键值对数组
-var outArray = Array.from(myMap);
+var outArray = Array.from(myMap);  
 ```
 #### Map合并
 ## Set
@@ -168,16 +165,15 @@ let receiver = {
     name: "Jerry",
     age: 20
 }
-Reflect.get(exam, 'info', receiver); // Jerry20
- 
+Reflect.get(exam, 'info', receiver); // Jerry20  
 // 当 name 为不存在于 target 对象的属性时，返回 undefined
-Reflect.get(exam, 'birth'); // undefined
+Reflect.get(exam, 'birth'); // undefined  
 ```
 # ES6字符串
 ## 字串识别
-includes()：返回布尔值，判断是否找到参数字符串。
-startsWith()：返回布尔值，判断参数字符串是否在原字符串的头部。
-endsWith()：返回布尔值，判断参数字符串是否在原字符串的尾部。
+includes()：返回布尔值，判断是否找到参数字符串  
+startsWith()：返回布尔值，判断参数字符串是否在原字符串的头部  
+endsWith()：返回布尔值，判断参数字符串是否在原字符串的尾部  
 ## 字符串重复
 repeat()
 ## 字符串补全
@@ -187,21 +183,21 @@ console.log("h".padEnd(5,"o"));    // "hoooo"
 console.log("h".padStart(5));      // "    h"
 ```
 ## 模板字符串
-可以定义多行字符串,``来定义
+可以定义多行字符串,``来定义  
 ```js
 let string1 =  `Hey,
 can you stop angry now?`;
 ```
 ## 标签模板
 # ES6数值
-感兴趣直接可以看网上教程
+感兴趣直接可以看网上教程  
 # ES6数组
 ## 数组创建
 ### Array.of()
 ### Array.form()
-将类数组对象或可迭代对象转化为数组。
+将类数组对象或可迭代对象转化为数组  
 ## 类数组对象
-必须得有length
+必须得有length  
 ## 转换
 ## 扩展
 ### 查找
@@ -315,19 +311,18 @@ export default var c = "error";
 import b from "./xxx.js"; // 不需要加{}， 使用任意变量接收
 ```
 ## 复合使用
-export 与 import 可以在同一模块使用，使用特点：
-
-可以将导出接口改名，包括 default。
-复合使用 export 与 import ，也可以导出全部，当前模块导出的接口会覆盖继承导出的。
+export 与 import 可以在同一模块使用，使用特点： 
+可以将导出接口改名，包括 default  
+复合使用 export 与 import ，也可以导出全部，当前模块导出的接口会覆盖继承导出的  
 # Promise对象
-异步编程的解决方案
-从语法上说，Promise 是一个对象，从它可以获取**异步操作**的消息。
+异步编程的解决方案  
+从语法上说，Promise 是一个对象，从它可以获取**异步操作**的消息  
 ## 状态
-pending（进行中）、fulfilled（已成功）和 rejected（已失败）
+pending（进行中）、fulfilled（已成功）和 rejected（已失败）  
 ### resolved()定型方法
-可以定型为success和reject
+可以定型为success和reject  
 ## then方法(重点)
-then 方法接收两个函数作为参数，第一个参数是 Promise 执行成功时的回调，第二个参数是 Promise 执行失败时的回调，两个函数只会有一个被调用。
+then 方法接收两个函数作为参数，第一个参数是 Promise 执行成功时的回调，第二个参数是 Promise 执行失败时的回调，两个函数只会有一个被调用  
 ```js
 const p = new Promise(function(resolve,reject){
   resolve(1);
@@ -349,10 +344,10 @@ const p = new Promise(function(resolve,reject){
 });
 ```
 # Generator函数
-ES6 新引入了 Generator 函数，可以通过 yield 关键字，把函数的执行流挂起，为改变执行流程提供了可能，从而为异步编程提供解决方案
+ES6 新引入了 Generator 函数，可以通过 yield 关键字，把函数的执行流挂起，为改变执行流程提供了可能，从而为异步编程提供解决方案  
 ## 函数组成
-function后面有个*
-内部有 yield
+function后面有个*  
+内部有 yield  
 ## 执行机制
 ```js
 f.next();
@@ -370,11 +365,11 @@ f.next();
 f.next();
 // {value: undefined, done: true}
 ```
- Generator 函数不会像普通函数一样立即执行，而是**返回一个指向内部状态对象的指针**，所以要调用遍历器对象Iterator 的 next 方法，**指针就会从函数头部或者上一次停下来的地方开始执行**
-1. 第一次调用 next 方法时，从 Generator 函数的头部开始执行，先是打印了 one ,执行到 yield 就停下来，并将yield 后边表达式的值 '1'，作为返回对象的 value 属性值，此时函数还没有执行完， 返回对象的 done 属性值是 false。
-2. 第二次调用 next 方法时，同上步 。
-3.第三次调用 next 方法时，先是打印了 three ，然后执行了函数的返回操作，并将 return 后面的表达式的值，作为返回对象的 value 属性值，此时函数已经结束，多以 done 属性值为true 。
-4. 第四次调用 next 方法时， 此时函数已经执行完了，所以返回 value 属性值是 undefined ，done 属性值是 true 。如果执行第三步时，没有 return 语句的话，就直接返回 {value: undefined, done: true}。
+ Generator 函数不会像普通函数一样立即执行，而是**返回一个指向内部状态对象的指针**，所以要调用遍历器对象Iterator 的 next 方法，**指针就会从函数头部或者上一次停下来的地方开始执行**  
+1. 第一次调用 next 方法时，从 Generator 函数的头部开始执行，先是打印了 one ,执行到 yield 就停下来，并将yield 后边表达式的值 '1'，作为返回对象的 value 属性值，此时函数还没有执行完， 返回对象的 done 属性值是 false  
+2. 第二次调用 next 方法时，同上步  
+3.第三次调用 next 方法时，先是打印了 three ，然后执行了函数的返回操作，并将 return 后面的表达式的值，作为返回对象的 value 属性值，此时函数已经结束，多以 done 属性值为true   
+4. 第四次调用 next 方法时， 此时函数已经执行完了，所以返回 value 属性值是 undefined ，done 属性值是 true 。如果执行第三步时，没有 return 语句的话，就直接返回 {value: undefined, done: true}  
 # async 函数
 ES7 异步操作关键字
 ## 语法
