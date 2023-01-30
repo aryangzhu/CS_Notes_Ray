@@ -1008,54 +1008,37 @@ Optional\<S> findFirst()
 查找第一个可用的服务提供者(如果有)。
 
 #### java.util.ServiceLoader.Provider\<S>
-
 Class\<? extends S> type()
-
 获得这个提供者的类型。
-
 S get()
-
 获得这个提供者的实例。
-
 # JDK动态代理
-
 利用代理(proxy)在运行时**创建了一组给定接口的新类**。只有在编译时无法确定需要实现哪个接口才需要使用代理。  
 相比于静态代理来说，动态代理更加灵活。我们不需要针对每个目标类都**单独创建一个代理类**，并且也**不需要我们必须实现接口，我们可以直接代理实现类**( CGLIB 动态代理机制)
-
 ## 何时使用代理
-假设我们需要创建一个类的对象，这个类可能实现了一个或者多个接口，但是在编译时不知道这些接口是什么。回想一下之前，如果是想要构造具体的类的话，那么我们可以里用newInstance或者反射来创建一个类的对象实例(通过找到构造器)。但是，**不能实例化接口**，需要在运行的程序中定义一个新类。
-
-为了解决这个问题，有些程序会生成代码，将这些代码放在一个文件中，调用编译器，然后再加载得到类文件。但是，这样做的速度很慢，而且需要**将编译器连同程序一起部署**。
-
-而代理机制是更好的解决方案，代理类可以在**运行**的时候由**JVM**创建全新的类。这样的代理类能够实现你指定的接口。具体的，代理类包含以下方法:
-1.指定接口所需要的全部方法   
-2.Object类中的全部方法，例如，toString、equlas等。
-说实话，上面的这些话我看了半天还是不太理解，从网上的关于代理模式的博文中我有了更加直观的了解。
-https://xie.infoq.cn/article/9a9387805a496e1485dc8430f
-
-**代理类和委托类有相同的方法**，代理类为委托类做了**消息的预处理、过滤或者调用委托类的方法以及事后的处理**。
-
+假设我们需要创建一个类的对象，这个类可能实现了一个或者多个接口，但是在编译时不知道这些接口是什么。回想一下之前，如果是想要构造具体的类的话，那么我们可以里用newInstance或者反射来创建一个类的对象实例(通过找到构造器)。但是，**不能实例化接口**，需要在运行的程序中定义一个新类。  
+为了解决这个问题，有些程序会生成代码，将这些代码放在一个文件中，调用编译器，然后再加载得到类文件。但是，这样做的速度很慢，而且需要**将编译器连同程序一起部署**。 
+而代理机制是更好的解决方案，代理类可以在**运行**的时候由**JVM**创建全新的类。这样的代理类能够实现你指定的接口。具体的，代理类包含以下方法:  
+1.指定接口所需要的全部方法     
+2.Object类中的全部方法，例如，toString、equlas等。  
+说实话，上面的这些话我看了半天还是不太理解，从网上的关于代理模式的博文中我有了更加直观的了解。  
+https://xie.infoq.cn/article/9a9387805a496e1485dc8430f  
+**代理类和委托类有相同的方法**，代理类为委托类做了**消息的预处理、过滤或者调用委托类的方法以及事后的处理**。  
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/%E9%80%89%E5%8C%BA_025.png)
-
 有几点我们需要注意:
-
 1.**用户只在乎接口功能，而不关心是谁实现的**。
-
 2.接口的真正实现者是**RealSubject，但是它不与用户直接接触**，而是通过代理。
-
 3.代理就是上图中的Proxy，由于它实现了Subject,所以它可以和用户直接接触。
-
 4.用户调用Proxy时，Proxy内部调用了RealSubject的方法,是对RealSubject的方法的增强。
 ## InvocationHandler接口
-不能在运行时为这些方法提供新代码，必须提供一个**调用处理器**(invocation handler)。调用处理器是实现了**InvocationHandler**接口的类的对象。这个接口只有一个方法:
-
+不能在运行时为这些方法提供新代码，必须提供一个**调用处理器**(invocation handler)。调用处理器是实现了**InvocationHandler**接口的类的对象。这个接口只有一个方法:  
 ```java
 Object invoke(Object proxy,Method method,Object[] args)
 ```
-分别有三个参数
-代理类 proxy
-调用方法 method
-方法参数 args
+分别有三个参数  
+代理类 proxy  
+调用方法 method  
+方法参数 args  
 无论何时调用代理对象的方法(proxy)，**调用处理器的invoke方法都会被调用，并向其传递Method对象和原调用的参数**。之后调用处理器必须确定如何处理这个调用。
 ## 创建代理对象
 创建代理对象需要使用**Proxy**类的**newProxyInstance**(之前见过的类似的工厂方法)。**这个方法有三个参数**:
@@ -1088,21 +1071,20 @@ h - 将方法调用分派到的调用处理程序
 */
 Class<?> cl = getProxyClass0(loader, intfs);
 ```
-1.**一个类加载器**(class loader)。作为Java安全模型的一部分，可以对平台和应用类、从因特网上下载的类等使用的加载器。
-2.一个**Class对象数组，每个元素对应需要实现的各个接口**。
-3.一个**调用处理器(invocation handler)**。
+1.**一个类加载器**(class loader)。作为Java安全模型的一部分，可以对平台和应用类、从因特网上下载的类等使用的加载器。  
+2.一个**Class对象数组，每个元素对应需要实现的各个接口**。  
+3.一个**调用处理器(invocation handler)**。  
 ## JDK动态代理的使用步骤
-1. 自定义接口和实现类
-2. 定义InvocationHandler接口并重写invoke方法
-3. 使用Proxy.newProxyInstance(...)方法调用
+1. 自定义接口和实现类  
+2. 定义InvocationHandler接口并重写invoke方法  
+3. 使用Proxy.newProxyInstance(...)方法调用  
 ### 两个需要解决的问题:
 #### 如何定义处理器？
 #### 对于得到的代理对象能够做些什么？
-这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:
-1. 将方法调用路由到远程服务器(说实话不明白什么意思)。
-2. 为了调试，跟踪方法调用。
-下面的例子中，我们使用代理和调用处理器跟踪方法调用。**我们定义了一个TraceHandler包装器类存储包装的对象**(将委托类包装在里面，查看委托类方法的调用情况)。其中的invoke方法会打印所调用方法的名称和参数，随后使用包装的对象作为隐式参数调用这个方法。
-
+这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:  
+1. 将方法调用路由到远程服务器(说实话不明白什么意思)。  
+2. 为了调试，跟踪方法调用。  
+下面的例子中，我们使用代理和调用处理器跟踪方法调用。**我们定义了一个TraceHandler包装器类存储包装的对象**(将委托类包装在里面，查看委托类方法的调用情况)。其中的invoke方法会打印所调用方法的名称和参数，随后使用包装的对象作为隐式参数调用这个方法。  
 ```java
 class TraceHandler implements InvocationHandler{
     private Object target;
@@ -1131,10 +1113,8 @@ Class[] interfaces=new Class[]{Comparable.class};
 Object proxy=Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
                               new Class[]{Comparable.class},handler);
 ```
-只要在Proxy上调用了某个接口的方法，就会打印这个方法的名字和参数，之后再用value调用这个方法。
-
-书上还有一个例子，使用代理对象跟踪一个二分查找。数组中填充整数1-1000的代理，调用Arrays类的binarySearch方法在数组张查找一个随机整数。最后打印匹配元素。
-
+只要在Proxy上调用了某个接口的方法，就会打印这个方法的名字和参数，之后再用value调用这个方法。  
+书上还有一个例子，使用代理对象跟踪一个二分查找。数组中填充整数1-1000的代理，调用Arrays类的binarySearch方法在数组张查找一个随机整数。最后打印匹配元素。  
 ```java
 //填充1-1000的代理对象
 for (int i = 0; i <elements.length; i++) {
@@ -1152,28 +1132,18 @@ if(result>0){
    	System.out.println(elements[result]);
 }
 ```
-Integer类实现了Comparable接口。代理对象属于运行时定义的一个类，**它也实现了Comparable接口**。不过，它的compareTo调用了代理对象处理器的invoke方法。
-
+Integer类实现了Comparable接口。代理对象属于运行时定义的一个类，**它也实现了Comparable接口**。不过，它的compareTo调用了代理对象处理器的invoke方法。  
 ## 代理类的特性
-1.代理类总是在程序的运行过程中动态创建的。**一旦被创建之后，他们就变成了常规类，与虚拟机中的任何其他类没有区别**。
-2.所有代理类都扩展了Proxy类。**一个代理类只有一个实例字段-即调用处理器，它在Proxy超类中定义**。完成代理对象任务所需要的任何额外数据都必须存储在调用处理器中。例如，代理Comparable对象时，TraceHandler就包装了任务苏需要的实际对象(Object target)。
-
-3.如果没有定义代理类的名字，Oracle虚拟机中的Proxy类将生成一个以字符串$Proxy开头的类名。
-
-4.**对于特定的类加载器和预设的一组接口来说，只能有一个代理类**。也就是说，如果使用同一个类加载器和接口数组调用了两次newProxyInstance方法，将得到同一个类的两个对象。也可以利用Class ProxyClass=Proxy.getProxyClass(null,interfaces)来获取这个类。
-
-5.**代理类总是public和final**。因为如果代理类实现的所有接口都是public,这个代理类就不属于任何特定的包；否则，所有非公共的接口都必须属于同一个包，而代理类也必须属于这个包。
-
-6.可以通过调用Proxy类的isProxyClass方法检测一个特定的Class对象是否代表一个代理类。
-
+1.代理类总是在程序的运行过程中动态创建的。**一旦被创建之后，他们就变成了常规类，与虚拟机中的任何其他类没有区别**。  
+2.所有代理类都扩展了Proxy类。**一个代理类只有一个实例字段-即调用处理器，它在Proxy超类中定义**。完成代理对象任务所需要的任何额外数据都必须存储在调用处理器中。例如，代理Comparable对象时，TraceHandler就包装了任务苏需要的实际对象(Object target)。  
+3.如果没有定义代理类的名字，Oracle虚拟机中的Proxy类将生成一个以字符串$Proxy开头的类名。  
+4.**对于特定的类加载器和预设的一组接口来说，只能有一个代理类**。也就是说，如果使用同一个类加载器和接口数组调用了两次newProxyInstance方法，将得到同一个类的两个对象。也可以利用Class ProxyClass=Proxy.getProxyClass(null,interfaces)来获取这个类。  
+5.**代理类总是public和final**。因为如果代理类实现的所有接口都是public,这个代理类就不属于任何特定的包；否则，所有非公共的接口都必须属于同一个包，而代理类也必须属于这个包。  
+6.可以通过调用Proxy类的isProxyClass方法检测一个特定的Class对象是否代表一个代理类。  
 ### 常用API
-
 #### java.lang.refelt.InvocationHandler
-
-Object invoke(Object proxy,Method method,Object[] args)
-
-定以这个方法完成一个动作(增强过程)，你希望只要在代理对象上调用一个方法就完成这个动作。
-
+Object invoke(Object proxy,Method method,Object[] args)  
+定以这个方法完成一个动作(增强过程)，你希望只要在代理对象上调用一个方法就完成这个动作。  
 #### java.lang.refelt.Proxy
 
 static Class\<?> getProxyClass(ClassLoader loader,Class<?>interfaces)

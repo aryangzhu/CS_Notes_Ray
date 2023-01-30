@@ -1,15 +1,14 @@
 HTTML+CSS+JavaSrcipt即 页面结构+样式+脚本
 # １．什么是css
-​	1.概述
-​    casscading sytle sheet　层叠式级联样式表
-​    css:表现(美化网页)
-​    字体，颜色，边距，高度，宽度，背景图片，网页定位，网页浮动...
+1. 概述
+casscading sytle sheet　层叠式级联样式表  
+css:表现(美化网页)字体，颜色，边距，高度，宽度，背景图片，网页定位，网页浮动...
 
 # ２．发展史
-​    css1.0
-​    css2.0 div(块)＋css,html与css结构分离的思想，网页变得简单，seo
-​    css2.1 浮动，定位
-​    css3.0　圆角，阴影，动画...浏览器兼容性
+css1.0
+css2.0 div(块)＋css,html与css结构分离的思想，网页变得简单，seo
+css2.1 浮动，定位
+css3.0　圆角，阴影，动画...浏览器兼容性
 
 # ３．快速入门
 <!--规范，<style>可以编写css的代码,没一个生命,最好使用分号结尾-->
@@ -19,14 +18,14 @@ HTTML+CSS+JavaSrcipt即 页面结构+样式+脚本
 ​                声明２;
 ​                声明３;
 ​           	｝
-当然也可以文件夹的形式将css文件保存在里面，在head头部中时候用\<link>标签进行引入，
+当然也可以文件夹的形式将css文件保存在里面，在head头部中时候用\<link>标签进行引入，  
 \<link rel="stylesheet" href="css/style.css"/>
 目录结构
-​    lesson01
-​    	1.我的一地个css程序
-​        	css
-​            	style.css
-​            index.html
+lesson01
+1.我的一地个css程序
+css
+>style.css
+index.html
 
 # 4.css的优势
 

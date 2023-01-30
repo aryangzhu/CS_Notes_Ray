@@ -19,6 +19,10 @@ VM:ViewModel 双向绑定数据???
 ## 前端发展史
 前端有许多UI框架，例如BootStrap、ElementUI等等。
 # vue入门
+## npm介绍
+Node包管理器
+https://www.freecodecamp.org/chinese/news/what-is-npm-a-node-package-manager-tutorial-for-beginners/
+这篇文章叙述得很清楚,就和maven的作用一样
 ## 快速开始
 ### 1.独立下载
 ### 2.\<script>引入
@@ -48,6 +52,7 @@ vue.js提供一个官方命令行工具，用于构建大型单页应用
 $ cnpm install --global vue-cli
 ```
 创建一个基于 webpack 模板的新项目  
+webpack是一个打包工具,将模块的依赖关系进行分析,最后打包成为静态资源。
 ```
 $ vue init webpack my-project
 ```
@@ -83,7 +88,8 @@ var vm=new Vue({
     //选项
 })
 ```
-通过一段代码来看是最直观的
+通过一段代码来看是最直观的,Vue2创建Vue实例时都是new Vue();而Vue3的时候是通过Vue.createApp()方法来进行创建。  
+new Vue()方案中都是在实例中通过el属性来挂载DOM元素,而createApp()方案则是通过mount()方法来挂载DOM实例。  
 ```html
 <div id="hello-vue" class="demo">
   {{message}}
@@ -380,7 +386,7 @@ new Vue({
 </script>
 ```
 ## 自定义指令
-## Vue.js路由
+# Vue.js路由vue-router
 为了方便构建单页面应用？？？
 安装vue-router
 ```shell
@@ -399,21 +405,35 @@ html中使用
 ```
 js中使用
 ```js
-<!--1.自定义组件，可以从其他地方导入进来 -->
-const Foo={template:'<div>foo</div>'}
-<!-- 2.定义路由 -->
-const routes={
-  {path:'/foo',component:Foo},
-}
-<!-- 3.创建router实例 -->
-const router=new VueRouter({
-  routes
+// 1. 定义路由组件.
+// 也可以从其他文件导入
+const Home = { template: '<div>Home</div>' }
+const About = { template: '<div>About</div>' }
+ 
+// 2. 定义一些路由
+// 每个路由都需要映射到一个组件。
+// 我们后面再讨论嵌套路由。
+const routes = [
+  { path: '/', component: Home },
+  { path: '/about', component: About },
+]
+ 
+// 3. 创建路由实例并传递 `routes` 配置
+// 你可以在这里输入更多的配置，但我们在这里
+// 暂时保持简单
+const router = VueRouter.createRouter({
+  // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
+  history: VueRouter.createWebHashHistory(),
+  routes, // `routes: routes` 的缩写
 })
-    
-<!-- 4.创建和挂载实例 -->
-const app=new Vue({
-  router
-}).$mount('#app')
+ 
+// 5. 创建并挂载根实例
+const app = Vue.createApp({})
+//确保 _use_ 路由实例使
+//整个应用支持路由。
+app.use(router)
+ 
+app.mount('#app')
 ```
 ### 简单实例
 vue-js+vue-router可以很简单的实现单页应用。
@@ -465,3 +485,117 @@ new Vue({
 直接参照菜鸟教程即可
 https://www.runoob.com/vue2/vue-examples.html
 # 组合式API
+# js-cookie
+一个专门用来处理cookie的js函数库
+## 基础用法
+### 存储
+保存cookie  
+Cookies.set('name','value')
+设置过期时间  
+Cookies.set('name','value',{expire:7})
+设置页面路径  
+github上的说明是这个属性指示的是cookie可见的路径,所以我的理解是这个cookie只能在指定的页面使用???
+Cookes.set('name','value',{expire:7,path:''})
+### 读取
+Cookies.get('name')
+Cookies.get() 获取所有可见的cookie
+### 删除
+Cookies.remove('name')
+Cookies.remove('name',{path:''})
+Cookies.remove('name',{path:'',domain:'.yourdomain.com'})
+### 属性说明
+1. expires
+2. path
+3. domain
+用来指示子域Cookie可见
+# Element-UI
+基于Vue2的组件  
+## 简单使用
+```js
+var Main={
+  data: ()=>{
+    show:true;
+  }
+}
+
+var Hello=Vue.extend(Main);
+
+Hello.mount("#app"); //从这里能够看出Vue2中也有mount()用于绑定DOM元素
+```
+# nprogress
+一款基于JavaScript的进度条UI组件
+## 安装
+```html
+<script src='nprogress.js'></script>
+<link rel='stylesheet' href='nprogress.css'/>
+```
+## 基础使用
+Nprogress.start();
+Nprogress.done();
+github上提到了说使用不同的xxx(搜了一下Turbolinks是一个typescript的项目,单页面跳转另一个页面)就有不同的写法
+## 进阶使用
+```js
+Nprogress.set(0.0); //和start()方法一样
+Nprogress.set(0.4);
+Nprogress.set(1.0); //和done()方法一样
+
+Nprogress.incr();  //随机增加进度
+
+Nprogress.incr(0.1); //增加指定进度
+
+Nprogress.done(true);
+```
+## 配置
+用法都是NProgress.configure({...})
+1. minimum最小值
+NProgress.configure({minimum:0.1});
+2. template模板
+NProgress.configure({
+  template:"<div class=''></div>"
+});
+3. easing and spped缓和速度
+需要参数easing的css格式和speed
+NProgress.configure({
+  easing:'ease',
+  speed:500
+})
+4. parent 父容器
+NProgress.configure({parent:'#container'});
+# path-to-regexp
+将路径字符串(如/user/:name)转换为正则表达式的工具库。
+## 安装
+npm install path-to-regexp --save
+## 基础使用
+首先我们需要理解的是vue前端的路径是/foo/:bar这样式儿的(教程是这么说明的),然后再来看它提供的Api  
+使用之前先要进行引入  
+```js
+var pathToRegexp=require('path-to-regexp')
+```
+pathToRegexp()  
+这个方法会根据参数生成一个标准的正则表达式
+```js
+var re=pathToRegexp('/foo/:bar')
+// /^\/foo\/((?:[^\/]+?))(?:\/(?=$))?$/i
+```
+exec()  
+用来验证url与验证规则是否相符  
+```js
+var re=pathToRegexp('foo/:bar'); //匹配规则
+var match1=re.exec('test/route'); //url路径
+var match2=re.exec('foo/route');
+
+//match1肯定是匹配不到的
+```
+parse()  
+解析url中的参数部分,当然前提是得按匹配规则来写  
+```js
+var url='/user/:id';
+console.log(pathToRegexp.parse(url));
+```
+complile()
+快速填充url字符串的参数值
+```js
+var url='/user/:id/:name';
+var data={id:10001,name:'bob'}
+console.log(pathToRegexp.complile(url)(data));
+```

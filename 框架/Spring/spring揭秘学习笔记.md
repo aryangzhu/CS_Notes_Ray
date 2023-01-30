@@ -1,61 +1,37 @@
----
-html:
-    toc: true
-    # number_sections: true
-    toc_depth: 6
-    toc_float: true
-        collapsed: true
-        smooth_scroll: true
---- 
+# Spring发展
 ## 时代发展
+# IOC部分
 ## IOC初入门
 ### 什么是IOC
-
-IOC-Inversion Of Control,又名Denpendency Inject
-
-从自己拿衣服到别人给你衣服
-
-但是,你得通过某种方式来通知别人给你衣服
-
-将代码调用者想象成个体的话,为你服务的角色就是IOC容器。
-
+IOC-Inversion Of Control,又名Denpendency Inject   
+从自己拿衣服到别人给你衣服   
+但是,你得通过某种方式来通知别人给你衣服   
+将代码调用者想象成个体的话,为你服务的角色就是IOC容器  
 ### 什么方式通知(依赖注入方式)
-
 #### 构造方法注入
-
 #### setter方法注入
-
 #### 接口注入
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/spring%E6%8E%A5%E5%8F%A3%E6%B3%A8%E5%85%A5.png)
-这种方式使用较少
-
+这种方式使用较少  
 #### IOC的附加值
-
 ## 掌管大局的IoC Service Provider
-
-首先必须明确IoC Service Provider是一个**概念**,它的主要用途就是将业务对象Bean绑定在一起。
-
+首先必须明确IoC Service Provider是一个**概念**,它的主要用途就是将业务对象Bean绑定在一起   
 ### IoC Service Provider的职责
-
 #### 业务的创建与管理
-
 #### 业务对象之间的依赖绑定
-
-IoC Service Provider通过结合之前构建和管理的所有业务对象，以及各个业务对象之间可以识别的依赖关系，将这些对象所依赖的对象注入绑定，从而保证每个业务对象的依赖关系。
-
+IoC Service Provider通过结合之前构建和管理的所有业务对象，以及各个业务对象之间可以识别的依赖关系，将这些对象所依赖的对象注入绑定，从而保证每个业务对象的依赖关系。  
 ### IoC Service Provider如何管理对象间的依赖关系
 #### 直接编码方式
 #### 配置文件
 #### 元数据方式
 基于java5的注解和Generic的基础上开发的框架。
 ## Spring的IoC容器之BeanFactory
-BeanFactory和ApplicationContext是有区别的,主要区别就是**BeanFactory主要是IoC Service Provider功能的实现**,而Application承担的更多例如Web场景、Aop场景。
-
+BeanFactory和ApplicationContext是有区别的,主要区别就是**BeanFactory主要是IoC Service Provider功能的实现**,而Application承担的更多例如Web场景、Aop场景。  
 ### BeanFactory的对象注册和依赖管理
-既然是IoC Service Provider的实现，那么就需要和IoC Service Provider一样三种实现。
+既然是IoC Service Provider的实现，那么就需要和IoC Service Provider一样三种实现。  
 #### 直接编码方式
-BeanFactory只是一个接口,具体的实现由子类**DefaultListableBeanFactory**来实现,同时DefaultListableBeanFactory又实现了BeanDefinationRegistry接口,该接口才担任Bean组件的注册管理的角色。
-**在容器中每一个受管的对象都会有一个BeanDefination实例**,包含了该对象的class类型、是否是抽象类、构造方法等属性。
+BeanFactory只是一个接口,具体的实现由子类**DefaultListableBeanFactory**来实现,同时DefaultListableBeanFactory又实现了BeanDefinationRegistry接口,该接口才担任Bean组件的注册管理的角色。  
+**在容器中每一个受管的对象都会有一个BeanDefination实例**,包含了该对象的class类型、是否是抽象类、构造方法等属性。  
 #### 外部配置文件
 这里以properties文件为例
 ```java
@@ -73,7 +49,7 @@ public static BeanFactory bindFile(BeanRegistry registry){
 }
 ```
 #### 注解方式
-@Autowired是最重要的一个注解(也是项目中用的最多的一种方式,虽然书上花费大量篇章去描述XML,奈何大人时代变了)。
+@Autowired是最重要的一个注解(也是项目中用的最多的一种方式,虽然书上花费大量篇章去描述XML,奈何大人时代变了)。  
 ### BeanFatory的xml(配置文件方式详细)
 可能作者真的觉得XML配置依赖关系会成为主流,所以才会讲的这么详细
 #### \<beans>和 \<bean>
@@ -284,11 +260,49 @@ classpath:*/
 ##### Resource注入
 Spring提供了针对Resource类型的PropertyEditor的实现到容器中。
 ##### ClassPathXmlApplication和FileSystemXmlApplication
-两者的区别就是ClassPathXmlApplication及时pattern没有标明为classpath:,它也会到classpath下去找。
-
-Resource
-ReosourceLoader 
-ResourceResolver
-继承与实现关系
-扮演角色
-应用场景
+两者的区别就是ClassPathXmlApplication及时pattern没有标明为classpath:,它也会到classpath下去找。  
+Resource  
+ReosourceLoader   
+ResourceResolver  
+继承与实现关系  
+扮演角色  
+应用场景  
+其实Resource代表的是资源的抽象,就因为在Java体系的面向对象的思想,很多中间过程也会被设计成类。  
+Resource有三个实现类,分别是FileSystemResouce、ClassResource和URIResource。
+ResourceLoader里面主要的功能就是编写读取资源的策略,根据资源路径的不同传值来将资源封装到不同的类对象中。  
+## IOC扩展
+1. 注解出现
+之前管理依赖的时候是在xml中通过
+```xml
+<bean id="xxx" class="xxx" autowire="byType"/>
+```
+自从Java5出现注解之后,Spring框架页顺应时代的发展,有了@Autowired这个注解,从这个时候开始,和现在的项目中的使用已经完全一致了。  
+但是有了注解之后,必须得有角色来为这个注解服务,还记得之前获取Bean实例的提到的Processor吗,插手容器的启动,对于@Autowired也必须得有一个BeanPostProcessor,spring框架也提供了这样的一个processor  
+这个时候还没有完全进化成今天这个样子,coder必须得在xml中追加一下配置
+```xml
+<beans>
+    <bean class="org.springframework.beans.factory.annotations.AutowiredAnnotionBeanPostProcessor">
+    <bean id="xxx" class="xxx" />
+</beans>
+```
+2. @Qulifier
+@Autowired有个问题是如果一个类有多个实例,那么Ioc容器就不知道将哪个实例注入给当前对象。  
+@Qulifier实际上就是byName自动绑定的注解版
+```java
+public class FXNewsProvider{
+    @Autowired
+    @Qualifier("reutersNewsListener")
+    private IFXNewsListener newsListener;
+    @Autowired
+    private IFXNewsPersister newsPersister;
+    ...
+}
+```
+3. @Autorwired之外的选择-使用JSR250标注依赖注入关系
+@Resource使用的是byName的准则  
+同时此注解也需要一个BeanPostProcessor
+但是,这样太过于麻烦,所以可以在spring的xml中直接添加\<context:annotation-config> 
+4. classpath-scanning
+到目前为止,xml中还是配置了bean,但是像@Autowired这类注解又在类中,能不能将其统一掉呢?所以就有了\<context:component-scan base-package="com.changzhu.xxx">,而且它也完成了\<context:annotation-config>的职责,将所有的BeanPostProcessor注入到容器中
+# Aop部分
+## Aop的实现
