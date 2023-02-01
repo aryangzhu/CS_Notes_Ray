@@ -509,6 +509,8 @@ Cookies.remove('name',{path:'',domain:'.yourdomain.com'})
 3. domain
 用来指示子域Cookie可见
 # Element-UI
+## 安装
+npm i element-ui -S
 基于Vue2的组件  
 ## 简单使用
 ```js

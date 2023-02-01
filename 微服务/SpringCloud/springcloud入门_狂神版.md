@@ -1,12 +1,3 @@
----
-html:
-    toc: true
-    # number_sections: true
-    toc_depth: 6
-    toc_float: true
-        collapsed: true
-        smooth_scroll: true
---- 
 # 出现的问题
 SpringCloud提供了一个完整的微服务生态下的解决方案
 在使用微服务之后，会面临以下四个方面的问题:
