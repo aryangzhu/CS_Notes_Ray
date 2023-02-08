@@ -1,13 +1,3 @@
----
-html:
-    toc: true
-    # number_sections: true
-    toc_depth: 6
-    toc_float: true
-        collapsed: true
-        smooth_scroll: true
---- 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 接口
 接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
 ## 接口的概念
@@ -1083,7 +1073,8 @@ Class<?> cl = getProxyClass0(loader, intfs);
 #### 对于得到的代理对象能够做些什么？
 这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:  
 1. 将方法调用路由到远程服务器(说实话不明白什么意思)。  
-2. 为了调试，跟踪方法调用。  
+2. 为了调试，跟踪方法调用  
+上面只是两种场景,还有一种场景,Spring整合Mybatis之后,只用编写xml文件,用屁股想也知道只有接口肯定是无法工作的,那么就一定是在运行过程中动态生成了Dao的实现类 
 下面的例子中，我们使用代理和调用处理器跟踪方法调用。**我们定义了一个TraceHandler包装器类存储包装的对象**(将委托类包装在里面，查看委托类方法的调用情况)。其中的invoke方法会打印所调用方法的名称和参数，随后使用包装的对象作为隐式参数调用这个方法。  
 ```java
 class TraceHandler implements InvocationHandler{

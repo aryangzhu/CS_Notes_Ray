@@ -1,13 +1,3 @@
----
-html:
-    toc: true
-    # number_sections: true
-    toc_depth: 6
-    toc_float: true
-        collapsed: true
-        smooth_scroll: true
---- 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 第一章 走入并行
 ## 必须知道的几个概念
 ### 同步和异步
@@ -82,17 +72,25 @@ finalize()方法在JVM中看到过,可达性分析时会有一次标记,实例�
 ### 进程与线程
 进程资源分配和调度的**基本单位**。
 线程是程序的**最小执行单位**。
-线程的状态6种，记住并且能说出具体干了什么。
+线程的状态6种，记住并且能说出具体干了什么
 ### 线程的6种状态
 ## 初始线程：线程的基本操作
 ### 新建
 ### 中止
 ### 中断
 ### 等待(wait)与唤醒(通知 notify)
-来自于Object的方法
+来自于Object的方法,Object类下面还有许多的方法也是面试经常会问到的    
 ### 挂起(suspend)与继续执行(resume)
 ### 等待线程结束(join)与谦让(yield)
 ## volatile与JMM(Java内存模型)
+第一章的末尾描述了多线程环境下JMM产生的问题
+1. 原子性
+多线程针对同一变量做修改的话,可能引起变量与期望值不一致  
+2. 可见性
+计算机对于经常访问的数据可能会放入cache或者寄存器中,A线程修改了变量值之后,B线程访问的还是缓存中的值
+3. 有序性
+同一个线程中,语义的串行话是能够保证的,但是A线程并不清楚B线程的执行顺序
+volatile关键字能够保证有序性和可见性,但是复杂的原子操作并不能保证
 ## 分门别类的管理(线程组)
 ## 驻守后台的线程(守护线程)
 ## 先干重要的事(线程优先级)
@@ -223,11 +221,11 @@ workQueue是被提交但未执行的**任务队列**,它是一个BlockingQueue�
 根据队列的狗功能分类,在ThreadPoolExecutor的构造函数中可以使用以下几种BlockingQueue。  
 1. 直接提交的队列   
 该功能由SynchronousQueue对象提供。任务不会真实的保存,总是将新任务提交给线程执行(后面书上的描述???)  
-2. 有界的任务队列ArrauBlockingQueue(int capacity)  
+1. 有界的任务队列ArrauBlockingQueue(int capacity)  
 由ArrayBlockingQueue实现。如果线程池的实际线程数小于corePoolSize,则会优先创建新的线程。如果大于corePoolSize,则会将新任务加入等待队列。若等待队列已满,无法加入。  
-3. 无界的任务队列   
+1. 无界的任务队列   
 无界的任务队列:无界任务队列可以通过LinkedBlockingQueue类实现,与有界的任务队列相比,除非系统资源耗尽,不存在入队失败的情况。  
-4. 优先任务队列   
+1. 优先任务队列   
 带着优先级的无界队列,通过PriorityBlockingQueue实现。  
 ### 超过负载之后的拒绝策略
 ThreadPoolExecutor的最后一个参数指定了拒绝策略。当线程池中的线程用完了,无法为新任务服务,同时,等待队列中已经排满了,无法容纳新的任务。

@@ -4,15 +4,11 @@
 目的是作为配置文件来使用
 ## 配置文件
 作用:修改SpringBoot自动配置的默认值,因为SpringBoot在底层给我们配置好了。
-
 例如
-
 ```
 server.port=8081;
 ```
-
 ## yml描述
-
 让我们先回顾一下xml长什么样子
 ### xml
 ```xml
@@ -398,8 +394,9 @@ MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
 }
 ```
 ## 消息队列
+之前在公司,领导让我用redis尝试实现一下消息队列,并将其作为一个包单独地抽出来
 ### 生产者lpush
-### 消费这rpop
+### 消费者rpop
 ## 分布式缓存
 # SpringBoot自定义包
 1. 创建maven项目  
@@ -409,7 +406,8 @@ MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
 4. mvn install打包到仓库，如果有需要的话上传至镜像仓库
 5. 其他项目中pom中引入依赖
 原理在另一篇文章中有提及到
-# 整合RabbiMq
+# 整合RabbiMQ
+
 # SpringAop使用
 今天看了公司的项目和mall项目,发现aop的两种使用方式
 ## 针对某个包的切点
