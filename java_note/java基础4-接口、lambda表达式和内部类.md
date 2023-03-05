@@ -914,9 +914,7 @@ class ArrayAlg{
 3.在接口中声明的内部类自动是public和static。
 
 # 服务加载器
-
-通常提供一个服务时，程序希望服务设计者能有一些自由，能够确定如何实现服务的特性。另外还希望有多个实现以供选择。**利用ServiceLoader类可以很容易地加载符合一个公共接口的服务**。
-
+通常提供一个服务时，程序希望服务设计者能有一些自由，能够确定如何实现服务的特性。另外还希望有多个实现以供选择。**利用ServiceLoader类可以很容易地加载符合一个公共接口的服务**。  
 假设有一个接口，其中包含服务的各个实例应当提供的方法。
 
 ```java
@@ -927,31 +925,22 @@ public interface Cipher{
     byte[] decrypt(byte[] source,byte[] key);
     int strlength();
 }
-```
-
-服务提供者可以提供一个或者多个实现这个服务的类，例如，
-
+``` 
+服务提供者可以提供一个或者多个实现这个服务的类，例如，  
 ```java
 package serviceLoader.impl;
 public calss CaesarCipher implements Cipher{
     ...
 }
-```
-
-实现类可以放在任意的包中，而不一定是服务接口所在的包。**每个实现类必须有一个无参数构造器**(类会调用超类的无参构造器，而接口必须有无参构造器)。
-
-现在，将类名增加至META-INF/services目录下的一个UTF-8编码文本文件中，**文件名必须与完全限定类名一致**。
-
-程序可以如下初始化一个服务加载器:
-
+```  
+实现类可以放在任意的包中，而不一定是服务接口所在的包。**每个实现类必须有一个无参数构造器**(类会调用超类的无参构造器，而接口必须有无参构造器)。  
+现在，将类名增加至META-INF/services目录下的一个UTF-8编码文本文件中，**文件名必须与完全限定类名一致**。  
+程序可以如下初始化一个服务加载器:  
 ```java 
 public static ServiceLoader<Cipher> cipher=ServiceLoader.load(Cipher.class);
-```
-
-这个初始化只在程序中完成一次。
-
-服务加载器的iterator方法会返回一个迭代器来处理所提供服务的所有实现(实现类)。最容易的是通过一个增强的for循环来进行遍历，在循环中选择一个适当的。
-
+```  
+这个初始化只在程序中完成一次。  
+服务加载器的iterator方法会返回一个迭代器来处理所提供服务的所有实现(实现类)。最容易的是通过一个增强的for循环来进行遍历，在循环中选择一个适当的。  
 ```java
 public static Cipher getCipher(int minStrength){
     for(Cipher cipher:cipherLoader){ //implicitly calls cipherLoader.iterator()
@@ -961,9 +950,7 @@ public static Cipher getCipher(int minStrength){
     }
 }
 ```
-
-也可以使用stream流(数据集合)来查找所要的服务。**stream方法会生成ServiceLoader.Provider实例的一个流**。
-
+也可以使用stream流(数据集合)来查找所要的服务。**stream方法会生成ServiceLoader.Provider实例的一个流**。  
 ```java
 public static Optional<Cipher> getCipher2(int minStrength){
     return cipherLoader.stream()
@@ -973,37 +960,50 @@ public static Optional<Cipher> getCipher2(int minStrength){
 }
 ```
 
-最后，如果想要得到任何服务实例，只是需要调用findFirst。
-
-Optional\<Cipher> cipher=cipherLoader.findFirst();
-
-### 常用API
-
-#### java.util.ServiceLoader\<S>
-
-static \<S> ServiceLoader\<S> load(Class\<S> service)
-
-创建一个服务加载器来加载实现给定服务接口的类。
-
-Iterator\<S> iterator()
-
-生成一个以“懒”方式加载服务类的迭代器。也就是说，**迭代器推进时才会加载类**。
-
-Stream\<ServiceLoader.Provider\<S>> stream()
-
-返回提供者描述的一个流，从而可以采用懒方式加载所要的类的提供者。
-
-Optional\<S> findFirst()
-
-查找第一个可用的服务提供者(如果有)。
-
+最后，如果想要得到任何服务实例，只是需要调用findFirst。  
+Optional\<Cipher> cipher=cipherLoader.findFirst();  
+### 常用API  
+#### java.util.ServiceLoader\<S>  
+static \<S> ServiceLoader\<S> load(Class\<S> service)  
+创建一个服务加载器来加载实现给定服务接口的类。  
+Iterator\<S> iterator()  
+生成一个以“懒”方式加载服务类的迭代器。也就是说，**迭代器推进时才会加载类**。  
+Stream\<ServiceLoader.Provider\<S>> stream()  
+返回提供者描述的一个流，从而可以采用懒方式加载所要的类的提供者。  
+Optional\<S> findFirst()  
+查找第一个可用的服务提供者(如果有)。  
 #### java.util.ServiceLoader.Provider\<S>
 Class\<? extends S> type()
 获得这个提供者的类型。
 S get()
 获得这个提供者的实例。
 # JDK动态代理
-利用代理(proxy)在运行时**创建了一组给定接口的新类**。只有在编译时无法确定需要实现哪个接口才需要使用代理。  
+## 从静态代理开始
+首先必须知道什么是静态代理,一般的场景是一个接口、一个接口的实现类,我们须手动编写这个实现类的代理类,示例代码如下
+```java
+public interface Product{
+    void addPrice(String price);
+}
+
+public class Stone implements Product{
+    public void addPrice(String price){
+        //...
+    }
+}
+
+public class Square implements Product{
+    Stone stone=new Stone();
+
+    public void addPrice(String price){
+        stone.addPrice("1");
+        //...
+    }
+}
+```
+静态代理的弊端???
+1. 如果新增一个方法,那么代理类中也需要增加方法
+2. 针对每个实现类都需要写一个代理类
+利用动态代理(proxy)在运行时**创建了一组给定接口的新类**。只有在编译时无法确定需要实现哪个接口才需要使用代理。  
 相比于静态代理来说，动态代理更加灵活。我们不需要针对每个目标类都**单独创建一个代理类**，并且也**不需要我们必须实现接口，我们可以直接代理实现类**( CGLIB 动态代理机制)
 ## 何时使用代理
 假设我们需要创建一个类的对象，这个类可能实现了一个或者多个接口，但是在编译时不知道这些接口是什么。回想一下之前，如果是想要构造具体的类的话，那么我们可以里用newInstance或者反射来创建一个类的对象实例(通过找到构造器)。但是，**不能实例化接口**，需要在运行的程序中定义一个新类。  
@@ -1136,23 +1136,17 @@ Integer类实现了Comparable接口。代理对象属于运行时定义的一个
 Object invoke(Object proxy,Method method,Object[] args)  
 定以这个方法完成一个动作(增强过程)，你希望只要在代理对象上调用一个方法就完成这个动作。  
 #### java.lang.refelt.Proxy
-
-static Class\<?> getProxyClass(ClassLoader loader,Class<?>interfaces)
-
-返回实现指定接口的代理类
-
-static Object newProxyInstance(ClassLoader loader,Class\<?> interfaces,InvocationHandler handler)
-
-构造实现指定接口的代理类对象实例。所有方法都调用给定处理器的invoke方法。
-
-static boolean isProxyClass(Class<?> cl)
-
-如果cl是一个代理类则返回true。
+static Class\<?> getProxyClass(ClassLoader loader,Class<?>interfaces)  
+返回实现指定接口的代理类  
+static Object newProxyInstance(ClassLoader loader,Class\<?> interfaces,InvocationHandler handler)  
+构造实现指定接口的代理类对象实例。所有方法都调用给定处理器的invoke方法。  
+static boolean isProxyClass(Class<?> cl)  
+如果cl是一个代理类则返回true。  
 # CGLIB动态代理机制
 ## 介绍
 JDK动态代理有一个最的问题就是**只能代理实现了接口的方法**
 cglib动态代理中重要的是
-MethodInterceptor接口和Enhacer类
+**MethodInterceptor接口**和**Enhacer类**
 其中MethodInterceptor接口中的**intercept**方法又是重中之重。
 ```Java
 public interface MethodInterceptor
@@ -1215,3 +1209,5 @@ public class CglibProxyFactory{
 MessageService service=(MessageService)new CglibProxyFactory().getProxy(MessageService.class);
 service.send("hello");
 ```
+## JDK动态代理和CGLIB动态代理的区别
+1. JDK只能代理接口或者接口的实现类,cglib可以代理普通类

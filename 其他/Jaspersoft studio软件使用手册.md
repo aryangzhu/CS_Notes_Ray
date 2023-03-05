@@ -1,13 +1,3 @@
----
-html:
-    toc: true
-    # number_sections: true
-    toc_depth: 6
-    toc_float: true
-        collapsed: true
-        smooth_scroll: true
---- 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 # 介绍
 Jaspersoft：这是基于Eclipse软件开发的图形化报表设计工具。
 # 快速上手
@@ -109,6 +99,15 @@ ___
 如图  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E4%B8%BB%E8%A1%A8%E5%8D%95%E5%85%83%E6%A0%BC%E5%8F%82%E6%95%B0.png)
 ## 主报表的表格动态高度设置
+## <font color="red">报表上传时的注意事项</font>
+1. 目前需要将主子报表进行打包成zip格式  
+2. 需要在压缩包里存在一个xml文件,用来描述主子报表的关系,示例如下
+```xml
+<jrxml name="Main">
+   <item name="Sub"/>
+</jrxml>
+```
+## 
 # <font color="red">合并行内容的第二种方案:使用CrossTable组件</font>
 使用crosstable的需要提前设计好表格的样式(需要展示多少个属性,展示在什么地方)  
 **CrossTab需要放在Summry的Band中**
@@ -144,7 +143,7 @@ order by uname
 1. 拖拽Table组件  
 2. 配置数据源
 右键DataSet1和主报表中设置数据源的方式一致。
-3. 合并单元格
+1. 合并单元格
 ## 细节调整
 1. table组件的detail不能超过主报表中的高度,否则会报错
 2. 设置variable变量来进行聚合运算的时候将表达式转换为数值型,否则可能不会生效
@@ -157,16 +156,16 @@ order by uname
 注:label一般来说不需要关注,如果只显示最后一个值的话那么就将Lable和Category设置成一样的。
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%9F%B1%E7%8A%B6%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
 注意:value为数值类型如Long、Double等,否则预览时会出错。
-3. 创建DataSet并传递参数
+1. 创建DataSet并传递参数
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/SubDataSet.png) 
 点击上一步的DataSet中的parameters就可以设置参数  
 需要向当前的SubDataSet中传入参数,可以是Main DataSet中的Fields中的其中一个属性。  
-4. 如果是单柱状图,则不需要Series,将Properties中的Show Legend设置为false。
+1. 如果是单柱状图,则不需要Series,将Properties中的Show Legend设置为false。
 ## 饼图
 1. 使用Chart组件,选择PieChart
 2. 设置Series、Key、Lable、Value
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E9%A5%BC%E5%9B%BE%E8%AE%BE%E7%BD%AE.png)
-3. 设置DataSet
+1. 设置DataSet
 和柱状图一样根据需要传递参数  
 <font color="red">一定要设置图表的字体,当前电脑的字体和与服务器支持的字体不一致,所以需要手动设置字体</font> 
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-11-01%20%E4%B8%8B%E5%8D%882.11.35.png)
