@@ -7,4 +7,6 @@
     产生token的方法
     从token中获取用户信息的方法
     判断是否过期的方法
-3. 
+
+# RabbitMq
+# ElasticSearch

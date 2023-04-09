@@ -120,7 +120,7 @@ spop myset 1
 ### 移动指定元素
 smove myset myset1 a
 ### 差集/交集/并集SDIFF/SINTER/SUNION
-## zset(sorted set)
+## Zset(sorted set)
 ### 添加元素
 zadd myset 1 one 2 two 3 three
 ### 获取所有元素
