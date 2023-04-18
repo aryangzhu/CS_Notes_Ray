@@ -157,5 +157,30 @@ select 0(index)
 键有过期时长,不知道和这个闲置时间的属性有什么关系
 键有个属性代表是否被修改,书上说的是键是不是为dirty(脏键),每次修改这个值都会被加1,如果客户端使用WATCH命令对其进行了监听,那么客户端程序在执行事务程序时就会注意到。
 ### 设置生存或者过期时间
-## RDB
+## RDB持久化
+### SAVE和BGSAVE
+### Mac下使用Homebrew安装的Redis的RDB文件位置
+1. 首先还是得找到redis.conf的位置
+使用brew info redis命令可以查看到
+/opt/homebrew/etc/redis.conf  
+2. 在redis.conf找到dbfilename和dir属性的值来确定文件名称和路径
+db.dump和/opt/homebrew/var/db/redis   
+## AOF持久化
+### AOF缓冲区
+### 重写
+#### AOF重写缓冲区
+## 事件
+首先来复习一下多路复用,没办法用的多有什么辙   
+几个关键的记忆点,bind()函数和accept()函数,socket    
+客户端connect()
+已连接队列   
+多进程模型  
+多线程模型  
+IO多路复用模型select()和poll()  
+IO多路复用模型epoll()  
+事件机制,回调函数
+### Redis中的IO多路复用
+## 客户端
+主要内容是服务器内部保存的redis-client结构,对其中的的属性进行讲解
+## 服务端
 
