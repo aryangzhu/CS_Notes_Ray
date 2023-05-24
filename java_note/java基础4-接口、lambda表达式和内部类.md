@@ -1065,8 +1065,8 @@ Class<?> cl = getProxyClass0(loader, intfs);
 2.一个**Class对象数组，每个元素对应需要实现的各个接口**。  
 3.一个**调用处理器(invocation handler)**。  
 ## JDK动态代理的使用步骤
-1. 自定义接口和实现类  
-2. 定义InvocationHandler接口并重写invoke方法  
+1. **自定义接口和实现类,这一步在静态代理里面也得有**  
+2. 定义InvocationHandler接口并重写invoke方法,**自己实现InvocaitonHandler接口的类中需要有是实现类**
 3. 使用Proxy.newProxyInstance(...)方法调用  
 ### 两个需要解决的问题:
 #### 如何定义处理器？
@@ -1163,7 +1163,7 @@ proxy:代理类
 ## 使用步骤
 1. 导入依赖  
 2. 定义一个类
-3. 自定义MethodInterceptor并重写intercept方法,intercept方法用于拦截被代理方法，与JDK动态代中的invoke方法类似
+3. **自定义MethodInterceptor**并重写intercept方法,intercept方法用于拦截被代理方法，与JDK动态代中的invoke方法类似
 4. **通过Enhancer类的create()创建代理类**
 ## JavaGuide示例
 1.定义发送短信的类

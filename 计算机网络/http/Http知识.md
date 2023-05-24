@@ -1,12 +1,3 @@
----
-html:
-    toc: true
-    # number_sections: true
-    toc_depth: 6
-    toc_float: true
-        collapsed: true
-        smooth_scroll: true
---- 
 参考资料---《图解HTTP协议》
 ### 一、了解Web及网络基础
 在开始之前，我们需要了解一个概念-**协议**，我的理解是通信双方要遵守的约定。例如，我们规定了Web页面要使用html语言来写,例如规定了双方通信时如何探测目标，例如硬件(路由器、计算机)在接入互联网时应该选择什么样的光缆。

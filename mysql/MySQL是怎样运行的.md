@@ -832,7 +832,7 @@ serilizable
 3. max_trx_id
 再次生成ReadView时应该分配的事务id
 4. creator_trx_id 
-生成当前ReadView的trxid  
+生成当前ReadView的trx_id  
 #### 比较规则
 1. 如果访问的trx_id和creator_id相等,说明访问的就是当前版本,可以访问  
 2. 如果trx_id小于min_trxid,说明之前已经提交,可以访问  
