@@ -3,8 +3,9 @@
 microservices 微服务  
 reactive 响应式编程  
 clond 分布式  
-webapps web应用开发  
-SpringBoot是为了解决SpringFrameWork中繁琐的配置而出现的。SpringBoot的优势可以直接看官网spring.io来进行查看。  
+webapps web应用开发   
+SpringBoot是为了解决SpringFrameWork中繁琐的配置而出现的。   
+SpringBoot的优势可以直接看官网spring.io来进行查看。  
 ### 时代背景  
 #### 微服务 
 微服务是一种架构风格   
@@ -72,12 +73,13 @@ false则会获取一个普通的对象。
 ###### @AutoCofigurationPackage
 向容器中添加指定包下的组件(主包)
 ###### @Import(AutoConfigurationImportSelector.class)
-通过一系列的方法加载jar包下的META-INF下的.factories文件中的配置类，但是具体生不生效根据条件装配。
+通过一系列的方法加载jar包下的META-INF下的.    
+factories文件中的配置类，但是具体生不生效根据条件装配。
 #### 按需开启自动配置项
 @ConditionalOnClass(User.class)
 #### 修改默认配置
-我们有两种方式来修改
-1.自定义Bean
-2.直接修改配置文件，@EnableConfigurationProperties(xxxProperties.class)中的属性值会发生更改。
+我们有两种方式来修改  
+1.自定义Bean  
+2.直接修改配置文件  @EnableConfigurationProperties(xxxProperties.class)中的属性值会发生更改。
 #### 最佳实践
 
