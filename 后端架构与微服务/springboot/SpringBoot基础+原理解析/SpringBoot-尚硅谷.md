@@ -82,4 +82,5 @@ factories文件中的配置类，但是具体生不生效根据条件装配。
 1.自定义Bean  
 2.直接修改配置文件  @EnableConfigurationProperties(xxxProperties.class)中的属性值会发生更改。
 #### 最佳实践
-
+1. 自定义一个starter,然后从其他项目中引入依赖
+2. 自定义一个包，在项目启动时将其注入到容器中

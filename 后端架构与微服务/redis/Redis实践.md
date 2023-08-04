@@ -1,5 +1,5 @@
 ### 分布式ID生成器
-自定义接口
+自定义接口IdGenerator
 ```Java
 @Component
 public class DistributeSnowFlakeIdGenerator implements IdGenerator {
@@ -196,7 +196,7 @@ public class DistributeSnowFlakeIdGenerator implements IdGenerator {
 
 }
 ```
-有序id序列类
+**有序id序列类**
 ```Java
 /**
  * 基于Twitter的Snowflake算法实现分布式高效有序ID生产黑科技(sequence)
