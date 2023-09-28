@@ -53,3 +53,4 @@ SHOW TABLE STATUS LIKE '表名'
 futu  
 1. 事务的隔离级别innodb如何实现  
 futu  
+MySQL主从复制
