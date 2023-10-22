@@ -54,3 +54,5 @@ futu
 1. 事务的隔离级别innodb如何实现  
 futu  
 MySQL主从复制
+https://blog.csdn.net/qq_55022037/article/details/116140174
+我是参照这个坏境搭建成功的(之前也有使用过别的方案,但是没有成功)
