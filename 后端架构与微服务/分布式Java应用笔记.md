@@ -30,3 +30,7 @@ JSR 269的支持下，在Annotation Processing进行后，再次进入Parse and 
 6. 检查所有语句都可到达
 7. 检查所有checked exception...
 **生成class**
+1. 将所有的实例变量收集到构造器中,具体不知道长什么样子  
+2. 将所有的类的静态变量收集到<clint>()中,我有点印象但是不多
+3. 进行少量的代码转换,例如String ret="a"+"b"转换为StringBuilder,看来是编译期间帮开发人员干了好多事儿，而我居然不知道
+##### 
