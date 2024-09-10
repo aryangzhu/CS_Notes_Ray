@@ -1,7 +1,3 @@
-#登录需要返回统一状态码的站点
-required.special.siteCode=aiamultivariate
-
-aiamultivariate
 # 深入Web请求过程
 ## B/S网络架构
 ## 发起一个请求
@@ -9,7 +5,7 @@ aiamultivariate
 ### 浏览器缓存机制
 ## DNS域名解析
 ### C记录和A记录
-总结:
+总结:  
 1. 域名到IP地址的映射就是通过DNS服务来实现的
 2. 多个域名之间的映射就是C记录
 3. 通过trace命令来追踪DNS解析的详细过程
