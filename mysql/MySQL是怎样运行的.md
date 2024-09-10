@@ -505,10 +505,12 @@ MySQL设计者又提出**半连接**(semi-join),这是**MySQL内部的一种查�
 11. extra 提供一些额外信息
 ## Json格式的执行计划
 使用时只需要在原来的语句中加入FORMAT=JSON 
-EXPLAIN <font color="green">FORMAT=JSON</font> SELECT * FROM s1 INNER JOIN s2 ON s1.key1 = s2.key2 WHERE s1.co 
+```sql
+EXPLAIN FORMAT=JSON SELECT * FROM s1 INNER JOIN s2 ON s1.key1 = s2.key2 WHERE s1.co 
+```
 ## Extend EXPLAIN
 执行计划的扩展信息 
-# Optimizer trace 
+### Optimizer Trace 
 explain只提供了部分信息,如果想要查看更加详细的优化过程就得借助optimizer_ trace表
 查看变量  
 show variables like 'optimizer_trace';  

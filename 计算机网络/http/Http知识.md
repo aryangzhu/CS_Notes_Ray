@@ -152,7 +152,7 @@ Accept-Charset
 #### 3xx重定向
 301 Moved Premamently
 请求的资源已经被被分配了新的URI，以后应该使用资源现在所指的URI。如果将资源对应的URI存为书签，那么应当按照Location首部字字段提示的URI重新保存。
-```
+```html
 http://example.com/sample
 ```
 #### 4xx 客户端错误

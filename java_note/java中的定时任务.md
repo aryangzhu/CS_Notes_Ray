@@ -1,3 +1,4 @@
+## 从demo开始
 1.开启一个线程，让它sleep一段时间跑一次这也就达到了定频率的执行run方法，我们只需要将业务写在run方法中即可。
 ```java
 import java.util.Date;
@@ -66,14 +67,15 @@ public class MyTask extends TimerTask{
     }
 }
 ```
+## 问题
 schedule和scheduleAtFixedRate方法的区别？
 分为两种情况：
-1.首次执行时间早于当前的时间
-schedule:以当前时间为准，然后依次按照时间间隔执行任务。
-scheduleAtFixedRate:以首次执行的时间为准，过去的时间没有执行任务的次数会在首次执行的时候补上。
-2.任务执行所需时间超过任务执行周期时间
-schedule:下一次执行的时间以上一次执行完成的时间为准，会存在一直延后执行的情况。
+1.首次执行时间早于当前的时间  
+schedule:以当前时间为准，然后依次按照时间间隔执行任务。 
+scheduleAtFixedRate:以首次执行的时间为准，过去的时间没有执行任务的次数会在首次执行的时候补上。 
+2.任务执行所需时间超过任务执行周期时间  
+schedule:下一次执行的时间以上一次执行完成的时间为准，会存在一直延后执行的情况。 
 scheduleFixedRate:下一次执行的时间以上一次执行开始的时间为准，不会延后，但是会存在并发的情况。
-Timer的缺陷
-1.并发操作时的缺陷，这是因为Timer的后台只有一个执行线程导致的。
+Timer的缺陷  
+1.并发操作时的缺陷，这是因为Timer的后台只有一个执行线程导致的。 
 2.当任务抛出异常时的缺陷。如果TimerTask抛出RuntimeException，Timer会停止所有任务的执行。
