@@ -2,11 +2,11 @@
 https://zhuanlan.zhihu.com/p/321616852
 # 1.配置
 不知道怎么回事无法查看之前的git配置
-```
+```bash
 leiliu@leiliu-Inspiron-5570:~$ git config --list
 ```
 于是我又重新设置了一下git的user.name和user.email
-```
+```bash
 leiliu@leiliu-Inspiron-5570:~$ git config --global user.name "leiliu"
 leiliu@leiliu-Inspiron-5570:~$ git config --global user.email "邮箱"
 ```
@@ -14,19 +14,19 @@ leiliu@leiliu-Inspiron-5570:~$ git config --global user.email "邮箱"
 1.http-每次都需要验证
 2.ssh-需要公钥
 
-```
+```bash
 ssh-keygen -C '配置时用到的邮箱' -t rsa
 ```
 文件处于 ~/.ssh下的id_rsa.pub中
 将其复制粘贴给gitee设置中的公钥
 测试链接
-```
+```bash
 ssh-T git@gitee.com
 ```
 # 2.上传文件
 1.新建本地仓库
 2.初始化
-```shell
+```bash
 mkdir picture
 cd picture
 git init
@@ -45,7 +45,7 @@ git push -u origin master
 1.如果上传时需要合并某些文件，那么使用gnu nano 记得Ctrl键
 2.对项目重命名时不要做多余操作，否则会适得其反
 合并失败时处理方法
-```
+```bash
 git merge --abort
 git reset --merge
 ```

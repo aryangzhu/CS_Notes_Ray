@@ -25,8 +25,9 @@ x=myObj.name;
 for(i=0;i<myObj.sites.length;i++){
     x+=myObj.sites[i]+"<br>";
 }
-```
-# JSON.parse()
+``` 
+# JOSN对象常用方法
+## JSON.parse()
 将**数据转换为JavaScript对象**
-# JSON.stringify()
+## JSON.stringify()
 将JavaScript对象转换为**字符串**
