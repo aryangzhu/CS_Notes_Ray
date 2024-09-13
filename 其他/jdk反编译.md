@@ -1,33 +1,35 @@
-jad反编译工具，已经不再更新，且只支持JDK1.4，但并不影响其强大的功能。
+jad反编译工具，已经不再更新，且只支持JDK1.4，但并不影响其强大的功能。 
 基本用法:jad xxx.class,会生成直接可读的xxx.jad文件
 １．自动拆装箱
+```java
 	public class Demo {
   	public static void main(String[] args) {
     int x = new Integer(10);  // 自动拆箱
     Integer y = x;            // 自动装箱
  	 }
 	}
-    反编译后
-    public class Demo
-	{
+   
+```
+```java
+//反编译后
+public class Demo{
     public Demo(){}
 
-```java
-public static void main(String args[])
-{
-	int i = (new Integer(10)).intValue();   // intValue()拆箱
-    Integer integer = Integer.valueOf(i);   // valueOf()装箱
-}
+    public static void main(String args[])
+    {
+	    int i = (new Integer(10)).intValue();   // intValue()拆箱
+        Integer integer = Integer.valueOf(i);   // valueOf()装箱
+    }
 }
 ```
 ２．foreach语法糖
-	// 原始代码
+```java
+// 原始代码
 	int[] arr = {1, 2, 3, 4, 5};
 	for(int item: arr) {
     	System.out.println(item);
 	}
-	}
-
+```
 ```java
 // 反编译后代码
 int ai[] = {
@@ -43,6 +45,7 @@ System.out.println(k);
 }
 ```
 ３. Arrays.asList(T...)
+```
 	asList()方法传入的参数不能是基本类型的数组，必须包装成包装类型再使用，否则对应生成的列表的大小永远是1
     import java.util.*;
 	public class Demo {
@@ -59,7 +62,7 @@ System.out.println(k);
 	import java.io.PrintStream;
 	import java.util.Arrays;
 	import java.util.List;
-
+```
 ```java
 public class Demo
 {
@@ -87,10 +90,11 @@ public static void main(String args[])
 传入基本类型后会被转换成一个二维数组，而且是new int[1][arr.length]这样的数据，调用list.size()当然返回１。
 
 ４．注解
-	Java中的类、接口、枚举和注解都可以看做是类类型
-    import java.lang.annotation.Retention;
-	import java.lang.annotation.RetentionPolicy;
-
+Java中的类、接口、枚举和注解都可以看做是类类型  
+```
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+```
 ```java
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Foo{
@@ -115,16 +119,17 @@ public abstract boolean bar();
 }
 ```
 ５．枚举
-	public enum DummyEnum {
-	}
-	１．自定义枚举类被转换成final类，并且继承Enum;
-    ２．提供了两个参数(name,odinal)的私有构造器，并且调用了父类的构造器。注意即使没有提供任何参数，也会有该构造器，其中name就是枚举实例的名称，odinal是枚举实例的索引号。
-    ３．初始化了一个private　static final自定义类型的空数$VALUES
-    ４．提供了两个public static方法
-    	 values()方法通过clone()方法返回内部的$VALUES的浅拷贝｛浅拷贝就是将类指向一个对象实例｝。这个方法结合私有构造器可以完美实现单例模式。
-         valueOf()：调用父类的Enum的valueOf方法并强转返回
+```
+public enum DummyEnum {
+}
+```
+１．自定义枚举类被转换成final类，并且继承Enum;
+２．提供了两个参数(name,odinal)的私有构造器，并且调用了父类的构造器。注意即使没有提供任何参数，也会有该构造器，其中name就是枚举实例的名称，odinal是枚举实例的索引号。 
+３．初始化了一个private　static final自定义类型的空数$VALUES  
+４．提供了两个public static方法  
+values()方法通过clone()方法返回内部的$VALUES的浅拷贝｛浅拷贝就是将类指向一个对象实例｝。这个方法结合私有构造器可以完美实现单例模式。valueOf()：调用父类的Enum的valueOf方法并强转返回
 
-    ```java
+```java
     public final class DommyEnum extends Enum{
         	// 功能和单例模式的getInstance()方法相同
         	public static DummyEnum[] values()
@@ -144,14 +149,10 @@ public abstract boolean bar();
     		// 初始化一个private static final的本类空数组
         	private static final DummyEnum $VALUES[] = new DummyEnum[0];
         }
-    ```
-
-
+```
 正常枚举类
-    	实际开发中，枚举类通常的形式是有两个参数(int code,String msg)的构造器，可以作为状态码进行返回。Enum类实际上也是提供了包含俩个参数且是protected的构造器，这里为了避免歧义，将枚举类的构造器设置为三个，使用jad进行反编译。
-        private构造器从２个参数变成５个，而且在内部任然将前两个参数通过super传递给父类，剩余的三个参数才是真正自己提供的参数。
-        
-
+实际开发中，枚举类通常的形式是有两个参数(int code,String msg)的构造器，可以作为状态码进行返回。Enum类实际上也是提供了包含俩个参数且是protected的构造器，这里为了避免歧义，将枚举类的构造器设置为三个，使用jad进行反编译。  
+private构造器从２个参数变成５个，而且在内部任然将前两个参数通过super传递给父类，剩余的三个参数才是真正自己提供的参数。
 ```java
 public final class CustomEnum extends Enum
 {
@@ -191,9 +192,8 @@ static
 }
 }
 ```
-含有抽象方法的枚举 
-	必须定义枚举实例并且重写抽象方法
-
+含有抽象方法的枚举  
+必须定义枚举实例并且重写抽象方法  
 ```java
  public enum DummyEnum {
     DUMMY1 {
@@ -210,17 +210,20 @@ DUMMY2 {
 abstract void dummyMethod();
 
 }
+```
 反编译后
-	１．原来final class变成了abstract class：这很好理解，有抽象方法的类自然是抽象类
-    ２．多了两个public static final的成员方法DUMMY1、DUMMY2，这两个实例的初始化过程被放到了static代码块中，并且实例过程中直接重写了抽象方法，类似于匿名内部类的形式
-    ３．数组$VALUES[]初始化时放入枚举实例
-    在反编译后的DummyEnum类中，是存在抽象方法的，而枚举实例在静态代码块中初始化过程中重写了抽象方法，在Java中，抽象方法和抽象方法重写同时放在一个类中，只能通过内部类形式完成。所以上面的就是内部类形式初始化
-    当前class下多了两个文件
-    	DummyEnum$1.class
-		DummyEnum$2.class
-	Java中.class文件出现$符号表示有内部类存在，就像OutClass$InnerClass，这两个文件出现也应证了上面的匿名内部类初始化的说法。
-	import java.io.PrintStream;
-	public abstract class DummyEnum extends Enum
+１．原来final class变成了abstract class：这很好理解，有抽象方法的类自然是抽象类  
+２．多了两个public static final的成员方法DUMMY1、DUMMY2，这两个实例的初始化过程被放到了static代码块中，并且实例过程中直接重写了抽象方法，类似于匿名内部类的形式  
+３．数组 
+\$VALUES[]初始化时放入枚举实例  
+在反编译后的DummyEnum类中，是存在抽象方法的，而枚举实例在静态代码块中初始化过程中重写了抽象方法，在Java中，抽象方法和抽象方法重写同时放在一个类中，只能通过内部类形式完成。所以上面的就是内部类形式初始化   
+当前class下多了两个文件  
+DummyEnum\$1.class     
+DummyEnum\$2.class  
+Java中.class文件出现$符号表示有内部类存在，就像OutClass$InnerClass，这两个文件出现也应证了上面的匿名内部类初始化的说法。  
+```java
+import java.io.PrintStream;
+public abstract class DummyEnum extends Enum
 {
 public static DummyEnum[] values()
 {
