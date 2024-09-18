@@ -1,4 +1,5 @@
-# SpringSecurity+JWT用作登录授权
+# 权限
+SpringSecurity+JWT用作登录授权
 1. springsecurity配置
     配置授权
     获取用户信息方法
@@ -7,6 +8,7 @@
     产生token的方法
     从token中获取用户信息的方法
     判断是否过期的方法
-
-# RabbitMq
-# ElasticSearch
+# 消息队列
+ RabbitMq
+# 搜索引擎
+ElasticSearch
