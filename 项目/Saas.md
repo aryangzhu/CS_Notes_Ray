@@ -1,10 +1,14 @@
-# 技术架构
+## 技术架构
 SpringCloud、SpringCloud Alibaba
 **新名词**
-DBEL,基于阿里的MyCat组件,用来起分库分表的作用  
-Canal,MySQL的binlog的增量订阅和消费组件  
+**DBLE**,基于阿里的**MyCat**组件,用来起分库分表的作用  
+**Canal**,MySQL的binlog的增量订阅和消费组件  
 ## 亮点
-使用Redis来做限流RateLimiter
+### 1.限流
+#### 大网关NGINX限流
+#### SpringCloud网关限流
+#### 使用Redis来做限流RateLimiter
+限流工具切面,后面我又用拦截器基于令牌桶算法实现了拦截器模式的方案
 ```java
 package com.yizhi.system.application.limiter.aspect;
 
@@ -151,4 +155,70 @@ public class RateLimiterAspect {
     }
 
 }
+```
+#### SpringCloud结合Hystrix实现限流
+#### Sential组件实现限流
+## 技术积累
+#### 1. Mapper.xml中做1对多关联查询
+这个倒不是什么很复杂的技术，单纯是因为我用的少，记录一下，后面可能还会用到
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yizhi.application.mapper.TrExamAnswerMapper">
+    <!-- 考试题目和考试题目选项，一对多 -->
+    <resultMap id="answerQuestionDetailMap" type="com.yizhi.exam.application.vo.AnswerQuestionDetailVO">
+        <collection property="options"
+                    ofType="com.yizhi.exam.application.vo.AnswerQuestionListVO"
+                    column="{answer_question_id=answer_question_id,answerId=answerId}"
+                    select="answerQuestionDetails">
+        </collection>
+    </resultMap>
+
+    <select id="answerQuestionDetail" resultMap="answerQuestionDetailMap"
+            resultType="com.yizhi.exam.application.vo.AnswerQuestionDetailVO">
+        select a.exam_id,
+               a.id                                                                                           as answerId,
+               c.analysis,
+               c.type,
+               c.stem,
+               c.stem_appendix_url,
+               c.id                                                                                           as subject_id,
+               c.subject_id                                                                                   as relSubjectId,
+               b.id                                                                                           AS answer_question_id,
+               b.id                                                                                           AS answerQuestionId,
+               c.auto_feedback_flag                                                                           AS autoFeedbackFlag,
+               c.correct_answer_feedback                                                                      AS correctAnswerFeedback,
+               c.incorrect_answer_feedback                                                                    AS incorrectAnswerFeedback,
+               CASE WHEN a.state = 2 THEN b.score ELSE CASE WHEN c.type!=4 THEN b.score ELSE '批阅中' END END AS score,
+               b.sort,
+               b.mark
+        from tr_exam_answer a
+                 left join tr_exam_answer_question b
+                           on b.company_id = #{companyId} AND a.id = b.answer_id
+                 left join tr_question_library_subject c on c.id = b.subject_id
+        WHERE a.id = #{answerId}
+          and b.company_id = #{companyId}
+          and c.type_reading != 51
+        order by b.sort, c.create_time, c.id
+    </select>
+
+    <select id="answerQuestionDetails" parameterType="java.util.Map"
+            resultType="com.yizhi.exam.application.vo.AnswerQuestionListVO">
+        select e.content,
+               e.option_appendix_url,
+               e.is_answer    as studentAnswer,
+               d.answer,
+               e.sort,
+               e.id           as optionId,
+               d.blank_answer as blankAnswer,
+               e.blank_answer as optionBlankRightAnswer,
+               d.right_answer as blankRightAnswer
+        from tr_question_subject_option e
+                 left join tr_exam_answer_question_res d
+                           on d.answer_id = #{answerId} AND e.id = d.option_id
+        where d.answer_question_id = #{answer_question_id}
+          and d.answer_id = #{answerId}
+        order by d.sort
+    </select>
+</mapper>
 ```
