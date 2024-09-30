@@ -310,7 +310,7 @@ Free Limit
 和独立表空间类似,但是比表空间在第一组中多了三个页
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-10-28%20%E4%B8%8B%E5%8D%883.21.37.png)  
 # 单表访问方法
-在此之前,书上有建了一个表,这是前提。  
+在此之前,书上有建了一个表,这是前提,可以回到前面查看建表语句。  
 在执行一条SQL语句的时候有多种方案,MySQL Server有个**查询优化器**的模块,这个模块最终会将查询语句优化成一个所谓的**执行计划**,执行计划后面会详细讲解,现在先有这么一个概念。
 ## 执行方法(access method)
 MySQL的**查询方式**大致有两种:  
@@ -323,12 +323,12 @@ MySQL的**查询方式**大致有两种:
 针对上面的这几种细分的查询方式,MySQL将其称为**访问方法**或者**访问类型**。  
 ## const(常量级别)
 指的就是针对主键或者唯一二级索引,执行几次二分查询就可得到数据,所以就是const
-## ref
+## ref&eq_ref
 ```mysql
 select * from single_table where key1='abc'
 ```
 搜索条件为二级索引与常数值等值比较,采用二级索引来执行查询的访问方法称为:ref。
-同时常见的还有eq_ref,区别就是我们使用的二级索引是唯一索引或者主键  
+同时常见的还有eq_ref,区别就是eq_ref使用的二级索引是唯一索引或者主键,所以eq_ref更加的快  
 ## ref_or_null
 与上面的差别是将NULL的等值也包括了
 ## range
@@ -493,7 +493,7 @@ MySQL设计者又提出**半连接**(semi-join),这是**MySQL内部的一种查�
 # Explain
 ## 执行计划输出各列详解
 1. table 表名 
-2. id 每出现一个select就会分配一个id,<font color="blue">在连接查询的执行计划中,每个表都会对应一条记录,这些记录的id的值是相同的,出现子在前边的表表示驱动表，后边的表表示被驱动表</font>   
+2. id 每出现一个select就会分配一个id,<font color="red">在连接查询的执行计划中,每个表都会对应一条记录,这些记录的id的值是相同的,出现子在前边的表表示驱动表，后边的表表示被驱动表</font>   
 3. select_type 在整个大查询中扮演了什么角色
 4. partitions
 5. type 对应的是之前的访问方法是哪种
@@ -532,7 +532,7 @@ select * from information_schema.OPTIMIZER_TRACE\G .
 MySQL服务器在启动的时候向操作系统申请了一片连续的内存,这块内存就叫做Buffer Pool(缓冲池)。
 ### Buffer Pool内部组成
 InnoDB设计者为每一个缓存页都创建了**控制信息**,书中将每一个页对应的控制信息占用的内存称为一个**控制块**。  
-<font color="blue">控制块和缓存页是一一对应的,它们都被存放到Buffer Pool中,其中控制快被存放到前面,缓存页被放在后边</font>   
+<font color="red">控制块和缓存页是一一对应的,它们都被存放到Buffer Pool中,其中控制快被存放到前面,缓存页被放在后边</font>   
 
 ### free链表的管理
 <font>用来记录Buffer Pool中哪些缓存页是可用的</font>,可以将所有的空闲页对应的控制块作为一个节点放到一个链表中。  
