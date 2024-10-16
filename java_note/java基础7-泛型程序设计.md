@@ -1,78 +1,9 @@
-在没有泛型之前,必须使用Object来编写适用多种类型的代码。泛型类和泛型方法有**类型参数**,使得它们可以准确描述**特定类型实例化**时会发生什么。
-
-- [为什么要使用泛型程序设计](#为什么要使用泛型程序设计)
-  - [1.类型参数的好处](#1类型参数的好处)
-  - [2.泛型程序员](#2泛型程序员)
-- [定义简单泛型类](#定义简单泛型类)
-- [泛型方法](#泛型方法)
-- [类型变量的限定](#类型变量的限定)
-- [泛型代码和虚拟机](#泛型代码和虚拟机)
-  - [类型擦除](#类型擦除)
-  - [转换泛型表达式](#转换泛型表达式)
-  - [转换泛型方法](#转换泛型方法)
-  - [调用遗留代码](#调用遗留代码)
-- [限制与局限性](#限制与局限性)
-  - [1.不能用基本类型](#1不能用基本类型)
-  - [2.运行时类型查询只适用于原始类型](#2运行时类型查询只适用于原始类型)
-  - [3.不能创建参数类型的数组](#3不能创建参数类型的数组)
-  - [4.Varargs警告](#4varargs警告)
-  - [5.不能实例化类型变量](#5不能实例化类型变量)
-  - [6.不能构造泛型数组](#6不能构造泛型数组)
-  - [7.泛型类的静态上下文中类型变量无效](#7泛型类的静态上下文中类型变量无效)
-  - [8.不能抛出或捕获泛型类的实例](#8不能抛出或捕获泛型类的实例)
-  - [9.可以取消对检查型异常的检查](#9可以取消对检查型异常的检查)
-  - [10.注意擦除后的冲突](#10注意擦除后的冲突)
-- [泛型类型的继承规则](#泛型类型的继承规则)
-- [通配符](#通配符)
-  - [通配符概念](#通配符概念)
-  - [通配符的超类限定](#通配符的超类限定)
-  - [无限定通配符](#无限定通配符)
-  - [通配符捕获](#通配符捕获)
-  - [泛型Class类](#泛型class类)
-  - [常用API](#常用api)
-    - [java.lang.Class\<T>](#javalangclasst)
-      - [T newInstance](#t-newinstance)
-      - [T cast(Object obj)](#t-castobject-obj)
-      - [T[] getEnumConstants()](#t-getenumconstants)
-      - [Class\<? super T> getSuperClass()](#class-super-t-getsuperclass)
-      - [Constructor\<T> getConstructor(Class paramaterTypes)](#constructort-getconstructorclass-paramatertypes)
-      - [Constructor\<T> getDeclaredConstructor(Class paramaterTypes)](#constructort-getdeclaredconstructorclass-paramatertypes)
-    - [java.lang.reflect.Constructor\<T>](#javalangreflectconstructort)
-      - [T newInstance(Object...paramaters)](#t-newinstanceobjectparamaters)
-  - [使用Class\<T>参数进行类型匹配](#使用classt参数进行类型匹配)
-  - [虚拟机中的泛型类型参数](#虚拟机中的泛型类型参数)
-  - [类型字面量](#类型字面量)
-    - [常用API](#常用api-1)
-      - [java.lang.Class\<T>](#javalangclasst-1)
-        - [TypeVarialbe[] getTypeParameters()](#typevarialbe-gettypeparameters)
-        - [Type getGenericSuperClass()](#type-getgenericsuperclass)
-        - [Type[] getGenericInterfaces()](#type-getgenericinterfaces)
-      - [java.lang.reflect.Method](#javalangreflectmethod)
-        - [TypeVariable[] getTypeParameters](#typevariable-gettypeparameters)
-        - [Type getGenericReturnType()](#type-getgenericreturntype)
-        - [Type[] getGenericParameterTypes()](#type-getgenericparametertypes)
-      - [java.lang.reflect.TypeVariable](#javalangreflecttypevariable)
-        - [String getName()](#string-getname)
-        - [Type[] getBounds()](#type-getbounds)
-      - [java.lang.reflect.WildcardType](#javalangreflectwildcardtype)
-        - [Type[] getUpperBounds()](#type-getupperbounds)
-        - [Type[] getLowerBounds()](#type-getlowerbounds)
-      - [java.lang.reflect.ParameterizedType](#javalangreflectparameterizedtype)
-        - [Type getRawType()](#type-getrawtype)
-        - [Type[] getActualTypeArguments()](#type-getactualtypearguments)
-        - [Type getOwnerType()](#type-getownertype)
-      - [java.lang.reflect.GenericArrayType](#javalangreflectgenericarraytype)
-        - [Type getGenericComponent()](#type-getgenericcomponent)
+在没有泛型之前,必须使用Object来编写适用多种类型的代码。泛型类和泛型方法有**类型参数**,使得它们可以准确描述**特定类型实例化**时会发生什么。  
 # 为什么要使用泛型程序设计
-
-**泛型程序设计(generic programming)**意味着编写的代码可以被多种不同的类型的对象重用。例如,收集File类型和String类型对象就可以设计为ArrayList\<T>。
-
+**泛型程序设计(generic programming)**意味着编写的代码可以被多种不同的类型的对象重用。例如,收集File类型和String类型对象就可以设计为ArrayList\<T>。  
 ## 1.类型参数的好处
-
-在没有泛型之前,实现ArrayList的时候需要在内部**维护**一个Object类型
-
-引用的数组,这种设计很明显是利用了任何类都继承了**Object**类。
-
+在没有泛型之前,实现ArrayList的时候需要在内部**维护**一个Object类型  
+引用的数组,这种设计很明显是利用了任何类都继承了**Object**类。 
 ```java
 public class ArrayList{
   private Object[] elementData;
@@ -86,11 +17,8 @@ public class ArrayList{
   }
 }
 ```
-
-这种方式存在两个问题:
-
-1.当获取一个值时必须进行强制类型转换:
-
+这种方式存在两个问题:  
+1.当获取一个值时必须进行强制类型转换:  
 ```java
 String filename=(String)list.get(0);
 ```
