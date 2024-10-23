@@ -2,5 +2,5 @@
 我觉得后端的职责不只是业务逻辑的编写，框架的使用，更重要的是我们需要培养去定位问题的能力，以及高强度下的抗压能力。
 大佬讲得很清晰  
 参考资料  
-https://www.cnblogs.com/laoshuai/p/12397296.html
-https://blog.csdn.net/csdn265/article/details/69389011
+[知乎_12397296](https://www.cnblogs.com/laoshuai/p/12397296.html)
+[知乎_69389011](https://blog.csdn.net/csdn265/article/details/69389011)

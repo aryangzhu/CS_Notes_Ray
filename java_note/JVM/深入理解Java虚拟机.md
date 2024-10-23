@@ -41,10 +41,11 @@
 ##### 8. 方法调用和方法返回指令
 ##### 9. 异常处理指令
 ### 7、类加载机制 
-#### 1.概述
+#### 1. 概述
 借用书上的一句话，这一块内容主要讲的是class文件中的信息进入到虚拟机中发生什么变化。  
-#### 2.类加载的时机
-![类加载时机](https://raw.githubusercontent.com/aryangzhu/blogImage/master/blogImage/images%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA20241023.png)
+#### 2. 类加载的时机  
+下图展示了类加载的7个阶段,其中验证、准备和解析统称为连接  
+![类加载时机](https://raw.githubusercontent.com/aryangzhu/blogImage/master/blogImage/images%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA20241023.png)  
 #### 3. 类加载的过程
 ##### 1. 加载
 ##### 2. 验证
@@ -57,4 +58,5 @@
 最近一直在准备面试,但是简历一直无人问津,索性先沉下心来学学JVM。我也不确定看这玩意儿对面试有没有帮助,说实话很怕花很多时间去研究但是没有收获期望的回报。
 参考资料 
 周志明-《深入理解Java虚拟机》
-怕什么真理无穷,进一步有进一步的欢喜 
+[知乎文章](https://zhuanlan.zhihu.com/p/98337005)
+怕什么真理无穷,进一步有进一步的欢喜
