@@ -1,39 +1,39 @@
-# 介绍
+## 介绍
 Ajax asyn javasript and xml
-异步发送请求的一种**技术**。
-## 作用
+**异步发送请求**的一种**技术**。
+### 作用
 不重新加载网页的情况下动态地修改网页内容
-## 遵从的标准
+### 遵从的标准
 1.XmlHttpRequest(与服务器异步交换数据)
 2.js/DOM(信息显示/交互)
 3.css
 4.xml
-# 创建XHR对象
+## 创建XHR对象
 XMLHttpRequest是Ajax的基础
 xmlhttp=new XMLHttpRequest();
-# XHR发送请求
-## open(method：请求的类型:GET 或 POST,url：文件在服务器上的位置,async：true（异步）或 false（同步）)
-## send(string(仅用于post请求))
-## GET实例
+## XHR发送请求
+### open(method：请求的类型:GET 或 POST,url：文件在服务器上的位置,async：true（异步）或 false（同步）)
+### send(string(仅用于post请求))
+### GET实例
 ```js
 xmlhttp.open("GET","/try/ajax/demo_get.php?t=" + Math.random(),true);
 xmlhttp.send();
 ```
-## POST实例
+### POST实例
 ```js
 xmlhttp.open("POST","/try/ajax/demo_post2.php",true);
 // 之前http学习过，请求可以设置首部
 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 xmlhttp.send("fname=Henry&lname=Ford");
 ```
-# XHR服务器响应
+## XHR服务器响应
 有两种响应
 reponseText和responseXML
-## responseText
+### responseText
 ```js
 document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
 ```
-## responseXML
+### responseXML
 ```js
 xmlDoc=xmlhttp.responseXML;
 txt="";
@@ -45,16 +45,16 @@ for (i=0;i<x.length;i++)
 }
 document.getElementById("myDiv").innerHTML=txt;
 ```
-# XHR readyState(事件)
+## XHR readyState(事件)
 **readyState**属性改变时就会出发onreadystatechange事件
 XHR对象的3个重要属性
-## onreadystatechange事件
+### onreadystatechange事件
 函数
-## readyState
+### readyState
 0-4发生变化
-## status
+### status
 对应http响应状态
-## 使用回调函数
+### 使用回调函数
 回调函数是以参数形式传递给另一个函数的函数
 ```js
 var xmlhttp;
@@ -84,9 +84,9 @@ function myFunction()
 	});
 }
 ```
-# Ajax实例
+## Ajax实例
 根据需求直接去菜鸟教程上找就可以
-# Ajax JSON
+## Ajax JSON
 使用JSON.parse()方法将数据转换为Javascript对象
 ```js
 function loadXMLDoc()

@@ -10,7 +10,6 @@ document对象，每个网页都有一个。
 ### 文本插入到HTML元素是文本节点,are text nodes
 ### 注释是注释及节点。
 ## DOM中Documment对象
-
 **当浏览器载入HTML文档,它就会成为Document对象**。
 就像Java一样,每个对象都有属性和方法,Document也不例外。
 ## DOM节点对象
