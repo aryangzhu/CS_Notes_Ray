@@ -1,5 +1,6 @@
 **标准对象**
 复习一下typeof关键字
+```javascript
 typeof 123
 number
 typeof '123'
@@ -16,9 +17,10 @@ typeof Math.abs
 function
 typeof undefined 
 undefined  
+```
 ### 1.Date
 #### 基本使用
-```js
+```javascript
   var now=new Date(); //Mon Mar 08 2021 14:51:20 GMT+0800 (中国标准时间)
         console.log(now);
         now.getFullYear();//年
@@ -33,7 +35,7 @@ undefined
         console.log(new Date(1615186280742)); //时间戳转换为时间格式
 ```
 #### 转换
-```js
+```javascript
 now.toLocaleString()
 "2021/3/8 下午2:56:22"
 now.toGMTString()
@@ -52,7 +54,7 @@ json是什么
 数组都用[]
 所有键值对都是使用key:value
 
-```js
+```javascript
 var user={
             name:"leiliu",
             age:3,
