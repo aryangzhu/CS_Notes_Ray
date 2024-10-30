@@ -6,11 +6,11 @@
 struct sdshdr{  
     ...  
 }
-method/properties
-len   
-free  
-buff  
 ``` 
+#### method/properties(方法和属性)
+1. len   
+2. free  
+3. buff  
 #### 优势
 1. 常数复杂度获取字符串长度 
 数据结构中有len属性用于保存字符串的长度
@@ -104,7 +104,7 @@ sadd numbers 1 3 5 7 9
 上面的命令用的是sadd,说明用的集合set的基本类型(Redis对外提供的)
 ### 升级
 先来看数据结构  
-```
+```C
 typedef strunct intset{
     unit32_t encoding;
 }
@@ -121,7 +121,7 @@ typedef strunct intset{
 EVAL "for i=1, 128 do redis.call('ZADD', KEYS[1], i, i) end" 1 numbers  
 上面这段代码是往一个zset里面插入128个元素,从1开始  
 在开始内容之前需要先看一个数据结构
-```
+```C
 typedef struct redisObject{
     //类型
     unsigned type:4;
