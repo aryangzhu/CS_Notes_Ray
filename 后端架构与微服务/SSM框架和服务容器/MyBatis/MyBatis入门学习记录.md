@@ -10,9 +10,9 @@ mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系�
     2.灵活  
     3.解除sql与程序之间的耦合  
     4.xml，动态sql  
-# 项目搭建
-##  1.搭建数据库
-##  2.pom.xml导入jar包
+## 项目搭建
+####  1.搭建数据库
+####  2.pom.xml导入jar包
 ```xml
     <dependency>
        <groupId>org.mybatis</groupId>
@@ -25,7 +25,7 @@ mybatis是一个半自动化的ORM(object relationship mapping)-->对象关系�
        <version>5.1.47</version>
     </dependency>
 ```
-## 3.resource下核心配置文件
+#### 3.resource下核心配置文件
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 </configuration>
 ```
 
-## 4.编写工具类SqlSessionFactory
+#### 4.编写工具类SqlSessionFactory
 
 ```java
     查看官方文档
@@ -70,23 +70,23 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
    return sqlSessionFactory.openSession();
   }
 ```
-## 5.创建实体类
-## 6.dao层mapper接口
-## 7.resource文件下编写mapper.xml
-## 8.编写测试，结果返回
-# 面试
-## $和#的区别
+#### 5.创建实体类
+#### 6.dao层mapper接口
+#### 7.resource文件下编写mapper.xml
+#### 8.编写测试，结果返回
+## 面试
+#### $和##的区别
 1. 符号类型
 2. 防sql注入问题
-#能够有效防止sql注入，而$不能
+##能够有效防止sql注入，而$不能
 3. 参数替换位置
-#{}在DBMS中,${}在DBMS外
+##{}在DBMS中,${}在DBMS外
 4. 参数解析
-#{}将传入的参数当做字符串，并添加'',例如userId='111';
+##{}将传入的参数当做字符串，并添加'',例如userId='111';
 而${}直接将其添加到sql中，如userId=111。
 5. 用法
 ORDER BY ${columnName}，这里MyBatis不会修改或转义字符串
 ${}方式一般用于传入数据库对象，例如传入表名
 6. sql执行过程
-#{}：编译好SQL后语句再去取值
+##{}：编译好SQL后语句再去取值
 ${}：取值以后再去编译SQL语句

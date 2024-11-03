@@ -9,9 +9,9 @@ SCMS
 分发  
 邮件列表  
 首先,我们需要知道的是maven采用的是约定大于配置的原则,约定的目录可以自行搜索查看。  
-# POM
+## POM
 POM(Project Object Model,项目对象模型)是maven工程的**基本工作单元**,是一个XML文件,包含了项目的基本信息,用于描述项目如何构建,声明项目依赖,等等。  
-## 节点介绍
+#### 节点介绍
 ```xml
 <project xmlns = "http://maven.apache.org/POM/4.0.0"
     xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
@@ -39,12 +39,12 @@ POM(Project Object Model,项目对象模型)是maven工程的**基本工作单�
 | artifactId   | 工程的标识。groudId和artifactId一起定义了artifact在仓库中的位置。 |
 | version      | 工程的版本号                                                 |
 
-## Super(父)POM
+#### Super(父)POM
 是maven默认的POM。所有的POM都继承自一个父POM(无论是否显式地定义了这个POM)。父POM中包含了一些可以被继承的默认设置。当maven发现需要下载POM中的依赖时,**它会到Super POM中配置的默认仓库http://repo1.maven.org/maven2**去下载。
-# 构建生命周期
+## 构建生命周期
 Maven构建生命周期定义了一个项目**构建和发布**的过程。
 验证-》编译-》测试-》包装(打包)-》检查-》安装(安装打包到本地仓库,一共其他项目使用)-》部署(拷贝最终的工程包到远程仓库中,已共享给其他开发人员使用)
-## 三个标准声明周期
+#### 三个标准声明周期
 clean:项目清理的处理  
 defalut或者build: 项目部署的处理  
 site:项目站点文档的创建  
@@ -81,26 +81,26 @@ post-clean:执行一些需要在clean之后立刻完成的工作
 [INFO] Final Memory: 4M/44M
 [INFO] ------------------------------------------------------------------
 ```
-# 仓库
-## 本地仓库
-## 中央仓库
+## 仓库
+#### 本地仓库
+#### 中央仓库
 社区提供
-## 远程仓库
+#### 远程仓库
 
-# 引入外部依赖
+## 引入外部依赖
 在pom.xml中进行引入，使用\<dependecies>标签。
-# 快照(SNAPSHOT)
-## 为什么需要快照
+## 快照(SNAPSHOT)
+#### 为什么需要快照
 首先我们需要知道的是大型项目应用通常包含多个模块,并且通常的场景是多个团队开发同一个应用的不同模块。  
 加入有一个service的模块需要快节奏的bug修复和更新,并且他们几乎每隔一天就要发布到远程仓库。会有下面的问题:  
 1.data-service团队每次发布更新的代码都要告知app-ui团队(这里是同一个应用下的不同模块)。  
 2.app-ui团队需要经常地更新他们pom.xml到最新版本。  
-## 什么是快照？
+#### 什么是快照？
 快照是一种特殊的版本,指定了某个当前的开发进度的副本。不同于常规的版本,**Maven每次构建都会在远程仓库中检查新的快照**。现在data-service团队可以每次发布更新代码的快照到仓库中。  
-## 项目快照VS版本
+#### 项目快照VS版本
 对于版本的话,如果指定了某个当前的开发进度的副本,例如data-service:1.0,那么就不会再次从仓库下载新的可用文件。  
 而对于快照来说,app-ui团队构建项目时,maven将自动获取最新的快照(data-service:1.0-SNAPSHOT)。  
-## 项目中如何使用快照
+#### 项目中如何使用快照
 app-ui项目中引入快照依赖  
 ```xml
 <dependencies>
@@ -134,13 +134,13 @@ data-service项目中的pom.xml文件
 
 
 
-# 自动化构建
+## 自动化构建
 
 延续上面的问题,app-web-ui和app-desktop-ui项目的团队要求不管bus-core-api项目何时发生变化,他们的构建过程都应当可以启动。
 
 在bus-core-api项目的pom文件中添加一个post-build目标操作来启动app-web-ui和app-desktop-ui项目的构建。
 
-## 修改bus-core-api项目文件
+#### 修改bus-core-api项目文件
 
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
@@ -181,15 +181,15 @@ data-service项目中的pom.xml文件
 
 
 
-## 
+#### 
 
-# 依赖管理
+## 依赖管理
 
 如果项目之间有依赖的话,那么是通过\<dependencies>来进行定义
 
 而如果项目之间存在父子关系,则是通过\<parent>来定义的。
 
-# 自动化部署
+## 自动化部署
 
 
 
