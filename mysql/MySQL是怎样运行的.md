@@ -600,13 +600,16 @@ Free buffers 代表LRU链表中页的数量
 10. 5.7.5之后,可以在服务器运行过程中调整Buffer Pool的大小。
 11. 查看Buffer Pool状态命令:show engine innodb status\G;
 # 事务
-## ACID
+## 事务的概念
+一组数据库操作,满足上面4个特性。
+## 为什么要出现事务
+需求就是期望一组操作要么都成功要么都失败
+## 事务的特性ACID
 原子性
 隔离性
 一致性 符合现实世界的约束(书上是这么说的,我还没有看其他的)
 持久性
-## 事务的概念
-一组数据库操作,满足上面4个特性。
+AID是手段，D才是我们的目标
 ## 事务的语法
 ### 开启事务
 两种方式  
@@ -630,13 +633,26 @@ SHOW VARIABLES LIKE 'autocommit';
 ### 保存点
 savepoint 保存点名称
 在事务中添加这条语句即可
+## 并发事务带来的问题
+### 脏读
+a事务将记录A从20改为19,随后回滚,但是B事务读取到了19 
+### 丢失修改
+两个事务同时读取到20,然后同时改为19,那么从道理上来说必定有一个事务丢失了修改
+### 不可重复读
+a事务读取到记录A将其从20修改为19,b事务一直在读取,但是两次的值分别为19和20
+### 幻读
+a事务插入一条记录，b事务在两次分别读取时读到了不同的数据
+### 不可重复读和幻读的区别
+幻读强调的是事务b读取到了新数据，而不可重复读强调的是读取的数据记录发生了变更
+## 如何解决上述问题
+MVCC机制
 # redo日志
 ## 事先说明
 因为一条记录刷新一个页面到磁盘有点过于浪费,所以将这个修改操作记录一下。  
 例如,更新操作 
 将第0号表空间的100号页面的偏移量为1000处的值更新为2。这就是一条完整的记录,称为redo log。
 ## redo日志格式
-![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-03%20%E4%B8%8B%E5%8D%886.09.07.png)
+![redolog日志格式](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-03%20%E4%B8%8B%E5%8D%886.09.07.png)
 各个部分释义 
 1. type 日志类型
 2. space ID 表空间ID
@@ -819,13 +835,12 @@ read commited
 repeated read
 serilizable 
 ## MVCC版本链
+首先记录中有几个隐藏的字段，trx_id产生当前记录的事务id，row_pointer指向最新一条的undo日志，row_id没有主键id或者唯一索引的时候默认分配的id。  
 每次对于数据的操作都会有一条undo日志,记录中用roll_pointer指向最新的一条undo日志
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2022-12-16%20%E4%B8%8B%E5%8D%883.55.54.png)
 从上面的图中能看出来,每条undo日志中也有roll_pointer这个属性,指向上一条的undo日志。
-下面看一下针对各个隔离级别MySQL是如何实现的
-### ReadUncommited
-直接读取最新的记录就可以
-### Read Committed
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/blogImage/images/ReadView结构图_20241120122940.png)
+### 数据可见性算法(比较规则)
 首先需要了解一个概念ReadView,这是版本链中一个非常重要的数据结构,有几个重要的属性(可能名称不一定准确):  
 1. m_ids
 生成ReadView时活跃的事务id列表
@@ -838,12 +853,16 @@ serilizable
 #### 比较规则
 1. 如果访问的trx_id和creator_id相等,说明访问的就是当前版本,可以访问  
 2. 如果trx_id小于min_trxid,说明之前已经提交,可以访问  
-3. 如果trx_id大于max_traxid,说明当前记录版本在创建事务之后,可以访问  
-4. 如果trx_id在[min,max]之间,trx_id是否在m_ids列表中,如果在的话说明事务trx_id还是活跃的,没有提交,所以不能被反问
-#### Select之前生成一个ReadView
+3. 如果trx_id大于max_traxid,说明当前记录版本在创建事务之后,不可以访问  
+4. 如果trx_id在[min,max]之间,trx_id是否在m_ids列表中,如果在的话说明事务trx_id还是活跃的,没有提交,所以不能被访问
+下面看一下针对各个隔离级别MySQL是如何实现的
+### ReadUncommited
+直接读取最新的记录就可以
+### Read Committed
+Select之前生成一个ReadView  
 trx_id只有在insert,update,delete的时候才会被分配。
 ### Repeated Read
-#### 只有第一次查询的时候生成一个ReadView
+只有第一次查询的时候生成一个ReadView(对于一个事务来说,事务开启的时候就会生成一个ReadView)
 ### Serilizalbe 
 采用锁的方式
 # 锁
