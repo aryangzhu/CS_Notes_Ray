@@ -2,21 +2,21 @@
 选择SpringBoot Intlizer然后选择Java Web组件
 ## yml文件
 目的是作为配置文件来使用
-#### 配置文件
+### 配置文件
 作用:修改SpringBoot自动配置的默认值,因为SpringBoot在底层给我们配置好了。
 例如
 ```
 server.port=8081;
 ```
-#### yml描述
+### yml描述
 让我们先回顾一下xml长什么样子
-###### xml
+#### xml
 ```xml
 <server>
     <port>8081<port>
 </server>
 ```
-###### yaml
+#### yaml
 **yml以数据作为中心,而不是以标记语言为重点**
 
 yml配置
@@ -26,9 +26,9 @@ server：
   prot: 8080
 ```
 
-#### yml基础语法
+### yml基础语法
 
-###### 注意事项
+#### 注意事项
 
 1.空格不能省略。
 
@@ -36,13 +36,13 @@ server：
 
 3.属性和值的大小都是十分敏感的。
 
-###### 字面量[数字,布尔值,字符串]
+#### 字面量[数字,布尔值,字符串]
 
 ```
 k: v
 ```
 
-######## 注意
+##### 注意
 
 “”不会转义字符串里面的特殊字符,特殊字符会作为本身想表示的意思
 
@@ -73,7 +73,7 @@ student:
 student:{name:qinjiang,age:3}
 ```
 
-###### 数组
+#### 数组
 
 用-值表示数组中的一个元素,比如:
 
@@ -89,7 +89,7 @@ pets:
 ```yml
 pets:[cat,dog,pig]
 ```
-###### 注入配置
+#### 注入配置
 @Value可以注入我们自己的配置值
 ## 多环境切换
 ```yaml
@@ -101,38 +101,38 @@ spring:
 使用注解@Valid来完成数据校验
 ## Web开发
 我们知道，在Spring框架中主要的和web相关的无非就是静态资源的配置和SpringMVC的相关配置。
-#### 静态资源导入
+### 静态资源导入
 通过官方文档可以得知，自定义的配置主要可以放在resource文件下的几个文件里面(这个是由源码所决定的)。
-#### 首页和图标定制
+### 首页和图标定制
 自定义配置文件里面，我们可以自行修改。
 ## 如何写一个网站
-#### 尽量用前端模板
-###### 栅格
-###### 导航栏
-###### 侧边栏
-###### 表单
-###### 尾部
-#### 设计数据库(难点!)
+### 尽量用前端模板
+#### 栅格
+#### 导航栏
+#### 侧边栏
+#### 表单
+#### 尾部
+### 设计数据库(难点!)
 #### 前端让它能够自动运行,独立化工程
 #### 数据接口对接
-###### json
-###### 前后端联调
+##### json
+##### 前后端联调
 ## 整合持久层
-#### 整合JDBC
-#### 整合Druid
-#### 整合Mybatis(重点)
+### 整合JDBC
+### 整合Druid
+### 整合Mybatis(重点)
 1.在springboot.yaml文件编写数据库相关配置  
 2.在dao/mapper包下使用注解来声明组件  
 3.现在需要在resource下编写xml文件.  
 ## 权限&认证
-#### 整合SpringSecurity
+### 整合SpringSecurity
 建议直接阅读官方文档
 https://www.docs4dev.com/docs/zh/spring-security/5.1.2.RELEASE/reference/jc.html
 
 首先需要创建Config类来实现WebSecurityConfigurerAdapter
 在配置类中我们需要做的工作有下面这两个步骤:
 注:下面的代码是链式的，关于这里可以看书
-###### 1.授权
+#### 1.授权
 主要是设置什么权限能够访问什么页面
 ```java
 protected void configure(HttpSecurity http) throws Excption{
@@ -153,7 +153,7 @@ protected void configure(HttpSecurity http) throws Excption{
 	http.remeberMe().remeberMeParameter("remeber-me");
 }
 ```
-###### 2.认证
+#### 2.认证
 ```java
 protected void configure(AuthenticationManagerBuilder auth)throws Exception{
 	//注意，这里要对密码进行加密，否则会报错
@@ -171,18 +171,18 @@ protected void configure(AuthenticationManagerBuilder auth)throws Exception{
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 ```
-#### 整合Shiro
+### 整合Shiro
 1.导入依赖
 2.配置文件
 3.HelloWorld
-###### Shiro中经常使用的三个类
+#### Shiro中经常使用的三个类
 ######## Subject
 我们正在进行的认证和授权的对象,通过subject.getPrinpal()获取。
 ######## SubjectManager
 安全管理器,所有与安全有关的操作都会与SecruityManager,与Subject的所有交互都会委托给SecruityManager;可以把Subject认为是一个**门面(???)**;
 ######## Realm
 真正连接数据库并进行认证和授权的类。
-###### 常用API
+#### 常用API
 Subject currentUser=SecurityUtils.getSubject();  
 Session session=currentUser.getSession();  
 currentUser.isAuthenticated();  
@@ -190,8 +190,8 @@ currentUser.getPrincipal();
 currentUser.hasRole("schwartz");  
 currentUser.isPermitted("lightsaber:wield");  
 currentUser.logout();  
-###### 项目使用
-######## 1.配置Shiro相关的类即ShrioConfig
+#### 项目使用
+##### 1.配置Shiro相关的类即ShrioConfig
 在这个类下我们主要是配置访问拦截以及工厂方法
 ```Java
 @Bean(name="manage")
@@ -230,7 +230,7 @@ public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qulifier("manager") Def
 	return bean;
 }
 ```
-######## 2.Realm
+##### 2.Realm
 下来就是Realm,来进行授权和认证操作
 我们自己的类需要继承AuthorizeRealm这个类
 先来看认证
@@ -262,7 +262,7 @@ public AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal){
 ## SpringBoot集成Swagger
 1.导入swagger和swagger-ui的依赖
 2.编写一个配置类，并声明@Coifiguration和@EnableSwagger2(其中有一个@Import,导入的是Swagger2DocumentationConfiguration)
-#### 详细配置
+### 详细配置
 需要在配置类中自己编写接口相关信息
 首先需要创建一个Docket，如果需要多个组的话那么就创建过个Docket。
 ```java
@@ -326,26 +326,26 @@ spring:
 ## 定时任务
 @Secdule
 ## Redis缓存
-#### 本地缓存
+### 本地缓存
 1. 导入依赖
 2. application.yml配置文件
 3. RedisConfig文件编写，其中最重要的就是RedisTemplate
 4. RedisUtil，用来存放我们处理缓存的常用方法
-###### RedisTemplate
+#### RedisTemplate
 操作字符串: redisATemplate.opsForValue()
 操作Hash: redisTemplate.opsForHash()
 操作List: redisTemplate.opsForList()
 操作Set: redisTemplate.opsForSet()
 操作ZSet: redisTemplate.opsForZSet()
-###### RedisTemplate与StringRedisTemplate
+#### RedisTemplate与StringRedisTemplate
 1. RedisTemplate是一个**泛型类**，而StringRedisTemplate不是，后者只能对键和值都为String类型的数据进行操作，而前者则可以操作任何类型
 2. 两者的数据是不共通的，StringRedisTemplate只能管理StringRedisTemplate里面的数据，RedisATemplate只能管理RedisTemplate中的数据
-###### RedisConfig
-######## 配置工厂
+#### RedisConfig
+##### 配置工厂
 其实配置文件中已经进行了配置，我看的别人的源码进行了工厂的配置，猜测可能不需要进行配置
-######## 实例化RedisTemplate组件，注入到容器中
+##### 实例化RedisTemplate组件，注入到容器中
 核心方法:**initDomainRedisTemplate**(redisTemplate,redisConnectionFactory)
-######## 设置Redis的序列化方式，并开启事务
+##### 设置Redis的序列化方式，并开启事务
 ```java
  /*
          * 设置 序列化器 .
@@ -377,8 +377,8 @@ spring:
 Redis中有原生的命令publish channel message
 以及subscribe channel来订阅消息
 ######  SpringBoot项目中实现Redis的订阅与发布
-######## RedisConfig配置
-########## 实例化RedisMessageListenerXContainer组件并注入到容器中
+####### RedisConfig配置
+######## 实例化RedisMessageListenerXContainer组件并注入到容器中
 核心代码
 ```Java
 RedisMessageListenerContainer container=new RedisMessageListenerContainer();
@@ -393,11 +393,11 @@ MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
 	return new MessageListenerAdapterr(consumer,"on message");
 }
 ```
-#### 消息队列
+### 消息队列
 之前在公司,领导让我用redis尝试实现一下消息队列,并将其作为一个包单独地抽出来
-###### 生产者lpush
-###### 消费者rpop
-#### 分布式缓存
+#### 生产者lpush
+#### 消费者rpop
+### 分布式缓存
 ## SpringBoot自定义包
 1. 创建maven项目  
 2. pom文件中需要引入autoconfigure的依赖和maven打包插件,这两个是最基础的
@@ -407,15 +407,14 @@ MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
 5. 其他项目中pom中引入依赖
 原理在另一篇文章中有提及到
 ## 整合RabbiMQ
-
 ## SpringAop使用
 今天看了公司的项目和mall项目,发现aop的两种使用方式
-#### 针对某个包的切点
+### 针对某个包的切点
 @Pointcut("execution(public * com.macro.mall.tiny.controller.*.*(..))")
     public void webLog() {
 }  
 从上面可以看出,这种方案针对的是某个包下的类来进行切面处理
-#### 针对某个注解的切点
+### 针对某个注解的切点
 @Pointcut("@annotation(com.xxx.core.anno.LogOption)")
     public void logPointCut() {
 }

@@ -1,8 +1,8 @@
-# 几个概念
+## 几个概念
 zookeepr:注册中心  
 dubbo-admin:服务监控后台  
 Dubbo:jar包形式
-# 步骤:
+## 步骤:
 1.开启zookeeper服务,启动dubbo-admin监控管理后台 
 **** 
 2.提供者提供服务  

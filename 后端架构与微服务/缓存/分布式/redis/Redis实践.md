@@ -1,4 +1,4 @@
-### 分布式ID生成器
+## 分布式ID生成器
 自定义接口IdGenerator 基于twitter的sequence
 ```Java
 @Component
