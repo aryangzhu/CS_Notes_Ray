@@ -1,5 +1,5 @@
 参考链接
-https://zhuanlan.zhihu.com/p/321616852
+[知乎_321616852](https://zhuanlan.zhihu.com/p/321616852)
 ## 1.配置
 不知道怎么回事无法查看之前的git配置
 ```bash
@@ -53,4 +53,4 @@ git reset --merge
 使用git rm 命令同时删除本地和远程仓库文件/文件夹  
 git rm --cached -r xxx 保留本地文件  
 参考链接
-https://blog.csdn.net/weixin_40769885/article/details/105560732
+[csdn](https://blog.csdn.net/weixin_40769885/article/details/105560732)
