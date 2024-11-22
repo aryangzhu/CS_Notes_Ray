@@ -1,7 +1,7 @@
 **网页查看元素时，f12,对值进行修改，查看效果**
 ![选区_120.png](https://i.loli.net/2021/02/23/xKMAP3wUrHjkFuE.png)
 
-#### 1.什么是盒子模型
+### 1.什么是盒子模型
 ![选区_119.png](https://i.loli.net/2021/02/23/cXHmESvKBxRgjtr.png)
 margin:外边距
 
@@ -15,13 +15,13 @@ border:边框
 
 实际长度=width+左右border+padding
 
-#### 2.边框
+### 2.边框
 1.边框的粗细
 2.边框的样式
 3.边框的颜色
 /*border:粗细,样式,颜色*/
 
-#### 3.内外边距
+### 3.内外边距
 
 ```html
 #box{
@@ -41,7 +41,7 @@ div:nth-of-type(1){
             padding: 10px 2px;
         }
 ```
-#### 4.圆角边框
+### 4.圆角边框
 
 ```html
   /*border-radius 顺时针 左上 右上...*/
@@ -55,7 +55,7 @@ div:nth-of-type(1){
 			border-radius:50%;/*也可以使用百分之多少来确定*/
         }
 ```
-#### 5.阴影
+### 5.阴影
 
 ```
   img{

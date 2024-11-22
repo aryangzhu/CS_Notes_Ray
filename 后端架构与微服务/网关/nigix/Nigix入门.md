@@ -50,7 +50,7 @@
 ```
 在配置完成并且重启服务之后，使用本地访问localhost:9001/wp-login.php即可访问云服务器地址
 关于入门的博客,参考的是狂神的博客,简单容易上手
-https://www.cnblogs.com/hellokuangshen/p/14334300.html
+[狂神_nginx入门](https://www.cnblogs.com/hellokuangshen/p/14334300.html)
 唯一需要注意的就是要开启防火墙的端口,狂神的博客对于常用命令也有列举
 关于配置文件的详情,下面这篇文章讲的非常详细
-https://www.cnblogs.com/54chensongxia/p/12938929.html
+[nginx配置解释](https://www.cnblogs.com/54chensongxia/p/12938929.html)

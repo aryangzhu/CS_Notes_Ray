@@ -1,4 +1,4 @@
-##### HTTML+CSS+JavaSrcipt即 页面结构+样式+脚本
+### HTTML+CSS+JavaSrcipt即 页面结构+样式+脚本
 
 
 １．基础
