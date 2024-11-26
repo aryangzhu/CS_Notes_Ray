@@ -190,6 +190,5 @@ flushall触发rdb规则
 退出redis触发rdb规则
 备份的快照 dump.rdb
 **恢复时只需要将备份放在redis的启动目录下就可以**
-#### 
 
 

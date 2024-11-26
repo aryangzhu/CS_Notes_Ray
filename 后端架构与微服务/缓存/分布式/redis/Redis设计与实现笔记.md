@@ -70,7 +70,7 @@ unsigned long len;
 void *(*dup)(void *ptr)
 ```
 #### 特性
-双端、无环、带表头和表尾指针、带链表长度计数器和多态(个人理解和Java的多台好像不太一样)  
+双端、无环、带表头和表尾指针、带链表长度计数器和多态(个人理解和Java的多态好像不太一样)  
 关于多态这里解释一下,以复制函数为例,使用的void*指针来保存节点值,所以可以保存各种不同类型的值
 #### 用途
 1. 列表键、发布与订阅、慢查询、监视器等
@@ -81,8 +81,68 @@ void *(*dup)(void *ptr)
 ### 字典
 #### 哈希表节点与哈希表数据结构
 ##### 哈希表结构
+```c
+typdef struct dictht{
+    //哈希表数组
+    dictEntry ** table;
+    //哈希表大小
+    unsigned long size;
+    //哈希表掩码，用于计算索引值
+    //总是等于size-1
+    unsigned long sizemask;
+    //哈希表元素数量
+    unsigned long used;
+}dictht
+```
 ##### 哈希表节点结构
+```c
+typef struct dictEntry{
+    //键
+    void * key;
+    //值
+    union{
+        void * value;
+        uint64_tu64;
+        int64_ts64;
+    }v;
+
+    //指向下一个节点
+    struct dictEntry * next;
+}dictEntry
+```
 ##### 字典结构
+```c
+typedef struct dict{
+    //类型特定函数
+    dictType * type;
+
+    //私有数据
+    void * privData;
+
+    //哈希表
+    dictht ht[2];
+    //rehash索引
+    //当rehash进行中,rehashIndex的值会不断增加,直到为-1
+    int trehashidx; 
+}dict;
+```
+type属性是一个指向dictType结构的指针，每个dictType结构**保存了一簇用于操作特定类型键值对的函数**，Redis会为用途不同的字典设置不同的类型特定函数。  
+```c
+typedef struct dictType{
+    //计算哈希值的函数
+    unsigned (int|long)(*hashFunction)(const void *key);
+    //复制键的函数
+    void *(*keyDup)(void *privdata, const void *key);
+    //复制值的函数
+    void *(*valDup)(void *privdata, const void *obj);
+    //比较键的函数
+    int (*keyCompare)(void *privdata, const void *key1, const void *key2);
+    //释放键的函数
+    void (*keyDestructor)(void *privdata, void *key);
+    //释放值的函数
+    void (*valDestructor)(void *privdata, void *obj);
+}
+```
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2023-04-04%20%E4%B8%8B%E5%8D%883.34.26.png)  
 从上面的图里可以看到,字典中有哈希表结构,而哈希表中有key-value键值节点  
 #### 哈希算法
@@ -135,8 +195,11 @@ typedef strunct intset{
 ### 对象
 #### 5种基本类型
 就是入门篇里提到的5种类型对象
+String、List、Set、Zset、Hash
 **注:由于Redis里面都是键对象和值对象,所以这一章的角度都是从这两个对象出发**
+```
 EVAL "for i=1, 128 do redis.call('ZADD', KEYS[1], i, i) end" 1 numbers  
+```
 上面这段代码是往一个zset里面插入128个元素,从1开始  
 在开始内容之前需要先看一个数据结构
 ```C
@@ -165,11 +228,11 @@ typedef struct redisObject{
 0-9999整数值会预先存好,就像Java的字符串常量池一样
 ##### 空转时间
 越近访问的值空转时间会越少
-### 单机数据库的实现
-#### 选择数据库
+## 单机数据库的实现
+### 选择数据库
 select 0(index)  
 客户端程序中有个数据结构,其中有个属性保存了当前客户端使用的数据库  
-#### 数据库键空间
+### 数据库键空间
 数据库键空间是这一章的重点  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/%E6%88%AA%E5%B1%8F2023-04-07%20%E4%B8%8B%E5%8D%882.26.03.png)
 ##### 关于键值变化时的操作过程
@@ -181,20 +244,20 @@ select 0(index)
 键有ideltime,用来指示键的闲置时间  
 键有过期时长,不知道和这个闲置时间的属性有什么关系
 键有个属性代表是否被修改,书上说的是键是不是为dirty(脏键),每次修改这个值都会被加1,如果客户端使用WATCH命令对其进行了监听,那么客户端程序在执行事务程序时就会注意到。
-##### 设置生存或者过期时间
-#### RDB持久化
-##### SAVE和BGSAVE
-##### Mac下使用Homebrew安装的Redis的RDB文件位置
+#### 设置生存或者过期时间
+### RDB持久化
+#### SAVE和BGSAVE
+#### Mac下使用Homebrew安装的Redis的RDB文件位置
 1. 首先还是得找到redis.conf的位置
 使用brew info redis命令可以查看到
 /opt/homebrew/etc/redis.conf  
 1. 在redis.conf找到dbfilename和dir属性的值来确定文件名称和路径
 db.dump和/opt/homebrew/var/db/redis   
-#### AOF持久化
-##### AOF缓冲区
-##### 重写
-###### AOF重写缓冲区
-#### 事件
+### AOF持久化
+#### AOF缓冲区
+#### 重写
+##### AOF重写缓冲区
+### 事件
 首先来复习一下多路复用,没办法用的多有什么辙   
 几个关键的记忆点,bind()函数和accept()函数,socket    
 客户端connect()
@@ -204,9 +267,14 @@ db.dump和/opt/homebrew/var/db/redis
 IO多路复用模型select()和poll()  
 IO多路复用模型epoll()  
 事件机制,回调函数
-##### Redis中的IO多路复用
-#### 客户端
+#### Redis中的IO多路复用
+### 客户端
 主要内容是服务器内部保存的redis-client结构,对其中的的属性进行讲解
-#### 服务端
+### 服务端
+## 多机数据库的实现
+### 复制
+### Sential
+### 集群
+## 独立功能的实现
 ## 一点碎碎念
 最近因为面试，所以又拿出了《Redis设计与实现》这本书出来复习，其实23年的时候就已经刷过一遍这本书了，但是没有做笔记，今年发现做笔记和不做笔记差别还是挺大的。这两天也不想去复盘之前的面试(畏难心理还是已经皮实了，不想再继续下去了)，索性就写写笔记，当做一种娱乐了。
