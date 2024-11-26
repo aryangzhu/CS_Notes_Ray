@@ -23,7 +23,7 @@ TCP/IP协议族中预存了各类通信时的服务。例如，FTP(FIle Transfer
 用来处理网络的**硬件部分**。包括操作系统、硬件的设备驱动、NIC(Network InterFace Card,网络适配器)，及光钎等物理可见部分。  
 #### TCP/IP的通信传输流
 我们来梳理一下网络通信时的协议族中的各个协议在各层发挥的作用。
-![](https://gitee.com/aryangzhu/picture/raw/master/TCP-IP%E4%BC%A0%E8%BE%93%E6%B5%81.png)
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/blogImage/images/TCP-IP传输流.png)
 发送端从应用层往下走，接收端则是从下往上走。  
 书中的例子是HTTP,首先作为发送端的**客户端在应用层发送(HTTP协议)一个想看某个Web页面的HTTP请求**。  
 然后，在传输层(TCP协议)将HTTP请求分成**一个个数据包**，再在各个数据上打上**标记序号和发送IP地址**。  
@@ -41,13 +41,13 @@ MAC地址网卡的**固有地址，是唯一的**。
 #### 负责确保可靠性的TCP协议
 TCP处于传输层，提供可靠的字节流服务。字节流服务是将大的数据块分成以数据报文为单位的数据包。而且TCP协议能够确认对方是否收到了数据包。  
 ##### 三次握手策略
-![](https://gitee.com/aryangzhu/picture/raw/master/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png)
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/blogImage/images/三次握手.png)
 发送端首先会**发送一个带有SYN(synchronized)标识**的数据包，接收端在接收到以后会回传一个**带有SYN/ACK(acknowlege)的标识**传达确认可以接收的信息，然后发送端再发送一个**带有ACK标识**的数据包。至此，"握手"完成。
 ### 负责域名解析的DNS服务  
 和HTTP协议一样存在于应用层，功能是**将主机域名解析为IP地址**。例如，想要访问某个网页(www.bilibili.com)，DNS服务会将这个域名转换为IP地址(形如192.168.1.1)。  
 ### 各种协议与HTTP协议的关系
 通过下面能够直观地看出IP协议、TCP协议和DNS服务在**使用HTTP协议通信的过程**发挥的作用。  
-![](https://gitee.com/aryangzhu/picture/raw/master/%E4%BD%BF%E7%94%A8http%E5%AE%8C%E6%95%B4%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png)  
+![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/blogImage/images/使用http完整通信过程.png) 
 ### URI和URL
 URI-统一资源标识符  
 URL-统一资源定位符  
@@ -158,41 +158,23 @@ http://example.com/sample
 ### 4xx 客户端错误
 404 Not Found
 ### 5xx 服务端错误
-
 500 Internetal Server Error
-
 ## 五、与HTTP协作的web服务器
-
 ### 单台虚拟主体实现了多个域名
-
-HTTP规范允许一台HTTP服务器搭建多个Web站点。利用虚拟服务器的功能，**实现物理层面一台服务器而假想多台服务器**。
-
-由前面的章节我们知道，在访问网站时，DNS会将域名解析成为IP地址。此时，虚拟主体的IP地址已知，但是如何确定访问的是哪个域名呢？这就要求访问时Host首部内有**完整指定主机名或者域名的URI**。
-
+HTTP规范允许一台HTTP服务器搭建多个Web站点。利用虚拟服务器的功能，**实现物理层面一台服务器而假想多台服务器**。  
+由前面的章节我们知道，在访问网站时，DNS会将域名解析成为IP地址。此时，虚拟主体的IP地址已知，但是如何确定访问的是哪个域名呢？这就要求访问时Host首部内有**完整指定主机名或者域名的URI**。  
 ### 通信数据转发程序：代理、网关和隧道
-
 #### 网关
-
 **转发其他服务器通信数据**，自己也可以处理客户端的请求。
-
 与代理类似，但是网关能使通信线路上的服务器提供非HTTP协议服务。
-
 #### 代理
-
-扮演了一个“中间人”的角色，接收客户端请求转发给服务端，也接收服务端响应发送给客户端。
-
+扮演了一个“中间人”的角色，接收客户端请求转发给服务端，也接收服务端响应发送给客户端。  
 **代理不改变请求URI**
-
 **每经过一台代理服务器，需要追加via首部信息**
-
 ##### 缓存代理-Cache Proxy
-
-代理服务器会将资源副本保存在自己的服务器上，等到下次客户端进行访问时，如果资源还是有效的，那么将会由代理服务器直接返回。
-
+代理服务器会将资源副本保存在自己的服务器上，等到下次客户端进行访问时，如果资源还是有效的，那么将会由代理服务器直接返回。  
 ##### 透明代理-Transparent Proxy
-
 不对报文做任何修改或者加工处理。
-
 #### 隧道
 客户端与服务端之间建立私密(SSL)通道。
 ### 保存资源的缓存
