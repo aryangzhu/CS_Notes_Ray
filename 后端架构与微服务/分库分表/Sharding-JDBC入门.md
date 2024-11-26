@@ -44,4 +44,6 @@ public class UserRouteAlgorithm implements RouteAlgorithm<User> {
 @ShardingJdbcMapper(table = "user")  // 指定分片表实体类对应的表名，此处为示例代码，实际应用中需要根据具体情况进行修改。  
 public interface UserMapper {  
   @Select("SELECT * FROM ${logicTable} WHERE id = #{id}")  // 查询指定id的用户信息，逻辑表名使用占位符${logicTable}来代替，id使用占位符#{id}来代替。
+  public UserVo getUserById(@Param("id") Long id);
+}
 ```

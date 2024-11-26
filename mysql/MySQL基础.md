@@ -54,472 +54,302 @@ DBMS可以分为两类:一类为**基于共享文件系统的DBMS**,另一类为
 3.输入help或\h获得帮助;  
 4.输入quit或exit退出命令行使用程序。  
 #### 2.MySQL Administrator
-
 MySQL Administrator(MySQL管理器)是一个图形交互客户机,用来简化MySQL服务器的管理。
-
 #### 3.MySQL Query Browser
-
 图形交互客户机,用来编写和执行MySQL命令。
-
 ## 第三章 使用MySQL
-
 ### 1.连接
-
-MySQL与所有客户机-服务器DBMS一样,**求在能执行命令之前登录到DBMS**。MySQL在内部保存自己的用户列表,并且把每个用户与各种权限关联起来。
-
-为了连接到MySQL,需要以下信息:
-
+MySQL与所有客户机-服务器DBMS一样,**求在能执行命令之前登录到DBMS**。MySQL在内部保存自己的用户列表,并且把每个用户与各种权限关联起来。  
+为了连接到MySQL,需要以下信息:  
 1.主机名-如果连接到本地MySQL服务器,为localhost;
-
 2.端口(如果使用默认端口3306之外的端口);
-
 3.一个合法的用户名;
-
 4.用户口令(如果需要)。
-
 ### 2.选择数据库
-
-刚连接上时需要选择一个数据库。可以使用**use**关键字。
-
-**关键字(key word)**作为MySQL语言组成部分的一个保留字。绝不要用关键字命名一个表或列。
-
+刚连接上时需要选择一个数据库。可以使用**use**关键字。  
+**关键字**(key word)作为MySQL语言组成部分的一个保留字。绝不要用关键字命名一个表或列。
 ```mysql
 use bookstore;
 ```
-
 ### 3.了解数据库和表
-
 数据库、表、列、用户、权限等信息被存储被存储在数据库和表中。内部的表一般不直接访问。可用MySQL的SHOW命令来显示这些信息
-
 ```mysql
-show databases;
+show databases;  
 ```
-
-为了获得一个数据库内的列表,使用show databases;
-
+为了获得一个数据库内的列表,使用show databases;  
 ```mysql
 show tables;
 ```
-
-show也可以用来显示表列:
-
+show也可以用来显示表列:  
 ```mysql
 show columns from custormers;
 ```
-
-**自动增量**:某些表列需要唯一值。每添加一行，MySQL可以自动地为每个行分配下一个可用编号,不用手动分配。
-
-describe语句作为show columns from的替代
-
+**自动增量**:某些表列需要唯一值。每添加一行，MySQL可以自动地为每个行分配下一个可用编号,不用手动分配。  
+describe语句作为show columns from的替代  
 ```mysql
 describe customers;
 ```
-
 ## 第四章 检索数据
-
-
-
 ### 1.select语句
-
 为了使用select检索表数据,必须至少给出两条信息-想选择什么,以及从什么地方选择。
-
 ### 2.检索单个列
-
 ```mysql
 select product_name from products;
 ```
-
 ### 3.检索多个列
-
 ```mysql
 select prod_id,prod_name,prod_price from products;
 ```
-
 #### 数据表示
-
 很多时候我们不会使用从数据库中直接返回的数据,而是需要进行格式转化。
-
 ### 4.检索所有列
-
 ```mysql
 select * from products;
 ```
-
-注意:除非真的需要一个表的所有列,否则不要去使用*通配符。
-
+注意:除非真的需要一个表的所有列,否则不要去使用*通配符。  
 ### 5.检索不同的行
-
 ```mysql
 select distinct vend_id from products;
 ```
-
-如上使用**distinct**关键字指示MySQL返回**不同**(如果有重复只返回一个)的值。
-
+如上使用**distinct**关键字指示MySQL返回**不同**(如果有重复只返回一个)的值。  
 ### 6.限制结果
-
 ```mysql
 select prod_name form products limit 5;
 ```
-
-limit 5指示MySQL返回不多于5行。
-
-也可以同时指示要检索的起始位置和数量:
-
+limit 5指示MySQL返回不多于5行。  
+也可以同时指示要检索的起始位置和数量:  
 ```mysql
 select prod_name form products limit 5,5;
 ```
-
 注:起始位置从0开始而不是从1开始
-
 ### 7.使用完全限定的表名
-
 ```mysql
 select products.prod_name from products;
 ```
-
-使用完全限定表名:
-
+使用完全限定表名:  
 ```mysql
 select products.prod_name 
 from crashcourse.products;
 ```
-
 假定products表确实位于crashcourse数据库中。
-
 ## 第五章 排序检索数据
-
 ### 1.排列数据
-
 ```mysql
 select prod_name form products;
 ```
-
 上面的代码查询返回结果是按照底层表的顺序来的,但是如果表有过修改、删除则可能底层表会被影响。
-
 #### 子句
-
-SQL语句由子句组成,有些是可选的,有些是必需的。
-
-如果想要对检索出的数据进行排序就要使用**order by**子句。
-
+SQL语句由子句组成,有些是可选的,有些是必需的。  
+如果想要对检索出的数据进行排序就要使用**order by**子句。  
 ```mysql
 select prod_name from products order by prod_name;
 ```
-
 ### 2.按多个列排序
-
-经常需要按不止一个列进行数据排序。例如,如果要显示雇员清单,可能希望按照姓和名排序(首先按照姓排序,每个姓中的数据再按名排序)。
-
+经常需要按不止一个列进行数据排序。例如,如果要显示雇员清单,可能希望按照姓和名排序(首先按照姓排序,每个姓中的数据再按名排序)。  
 ```mysql
 select prod_id,prod_price,prod_name from products order by prod_price,prod_name;
 ```
-
 ##　3. 指定排序方向
-
-为了降序排序,可以使用**desc**关键字。
-
+为了降序排序,可以使用**desc**关键字。  
 ```mysql
 select prod_id,prod_price,prod_name from products order by prod_price desc;
 ```
-
-注:在多个列上降序排序的时候需要对每个列都是用desc关键字。
-
-现实场景中经常将order by和limit组合使用
-
+注:在多个列上降序排序的时候需要对每个列都是用desc关键字。  
+现实场景中经常将order by和limit组合使用  
 ```mysql
 select prod_price 
 from products  
 order by prod_price desc 
 limit 5;
 ```
-
 ## 第六章 过滤数据
-
 ### 1.使用where子句
-
-通常我们会遇到指定检索条件的场景,一般将检索条件称为**过滤条件**。
-
+通常我们会遇到指定检索条件的场景,一般将检索条件称为**过滤条件**。  
 ```mysql
 select prod_name,prod_price from products where prod_price=2.50;
 ```
-
-在同时使用order by和where子句时,应该让order by位于where之后,否则会产生错误。
-
+在同时使用order by和where子句时,应该让order by位于where之后,否则会产生错误。  
 ### 2.where子句操作符
-
-操作符直接查看手册,
-
-between:在两个指定的值之间。
-
+操作符直接查看手册,between:在两个指定的值之间。
 #### 1.检查单个值
-
 ```mysql
 select prod_name,prod_price from products where prod_name='fuses';
 ```
-
 #### 2.不匹配检查
-
 ```mysql
 select vend_id,prod_name from products where vend_id <>1003;
 ```
-
-也可将上面的"<>"替换为"!="。
-
+也可将上面的"<>"替换为"!="。  
 #### 3.范围值检查
-
 ```mysql
 select prod_name,prod_price from products where prod_price between 5 and 10;
 ```
-
 #### 4.空值检查
-
 ```mysql
 select prod_name from products where prod_price is NULL;
 ```
-
 ## 第七章 数据过滤
-
 ### 1.组合where子句
-
 通过and子句或者or子句的方式来使用。
-
 #### 1.and操作符
-
 ```mysql
 select prod_id,prod_price,prod_name 
 from products 
 where vend_id=1003 and prod_price <=10; 
 ```
-
 搜索价格小于10而且id为1003的产品信息。
-
 #### 2.or操作符
-
 ```mysql
 select prod_name,prod_price from products where vend_id=1002 or vend_id-1003;
 ```
-
 #### 3.计算次序
-
-可以使用任意数目的and和or操作符,允许两者结合以进行复杂和高级的过滤。
-
+可以使用任意数目的and和or操作符,允许两者结合以进行复杂和高级的过滤。  
 ```mysql
 select prod_name,prod_price 
 from products
 where vend_id=1002 or vend_id=1003 and prod_price>=10;
 ```
-
-上面的代码将会被执行为id为1003并且价格大于10或者id为1002的任意产品,**显然and操作符的优先级要高于or**。
-
-这与我们的想法背道而驰,解决方案是使用()来明确地分组相应的操作符
-
+上面的代码将会被执行为id为1003并且价格大于10或者id为1002的任意产品,**显然and操作符的优先级要高于or**。  
+这与我们的想法背道而驰,解决方案是使用()来明确地分组相应的操作符  
 ```mysql
 select prod_name,prod_price 
 from products
 where (vend_id=1002 or vend_id=1003) and prod_price>=10;
 ```
-
 ### 2.in操作符
-
-in用来指定条件范围,in的范围在(x,y...)中。
-
+in用来指定条件范围,in的范围在(x,y...)中。  
 ```mysql
 select prod_name,prod_price 
 from products
 where vend_id in (1002,1003)
 order by prod_name;
 ```
-
-优点:
-
+优点:  
 1.代码更加清晰易懂;
-
 2.in操作符一般比or操作符清单执行更快;
-
 ### 3.not操作符
-
 not:where子句中用来否定后跟条件的关键字。
-
 ```mysql
 select prod_name,prod_price 
 from products
 where vend_id not in (1002,1003)
 order by prod_name;
 ```
-
 ## 第八章 使用通配符过滤
-
 ### 1.like操作符
-
-通配符：用来匹配值的一部分的特殊字符。
-
+通配符：用来匹配值的一部分的特殊字符。  
 **搜索模式(search pattern)** 由字面值、通配符或两者组合而成的搜索条件(例如,'%jet')。
-
 #### 1.百分号(%)通配符
-
 ```mysql
 select prod_id,prod_name 
 from products
 where prod_name like 'jet%';
 ```
-
-此例子使用了搜索模式'jet%',在执行时将检索任意以jet开头的词。
-
-注:根据MySQL的配置方式,搜索可以是区分大小写的。如果区分大小写,'jet%'与JetPack 1000将不匹配。
-
+此例子使用了搜索模式'jet%',在执行时将检索任意以jet开头的词。  
+注:根据MySQL的配置方式,搜索可以是区分大小写的。如果区分大小写,'jet%'与JetPack 1000将不匹配。  
 ```mysql
 select prod_id,prod_name 
 from products
 where prod_name like '%anvil%';
 ```
-
-搜索模式'%anvil%'将匹配任何位置包含文本anvil的值。
-
+搜索模式'%anvil%'将匹配任何位置包含文本anvil的值。  
 ```mysql
 select prod_name
 from products
 where prod_name like 's%e';
 ```
-
 **除了一个或者多个字符之外,%还能匹配0个字符**。
-
-注意:%不能匹配NULL
-
+注意:%不能匹配NULL  
 ```mysql
 select ...
 where prod_name like '%';
 ```
-
-上面的代码(可以执行,匹配所有值)也无法匹配NULL。
-
+上面的代码(可以执行,匹配所有值)也无法匹配NULL。  
 #### 2.下划线(_)通配符
-
 ```mysql
 select prod_id,prod_name
 from products
 where prod_name like '_ ton anvil';
 ```
-
-_用来匹配单个字符。
-
+_用来匹配单个字符。  
 ### 2.通配符使用技巧
-
-1.不要过度使用通配符。如果其他操作符能达到相同的目的,应该使用其他操作符。
-
-2.在确实需要使用通配符时,除非绝对有必要,否则不要把它们用在搜索模式的开始处。把通配符置于搜索模式的开始处,搜索起来是最慢的。
-
-3.注意通配符的位置,否则将会返回错误的结果。
-
+1.不要过度使用通配符。如果其他操作符能达到相同的目的,应该使用其他操作符。  
+2.在确实需要使用通配符时,除非绝对有必要,否则不要把它们用在搜索模式的开始处。把通配符置于搜索模式的开始处,搜索起来是最慢的。  
+3.注意通配符的位置,否则将会返回错误的结果。  
 ## 第九章 用正则表达式进行搜索
-
 ### 1.正则表达式介绍
-
-为什么使用正则表达式？
-
-为了应对更加复杂的过滤条件。
-
-正则表达式用来匹配文本的**特殊的串**(字符集合)。例如,从文本中提取电话号码,找到文本中所有重复的单词等等。
-
-任何语言、文本编辑器和操作系统都支持正则表达式。
-
+为什么使用正则表达式？  
+为了应对更加复杂的过滤条件。  
+正则表达式用来匹配文本的**特殊的串**(字符集合)。例如,从文本中提取电话号码,找到文本中所有重复的单词等等。  
+任何语言、文本编辑器和操作系统都支持正则表达式。  
 ### 2.使用MySQL正则表达式
-
 #### 1.基本字符匹配
-
 ```mysql
 select prod_name 
 from products
 where prod_name regexp '1000'
 order by prod_name;
 ```
-
-就像like的语句一样,他告诉MySQL:后面跟的东西为正则表达式。
-
+就像like的语句一样,他告诉MySQL:后面跟的东西为正则表达式。  
 ```mysql
 select ...
 where prod_name regexp '.000'
 ```
-
-.可以匹配任意一个字符。
-
-匹配不区分大小写,即大写和小写都匹配。如果想要区分大小写,可以使用BINARY关键字,放在regexp后面。
-
+.可以匹配任意一个字符。  
+匹配不区分大小写,即大写和小写都匹配。如果想要区分大小写,可以使用BINARY关键字,放在regexp后面。  
 ##### regexp和like的区别
-
-like匹配的是整个列
-
-regexp中是值(例如字符串)逐个匹配的功能。
-
+like匹配的是整个列  
+regexp中是值(例如字符串)逐个匹配的功能。  
 #### 2.进行or匹配
-
 ```mysql
 select prod_name
 from products
 where prod_name regexp '1000|2000'
 order by prod_name;
 ```
-
-使用|,功能和or操作符一样,多个or可以并入单个正则表达式。
-
+使用|,功能和or操作符一样,多个or可以并入单个正则表达式。  
 #### 3.匹配几个字符之一
-
 ```mysql
 select prod_name
 ...
 where prod_name regexp '[123] Ton'
 ...
 ```
-
-[123]定义一组字符,它的意思是匹配1或2或3,因此,1ton和2ton都匹配且返回。
-
+[123]定义一组字符,它的意思是匹配1或2或3,因此,1ton和2ton都匹配且返回。  
 ```mysql
 select prod_name
 from products
 where prod_name regexp '1|2|3 Ton'
 order by prod_name;
 ```
-
 #### 4.匹配范围
-
 ```mysql
 select prod_name
 from products
 where prod_name regexp '[1-5] Ton'
 order by prod_name;
 ```
-
 #### 5.匹配特殊字符
-
 ```mysql
 select vend_name
 from vendors
 where vend_name regexp '.'
 order by vend_name;
 ```
-
-上面检索返回的结果并不对,想要匹配特殊字符,必须用\\\\为前导。
-
+上面检索返回的结果并不对,想要匹配特殊字符,必须用\\\\为前导。  
 ```mysql
 select vend_name
 from vendors
 where vend_name regexp '\\.'
 order by vend_name;
 ```
-
-特殊字符包括.、|、[]以及迄今为止用过的其他字符。
-
-注意:
-
-1.为了匹配反斜杠(\\)字符本身,需要使用\\\\\\。
-
-2.\\或\\\\？多数正则表达式实现使用单个反斜杠转义特殊字符,以便能使用这些字符本身。但是MySQL要求两个反斜杠(MySQL自己解释一个,正则表达式库解释另一个)。
-
+特殊字符包括.、|、[]以及迄今为止用过的其他字符。  
+注意:  
+1.为了匹配反斜杠(\\)字符本身,需要使用\\\\\\。  
+2.\\或\\\\？多数正则表达式实现使用单个反斜杠转义特殊字符,以便能使用这些字符本身。但是MySQL要求两个反斜杠(MySQL自己解释一个,正则表达式库解释另一个)。  
 #### 6.匹配字符类
-
 建议直接观看手册
-
 #### 7.匹配多个实例
-
 | 元字符 | 说明                      |
 | ------ | ------------------------- |
 | *      | 0个或者多个匹配           |
@@ -568,10 +398,8 @@ order by prod_name;
 **字段**基本上与列的意思相同,列被称为数据库列,字段一般用在计算字段的连接上。  
 客户机与服务器的格式:许多转换和格式化的工作都可以在客户机的应用程序内完成。但是一般来说,在数据库服务器上完成这些操作比在客户机内完成要快的多,因为DBMS是设计来快速有效地完成这种处理的。  
 ### 2.拼接字段
-拼接:将值联结到一起构成单个值,MySQL中是使用concat()函数来拼接两个列。
-
-下面的例子是要生成一个表,需要在供应商的名字按照name(location)这样的格式列出供应商的位置。
-
+拼接:将值联结到一起构成单个值,MySQL中是使用concat()函数来拼接两个列。  
+下面的例子是要生成一个表,需要在供应商的名字按照name(location)这样的格式列出供应商的位置。  
 ```mysql
 select concat(vend_name,'(',vend_country,')')
 from vendors
@@ -701,11 +529,8 @@ select avg(distinct prod_price) as avg_price
 from proucts
 where vend_id=1003;
 ```
-
-上面5个函数既可以单独使用(例如sum()),也可以和distinct参数搭配使用。
-
+上面5个函数既可以单独使用(例如sum()),也可以和distinct参数搭配使用。  
 ### 3.组合聚集函数
-
 ```mysql
 select count(*) as num_tiems
 min(prod_price) as price_min
@@ -807,53 +632,34 @@ where orders.custid=customers.custid
 ## 第十五章 联结表
 ### 1.联结
 #### 1.关系表
-**外键**:某个表中的某一列,它包含另一个表的主键值,定义了两个表之间的关系。
-
-好处:
-
-1.供应商信息不重复,从而不浪费时间和空间。
-
-2.如果供应商信息变动,可以只更新vendors表中的单个记录。
-
-3.由于数据无重复,显然数据一致。
-
+**外键**:某个表中的某一列,它包含另一个表的主键值,定义了两个表之间的关系。  
+好处:  
+1.供应商信息不重复,从而不浪费时间和空间。  
+2.如果供应商信息变动,可以只更新vendors表中的单个记录。  
+3.由于数据无重复,显然数据一致。  
 #### 2.为什么使用外联结
-
-将数据分为多个表能更有效地存储,更方便的处理,并且具有更大的可伸缩性。
-
-但是代价就是检索多个列时更加复杂,所以有了联结。
-
-联结是一种机制,用来在一条select语句中关联表。
-
+将数据分为多个表能更有效地存储,更方便的处理,并且具有更大的可伸缩性。  
+但是代价就是检索多个列时更加复杂,所以有了联结。  
+联结是一种机制,用来在一条select语句中关联表。  
 ### 2.创建联结
-
 #### 1.where子句的重要性
-
 ```mysql
 select vend_name,prod_name,prod_price
 from vendors,products
 where vendors.vend_id=products.vend_id
 order by vend_name,prod_name;
 ```
-
-上面代码中需要检索的列不在同一张表中,所以from后面用,将表隔开,而在where中建立正确的联结。
-
-我们可以这样理解,实际上就是将第一个表的每一行和第二个表进行匹配。
-
+上面代码中需要检索的列不在同一张表中,所以from后面用,将表隔开,而在where中建立正确的联结。  
+我们可以这样理解,实际上就是将第一个表的每一行和第二个表进行匹配。  
 **笛卡尔积**没有联结条件的表关系返回的结果为笛卡尔积(第一个表的行数\*第二个表的行数)。
-
 #### 2.内部联结
-
-也被称作**等值联结**,基于两个表的相等测试。
-
+也被称作**等值联结**,基于两个表的相等测试。  
 ```mysql
 select vend_name,prod_name,prod_price
 from vendors inner join products
 on vendors.vend_id=products.vend_id;
 ```
-
 ### 3.联结多个表
-
 ```mysql
 select prod_name,vend_name,prod_price,quantity
 from orderitems,products,vendors
@@ -861,23 +667,16 @@ where products.vend_id=vendors.vend_id
 	and orderitems.prod_id=products.prod_id
 	and order_num=20005;
 ```
-
 联结的表越多,性能下降越快。
-
 ## 第十六章 创建高级联结
-
 ### 1.使用表别名
-
 ```mysql
 select ...
 from customers as c...
 ```
-
 ### 2.使用不同类型的联结
-
 #### 1.自联结
-
-场景:通过某生产商查询其他铜生产商产品。
+场景:通过某生产商查询其他铜生产商产品。  
 
 ```mysql
 select prod_id,prod_name
@@ -886,23 +685,14 @@ where vend_id=(select vend_id
 from products
 where prod_id='DTNTR');
 ```
-
 #### 2.自然联结
-
 内部联结
-
 #### 3.外部联结
-
 ##### 左联结left joijn
-
-检索结果保留左边表的全部数据。
-
+检索结果保留左边表的全部数据。  
 #### 右联结right join
-
-检索结果保留右边表的全部数据。
-
+检索结果保留右边表的全部数据。  
 ### 3.使用带聚集函数的联结
-
 ```mysql
 select customers.cust_name
 	customers.cust_id,
@@ -910,21 +700,13 @@ select customers.cust_name
 	from customers inner join orders on customers.cust_id=orders.cust_id
 	group by customers.cust_id;
 ```
-
 ### 4.使用联结和联结条件
-
 1.注意所使用的联结类型。一般我们使用内部联结,但使用外部联结也是有效的。
-
 2.保证正确的联结条件。
-
 3.应该总是提供正确的联结条件。
-
 4.在一个联结中包含多个表,甚至对于每个联结可以采用不同的联结类型。
-
 ## 第十七章 组合查询
-
 ### 1.组合查询
-
 为什么使用组合查询  
 1.在单个查询中从不同的表返回类似的数据。  
 2.对单个表执行多个查询,按单个查询返回数据。  
@@ -944,7 +726,6 @@ order by vend_id,prod_price;
 1.必须两条或者**两条以上**的select语句构成
 2.每个查询中必须**包括相同的列**
 3.每个**查询的列必须兼容**
-
 ## 第十八章 全文本搜索
 ## 第十九章 插入数据
 ### 1.数据插入
