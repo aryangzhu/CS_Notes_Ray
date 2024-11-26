@@ -18,74 +18,50 @@ server.port=8081;
 ```
 #### yaml
 **yml以数据作为中心,而不是以标记语言为重点**
-
-yml配置
-
+yml配置  
 ```yml
 server：
   prot: 8080
 ```
-
 ### yml基础语法
-
 #### 注意事项
-
-1.空格不能省略。
-
-2.以缩进来控制层级关系,只要是左边对齐的一列数据都是同一个层级的。
-
-3.属性和值的大小都是十分敏感的。
-
+1.空格不能省略。 
+2.以缩进来控制层级关系,只要是左边对齐的一列数据都是同一个层级的。 
+3.属性和值的大小都是十分敏感的。 
 #### 字面量[数字,布尔值,字符串]
-
-```
+```yaml
 k: v
 ```
-
 ##### 注意
-
-“”不会转义字符串里面的特殊字符,特殊字符会作为本身想表示的意思
-
+""不会转义字符串里面的特殊字符,特殊字符会作为本身想表示的意思  
 比如:name:"kuang \n shen"，输出:kuang换行shen
-
 ''单引号会转义特殊字符
-
 ###### 对象、Map(键值对)shi
-
 ```yml
 ##对象、Map格式
 k:
 	v1:
 	v2:
 ```
-
 缩进写法
-
 ```yml
 student:
 	name:qinjiang
 	age:3
 ```
-
 行内写法
-
 ```yml
 student:{name:qinjiang,age:3}
 ```
-
 #### 数组
-
-用-值表示数组中的一个元素,比如:
-
+用-值表示数组中的一个元素,比如:  
 ```yml
 pets:
 	- cat
 	- dog
 	- pig
 ```
-
-行内写法
-
+行内写法  
 ```yml
 pets:[cat,dog,pig]
 ```
@@ -332,11 +308,18 @@ spring:
 3. RedisConfig文件编写，其中最重要的就是RedisTemplate
 4. RedisUtil，用来存放我们处理缓存的常用方法
 #### RedisTemplate
-操作字符串: redisATemplate.opsForValue()
-操作Hash: redisTemplate.opsForHash()
-操作List: redisTemplate.opsForList()
-操作Set: redisTemplate.opsForSet()
-操作ZSet: redisTemplate.opsForZSet()
+```java
+//操作字符串: 
+redisATemplate.opsForValue()
+//操作Hash: 
+redisTemplate.opsForHash()
+//操作List: 
+redisTemplate.opsForList()
+//操作Set: 
+redisTemplate.opsForSet()
+//操作ZSet: 
+redisTemplate.opsForZSet()
+```
 #### RedisTemplate与StringRedisTemplate
 1. RedisTemplate是一个**泛型类**，而StringRedisTemplate不是，后者只能对键和值都为String类型的数据进行操作，而前者则可以操作任何类型
 2. 两者的数据是不共通的，StringRedisTemplate只能管理StringRedisTemplate里面的数据，RedisATemplate只能管理RedisTemplate中的数据
@@ -380,7 +363,7 @@ Redis中有原生的命令publish channel message
 ####### RedisConfig配置
 ######## 实例化RedisMessageListenerXContainer组件并注入到容器中
 核心代码
-```Java
+```java
 RedisMessageListenerContainer container=new RedisMessageListenerContainer();
 container.setConnectionFactory(connectionFactory);
 container.addMessageListener(listenerAdapter,new PatternTopic(channel));
@@ -410,12 +393,16 @@ MessageListenerAdapter listenerAdapter(ConsumerImpl consumer){
 ## SpringAop使用
 今天看了公司的项目和mall项目,发现aop的两种使用方式
 ### 针对某个包的切点
+```java
 @Pointcut("execution(public * com.macro.mall.tiny.controller.*.*(..))")
     public void webLog() {
 }  
+```
 从上面可以看出,这种方案针对的是某个包下的类来进行切面处理
 ### 针对某个注解的切点
+```java
 @Pointcut("@annotation(com.xxx.core.anno.LogOption)")
     public void logPointCut() {
 }
+```
 这种方案需要先定义一个LogOption的注解,此后所有使用这个注解的方法都会引入切面  

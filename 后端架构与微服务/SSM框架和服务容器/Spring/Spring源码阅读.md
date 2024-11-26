@@ -1,13 +1,13 @@
 之前在网上看了Spring源码,但是对于我来说即使有流程图例,即使也看过Spring揭秘,但是源码对于我来说还是云里雾里,我在github上找到了small-spring项目,个人觉得结合源码阅读非常的nice。
-# BeanFactory与BeanDefinition
+## BeanFactory与BeanDefinition
 这就是IOC中最重要的两个角色,而Spring揭秘是从如何处理对象之间的依赖这个角度去看Spring框架的,其实不论从任何角度去观察或者说深入这个框架,都会发现它的强大之处  
-# 将职责进行分离
+## 将职责进行分离
 从这一步开始开始代码就需要细细体会了    
 如果没有UML图的话,那么很快就会忘记,根据功能将方法放在了不同的地方,这么理解可能更加地清晰  
 从源码中可以看出抽象类既承担了一部分真正意义上的功能实现,同时也是抽象层次分离的重要一步  
 ![](https://raw.githubusercontent.com/aryangzhu/blogImage/master/Spring%E6%A1%86%E6%9E%B6%E9%A6%96%E6%AC%A1%E5%88%86%E5%B1%82.drawio.png)
 此后的代码将在这个框架上添砖加瓦
-# 进一步完善-创建Bean实例时自定义策略
+## 进一步完善-创建Bean实例时自定义策略
 类如果有自定义的构造方法的话,那么创建类的实例对象时就必须调用构造方法  
 由于容器创建实例实例对象时使用了动态代理,所以自然而然就有两种选择  
 1. JDK动态代理
@@ -16,21 +16,21 @@
 一般来说需要有个策略的接口,然后不同的策略由不同的类来实现,同时更合理的是要有策略的持有者即应用上下文  
 https://www.liaoxuefeng.com/wiki/1252599548343744/1281319606681634
 在这个环节中create(String name,BeanDefinition)方法持有策略接口,默认是字节码代理    
-# 进一步完善-创建Bean实例时带构造参数
+## 进一步完善-创建Bean实例时带构造参数
 
-# 进一步完善-创建Bean实例时参数的属性填充
+## 进一步完善-创建Bean实例时参数的属性填充
 
-# Resource与ResourceLoader
+## Resource与ResourceLoader
 
-# 插手容器的启动机制(Processor)和应用上下文(Context)
+## 插手容器的启动机制(Processor)和应用上下文(Context)
 这一章的重点是ApplicationContext
-# Bean实例的初始化方法和销毁方法
+## Bean实例的初始化方法和销毁方法
 
-# 感应容器(Aware)
+## 感应容器(Aware)
 
-# 单例模式/原型模式与FactoryBean
+## 单例模式/原型模式与FactoryBean
 
-# 监听器(容器关闭与刷新???)在Spring中的应用
+## 监听器(容器关闭与刷新???)在Spring中的应用
  Spring容器中监听器最先联想到的场景就是容器的刷新和关闭了,监听器其实就是观察者设计模式最常见的应用。   
  我们知道Spring的由于职责分离的设计导致UML图复杂(浅浅地吐槽一下,我在脑子里是真的记不下,可能平时不怎么用),该记还是得记,要不然面试的时候项目不行,技术学习的又不够底层, 跟人家面试官聊什么,又怎么赚到小钱钱   
  话说回来,Event、Lisenter、Multicaster和Publisher是Spring的监听器中重要的4个部分,EventObject是jdk中提供的接口,event的翻译是事件,但是我觉得将其理解为通知更加合理一点。廖雪峰老师在讲观察者模式时举了一个例子,我理解之后复现如下  
@@ -85,7 +85,7 @@ String className= actualTypeArgument.getTypeName();
 return eventClass.isAssignableFrom(event.getClass());
 ```
 不得不说,反射真的是一个非常强大的功能
-# Aop的实现
+## Aop的实现
 越是到了难啃的骨头的地方,反复的思考与实践就尤为重要,小傅哥的文章讲的非常的好,但是对于基础知识薄弱的同学,在没有了解一些概念之前,即使我们知道Spring做了大量的指责分离的工作来保证框架的扩展性,但是还是有一层似透非透的感觉
 首先来看一下Aop的公民  
 1. JoinPoint
