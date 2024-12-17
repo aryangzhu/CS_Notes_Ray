@@ -3,9 +3,9 @@ zookeepr:注册中心
 dubbo-admin:服务监控后台  
 Dubbo:jar包形式
 ## 步骤:
-1.开启zookeeper服务,启动dubbo-admin监控管理后台 
-**** 
-2.提供者提供服务  
+### 1.开启zookeeper服务,启动dubbo-admin监控管理后台 
+
+### 2.提供者提供服务  
 - 1.导入依赖  
 - 2.配置注册中心的地址，以及服务发现名，和要扫描的包  
 - 3.在想要被注册的服务上面增加一个注释@Service(注意是duboo的)     
