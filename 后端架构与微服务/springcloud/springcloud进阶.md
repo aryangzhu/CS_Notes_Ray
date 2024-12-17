@@ -8,7 +8,7 @@ nacos和eruke一样，都是来用来提供服务注册功能的微服务组件,
 ## 公司中的实际使用
 首先由于是微服务项目,所以使用Nacos来作为配置中心
 ### 配置模板
-```bash
+```properties
 server.port=35000
 spring.application.name=system
 ACTIVE=${spring.profiles.active}

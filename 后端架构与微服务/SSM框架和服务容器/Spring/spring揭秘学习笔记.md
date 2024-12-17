@@ -128,13 +128,15 @@ web场景下才有
 ########## 静态工厂方法
 为什么用工厂？
 有时候需要依赖第三方的库
-\<bean id="foo">
+```xml
+<bean id="foo">
     <property name="barInterface">
         <ref bean="bar">
     </property> 
-\</bean>
+</bean>
 
-\<bean id="bar" class="....Factory" factory-method="getInstance">\</bean>
+<bean id="bar" class="....Factory" factory-method="getInstance">\</bean>
+```
 ```java
 public class StaticFatoryBean{
     public static  BarInterface getInstance(){
@@ -143,9 +145,10 @@ public class StaticFatoryBean{
 }
 ```
 ########## 非静态工厂方法(instance Factory Mehod)
-\<bean id="bar" factory-bean="barFactory" factory-method="getInstance">
-\</bean>
-
+```xml
+<bean id="bar" factory-bean="barFactory" factory-method="getInstance">
+</bean>
+```
 非静态是以factory-bean属性来指定工厂方法所在的工厂类实例。
 ########## FactoryBean
 不要和容器名称BeanFactory搞混，FactoryBewan是Spring容器提供的可以扩展容器实例化的接口。
@@ -158,10 +161,10 @@ public class NextDateFactoryBean {
     }
 }
 ```
-
-\<bean id="nextDate" class="NextDateFactoryBean">
-\</bean>
-
+```xml
+<bean id="nextDate" class="NextDateFactoryBean">
+</bean>
+```
 可以和之前的静态方法和非静态方法做个对比
 ######## 偷梁换柱之法(修改默认配置)
 有的时候声明了protype，但是当从另一个类中getBean()得到的仍然是singleton。

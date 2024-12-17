@@ -1,10 +1,10 @@
 ## 出现的问题
 SpringCloud提供了一个完整的微服务生态下的解决方案
 在使用微服务之后，会面临以下四个方面的问题:
-1.如何发现服务?(网关)
-2.服务之间如何通信？
-3.服务如何治理？
-4.服务发生问题怎么办？
+1. 如何发现服务?(网关)
+2. 服务之间如何通信？
+3. 服务如何治理？
+4. 服务发生问题怎么办？
 ## Rest服务通信
 主要是服务之间进行通信，最常见的就是consumer和provider服务。通过学习视频，我觉得下面这端代码很清晰地展示了Rest服务通信。
 ```java
@@ -27,8 +27,8 @@ public class ConsumerController{
 ```
 ## Eureka服务注册中心
 将服务都注册到分布式集群上，就像zookeeper一样，下面来看看步骤  
-1.导入依赖  
-2.配置application.yml   
+1. 导入依赖  
+2. 配置application.yml   
 ```yaml
 eureka:
   instance:
@@ -45,8 +45,8 @@ eureka:
       defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7003.com:7003/eureka/
 
 ```
-3.使用注解@EnableEurekaServer开启Eureka  
-4.生产者服务注册到中心
+3. 使用注解@EnableEurekaServer开启Eureka  
+4. 生产者服务注册到中心
 ```yaml
 ## Eureka 配置，服务注册到哪里
 eureka:
@@ -64,11 +64,11 @@ info:
 ## Ribbon负载均衡
 负载均衡是一个概念，它的实现可以是想Lvs这种基于client端或者消费者这一级的，也可以是从调用中心到服务这一层的Nigix。  
 下面来看一下如何配置Ribbon   
-1.导入依赖  
-2.application.yml  
-3.配置config  
+1. 导入依赖  
+2. application.yml  
+3. 配置config  
 使用注解@LoadBalanced  
-4.主启动类添加开启Ribbon
+4. 主启动类添加开启Ribbon
 ## Feign
 Feign是对Ribbon做了一层封装，更加符合接口编程的风格。
 ```java
@@ -76,7 +76,7 @@ Feign是对Ribbon做了一层封装，更加符合接口编程的风格。
 public class DeptConsumerController {
 
     @Autowired
-    private DeptClientService deptClientService = null;
+    private DeptClientService deptClientService;
 
     @RequestMapping("/consumer/add")
     public boolean add(Dept dept){
@@ -95,8 +95,8 @@ public class DeptConsumerController {
 ## Hystrix服务熔断、降级和监视
 #### 服务熔断
 首先需要明确的是，服务熔断是在服务端，当一个服务出现问题，链路断掉，断电、网络问题，这个时候就需要有一手后备的解决方案，服务熔断为此而生。   
-1.导入依赖  
-2.配置文件中编写相关配置项  
+1. 导入依赖  
+2. 配置文件中编写相关配置项  
 ```yml
 ## Eureka 配置，服务注册到哪里
 eureka:
@@ -113,7 +113,7 @@ info:
 
 ```
 配置中基本没有什么变化，当然你也可以根据需求来更改  
-3.编写fallbackMehod兜底
+3. 编写fallbackMehod兜底
 ```java
    @GetMapping("/dept/get/{id}")
     @HystrixCommand(fallbackMethod = "hystrixGet") // 当出现问题，就会跳到备选方法
@@ -133,7 +133,7 @@ info:
                 .setDb_source("no this database in Mysql");
     }
 ```
-4.开启Hystrix熔断功能
+4. 开启Hystrix熔断功能
 @EnableCircuitBreaker // 添加对熔断的支持
 #### 服务降级
 当我们的某个服务在集群上被访问的过多时，可以将其他服务关闭，来节省资源给并发访问高的服务给以特殊照顾，这就是服务降级(降的是被声明关闭的那个服务)。  
@@ -197,10 +197,10 @@ public class DeptClientServiceFallbackFactory implements FallbackFactory {
 }
 ```
 记得要开启feign的场景。 
-#### 监视
+#### Dashboard服务监视
 我们需要可视化的工具来帮助我们查看服务是否出现问题以及并发的访问量如何。
-1. 导入依赖
-2. 编写配置
+1.  导入依赖
+2.  编写配置
 ```yml
 hystrix:
   dashboard:
@@ -219,7 +219,7 @@ hystrix:
 ```
 4. 访问路径  
   localhost:8001/hystrix/actuator/hystrix.stream
-  ## zuul网关
+## zuul网关
 1. 导入依赖
 eureka与zuul整合,即注册中心和网关整合
 2. application.yml配置
@@ -260,7 +260,7 @@ public class ZuulApplication_9223 {
 1. 首先需要github新建仓库pull到本地
 2. 然后编写相关配置，push到远程仓库
 3. 在自己的服务中编写
-   1.  编写bootstrap.yml文件(系统级别文件)
+   - 3.1 编写bootstrap.yml文件(系统级别文件)
 ```yml
   spring:
   cloud:
@@ -270,7 +270,7 @@ public class ZuulApplication_9223 {
       profile: dev
       uri: http://localhost:3344/ ## 服务器的地址
 ```
-   2. 编写applcation.yml文件
+- 3.2 编写applcation.yml文件   
 ```yml
   ## 用户级别的配置
   spring:

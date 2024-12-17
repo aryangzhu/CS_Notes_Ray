@@ -34,9 +34,11 @@ SpringBoot的优势可以直接看官网spring.io来进行查看。
 ##### 修改默认版本号  
 查看spring-boot-dependencies里面规定当前依赖的版本用的 key。
 在当前项目里面重写配置
+```xml
     <properties>
         <mysql.version>5.1.43</mysql.version>
     </properties>  
+```
 #### 自动配置  
 ##### 配置Tomcat  
 ##### 自动配好SpringMVC   
@@ -50,9 +52,10 @@ SpringBoot的优势可以直接看官网spring.io来进行查看。
 MyConfiguration myconfiguration=run.getBean(MyConfiguration);
 就会得到一个代理对象,后面无论调用多少次来说都会这个Bean实例。  
 false则会获取一个普通的对象。  
-##### @Bean @Component @Service @Controller  
-##### @ComponentScan @Import  
-@ComponentScan指定要扫描的包,将其添加到容器中???  
+##### @Bean/@Component/@Service/@Controller  
+##### @ComponentScan/@Import  
+@ComponentScan  
+**指定要扫描的包**,将其添加到容器中???  
 @Import(User.class)  
 将指定的类在容器中添加、默认组件的名字就是全类名。  
 ##### @Conditional  
@@ -78,9 +81,9 @@ factories文件中的配置类，但是具体生不生效根据条件装配。
 #### 按需开启自动配置项
 @ConditionalOnClass(User.class)
 #### 修改默认配置
-我们有两种方式来修改  
-1.自定义Bean  
-2.直接修改配置文件  @EnableConfigurationProperties(xxxProperties.class)中的属性值会发生更改。
+有**两种方式来修改**  
+1. 自定义Bean  
+2. 直接修改配置文件  @EnableConfigurationProperties(xxxProperties.class)中的属性值会发生更改。
 #### 最佳实践
 1. 自定义一个starter,然后从其他项目中引入依赖
 2. 自定义一个包，在项目启动时将其注入到容器中

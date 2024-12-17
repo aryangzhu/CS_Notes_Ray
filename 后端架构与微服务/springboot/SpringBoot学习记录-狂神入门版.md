@@ -5,7 +5,7 @@
 ### 配置文件
 作用:修改SpringBoot自动配置的默认值,因为SpringBoot在底层给我们配置好了。
 例如
-```
+```properties
 server.port=8081;
 ```
 ### yml描述
@@ -43,25 +43,26 @@ k:
 	v1:
 	v2:
 ```
-缩进写法
+1. 缩进写法
 ```yml
 student:
 	name:qinjiang
 	age:3
 ```
-行内写法
+2. 行内写法
 ```yml
 student:{name:qinjiang,age:3}
 ```
 #### 数组
 用-值表示数组中的一个元素,比如:  
+1. 缩进写法
 ```yml
 pets:
 	- cat
 	- dog
 	- pig
 ```
-行内写法  
+2. 行内写法  
 ```yml
 pets:[cat,dog,pig]
 ```
@@ -148,15 +149,15 @@ protected void configure(AuthenticationManagerBuilder auth)throws Exception{
 <head>
 ```
 ### 整合Shiro
-1.导入依赖
-2.配置文件
-3.HelloWorld
+1. 导入依赖
+2. 配置文件
+3. HelloWorld
 #### Shiro中经常使用的三个类
-######## Subject
+###### Subject
 我们正在进行的认证和授权的对象,通过subject.getPrinpal()获取。
-######## SubjectManager
+###### SubjectManager
 安全管理器,所有与安全有关的操作都会与SecruityManager,与Subject的所有交互都会委托给SecruityManager;可以把Subject认为是一个**门面(???)**;
-######## Realm
+###### Realm
 真正连接数据库并进行认证和授权的类。
 #### 常用API
 Subject currentUser=SecurityUtils.getSubject();  
