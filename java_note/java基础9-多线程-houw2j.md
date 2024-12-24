@@ -1,10 +1,10 @@
-### day01
+## day01
 
 这里是按照how2j的知识点来的，先建立起一个框架-即比较重点的知识点
 
-#### 启动一个线程
+### 启动一个线程
 
-##### 继承线程类
+#### 继承线程类
 很简单就是extends关键字，同时我们还需要重写run()方法,最后使用start()方法
 下面的示例非常有用
 
@@ -60,14 +60,14 @@ public static void main(String[] args){
 }
 ```
 上面代码中常用的几个方法，首先就是file.isFile()和file.isDerectory()方法，用于判断是否为文件夹。其次就是file.getName().endswith()方法，这里让我想起了stream管道流处理数据。
-##### 实现Runnable接口
+#### 实现Runnable接口
 启动的时候，首先创建一个对象，然后再根据对象创建一个线程，并进行启动
 
 ```java
 Battle battle1=new Battle(gareen,teemo);
 new Thread(battle).start();
 ```
-##### 匿名类
+#### 匿名类
 继承Thread,重写run方法，直接在run方法中写业务代码
 匿名类的一个好处是可以很方便访问外部的局部变量
 
@@ -92,7 +92,7 @@ Thread t2=new Thread(){
 t2.start();
 ```
 
-### day02
+## day02
 
 **常用API**
 sleep-当前线程休眠
@@ -101,7 +101,7 @@ setPriority-设置线程优先级
 yield-临时暂停
 setDaemon-守护线程
 
-##### 当前线程暂停
+#### 当前线程暂停
 
 有一点需要注意的是当前线程sleep的时候有可能被停止，这时就会抛出InterrunptedException
 
@@ -123,7 +123,7 @@ public static main(String[] args){
     t1.start();
 }
 ```
-##### 加入到当前线程中
+#### 加入到当前线程中
 这一块儿how2j的示例部分我个人认为是存在问题的。
 
 ```java
@@ -177,7 +177,7 @@ public void main(String[] args){
 ```
 上面的代码有问题，join()阻塞，从书上可以看到是等待终止指定的线程。
 
-##### 设置线程优先级
+#### 设置线程优先级
 
 ```java
 	Thread t1= new Thread(){
@@ -202,7 +202,7 @@ public void main(String[] args){
 ```
 虽然这里只是简单的进行应用，如果想成为高级Java工程师的话，那么这里就是我们必经之路。
 
-##### 临时暂停
+#### 临时暂停
 
 ```java
 public static void main(String[] args){
@@ -262,9 +262,9 @@ while(true){
 这里有两个需要注意的api，一个是**Charatcter.isLetterOrDigit()**用来判断是否为字母或者数字
 还有就是我们设置守护线程**Thread.setDemon()**;
 
-### day03
+## day03
 
-#### 同步问题
+### 同步问题
 
 使用n个线程来增加英雄的血量，再使用n个线程来减少英雄的血量
 
@@ -316,7 +316,7 @@ for(Thread t:addThreads){
     }
 }
 ```
-#### 原因
+### 原因
 
 上面的代码很明显容易出问题，Hero的对象在这种情况被并发访问的话肯定是要出大问题的
 
@@ -418,13 +418,13 @@ Thread t=new Thread(){
 ```
 **方法之前添加synchronized**
 
-#### 线程安全的类
+### 线程安全的类
 
 如果使用synchronized来修饰类的话那么该类就叫做线程安全的类,同一时间，只能由一个线程绑定一个类的实例去修改数据。
 我觉得还是线程和对象实例进行了绑定，或者说是和代码块中的局部变量进行了绑定，同一时间，只能有一个线程来进行访问和修改。
 比如StringBuffer就是使用synchronized来修饰的
 
-#### 区别
+### 区别
 
 1.HashMap和HashTable的区别
 2.StringBuffer和StringBuilder的区别
@@ -432,9 +432,9 @@ Thread t=new Thread(){
 **4.把非线程安全的集合转换为线程安全**
 List<Integer> list2=Collections.synchronized(list1);
 
-### day04
+## day04
 
-#### 死锁
+### 死锁
 
 当出现竞态条件时，那么自然而然的就会发生死锁，两个线程互相等待，非常容易理解
 
@@ -464,7 +464,7 @@ public void run(){
 }
 }
 ```
-#### 如何让3个线程彼此形成死锁
+### 如何让3个线程彼此形成死锁
 
 ```java
 synchronized(a){
@@ -486,7 +486,7 @@ synchronized(c){
     }
 }
 ```
-#### 线程之间的交互
+### 线程之间的交互
 
 如果现在的场景是
 首先，需要清楚什么是好的设计方式和坏的设计方式，坏的解决方案就是使用while()来判断当前英雄的血量是否见底。很容易理解，但是这样处理的话CPU的负载就比较大，很明显不符合我们的设计思路。
@@ -504,7 +504,7 @@ Thread t1=new Thread(){
     }
 }
 ```
-#### 使用wait和notify进行线程交互
+### 使用wait和notify进行线程交互
 
 this.wait()表示让占有this对象的线程等待，并临时释放占有
 this.wait()会让减血线程临时释放this的占有。这样加血线程，就有机会进入recover()加血方法了。
@@ -620,11 +620,11 @@ public class ConsumerThread extends Thread{
 }
 ```
 
-### day05
+## day05
 
-#### 线程池
+### 线程池
 
-#### 设计线程思路
+### 设计线程思路
 ![选区_256.png](https://i.loli.net/2021/07/01/y9i52B4wFDsPfOJ.png)
 从上图中可以得知，计算机内存中存在一个任务队列。各个线程会根据一定的逻辑和任务进行绑定，然后再次等待下一个任务。
 之前的生产者消费者模型:
@@ -693,7 +693,7 @@ class TaskConusmeThread extends Thread{
 上面的add()方法就是用来添加任务的，从代码中可以看到传入的参数是Runnable类型的，所以说明任务的类型可以像这样设计，不得不说这里的干货非常的足。
 从run()方法中可以得知如果说任务队列中有任务，那么就去执行任务；如果队列为空，那么就需要wait()
 
-#### Lock对象
+### Lock对象
 
-#### 原子访问
+### 原子访问
 

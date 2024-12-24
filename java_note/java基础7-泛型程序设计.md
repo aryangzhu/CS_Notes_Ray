@@ -1,7 +1,7 @@
 在没有泛型之前,必须使用Object来编写适用多种类型的代码。泛型类和泛型方法有**类型参数**,使得它们可以准确描述**特定类型实例化**时会发生什么。  
-# 为什么要使用泛型程序设计
+## 为什么要使用泛型程序设计
 **泛型程序设计(generic programming)**意味着编写的代码可以被多种不同的类型的对象重用。例如,收集File类型和String类型对象就可以设计为ArrayList\<T>。  
-## 1.类型参数的好处
+### 1.类型参数的好处
 在没有泛型之前,实现ArrayList的时候需要在内部**维护**一个Object类型  
 引用的数组,这种设计很明显是利用了任何类都继承了**Object**类。 
 ```java
@@ -22,23 +22,16 @@ public class ArrayList{
 ```java
 String filename=(String)list.get(0);
 ```
-
 2.没有错误检查,可以向数组列表中添加任意类型的对象:
-
 ```java
 files.add(new File("..."));
 ```
-
-但是,如果将get的结果进行强制类型转换为String类型,就会产生一个错误。
-
+但是,如果将get的结果进行强制类型转换为String类型,就会产生一个错误。 
 泛型提供了一个更好的解决方案:**类型参数(type paramater)**。ArrayList类有一个类型用来**指示元素**的类型:
-
 ```java
 ArrayList<String> files=new ArrayList<String>();
 ```
-
 java9中对于匿名子类可以使用菱形语法:
-
 ```java
 ArrayList<String> passwords=new ArrayList<>(){
  	public String get(int n){
@@ -46,28 +39,22 @@ ArrayList<String> passwords=new ArrayList<>(){
     }   
 }
 ```
-
 编译器也会利用这个类型信息,调用get的时候,**不需要进行强制类型转换**。**编译器**知道返回的类型为String,而不是Object：
-
 ```java
 String filename=files.get(0);
 ```
-
 **编译器还会进行检查,防止你插入错误类型的对象**,例如,以下语句:
-
 ```java
 files.add(new File("..."));//can only add Sting objects to an ArrayList<String>
 ```
-
 上面的错误是无法通过编译的。不过,出现**编译错误要比运行时出现类的强制类型转换异常好得多**。
-
-## 2.泛型程序员
+### 2.泛型程序员
 
 使用泛型类很简单(比较经典的是像ArrayList这样的集合),但是混合使用不同的类型时或者要对类型参数一无所知的遗留代码交互时,你可能看到令人困惑的错误消息,这个时候你需要对Java泛型有足够的了解,才能系统地解决问题。
 
 应用程序员很可能不会编写太多的泛型代码,因为JDK的编写人员已经尽了自己最大的努力。学习这些知识可以更好地帮助我们来排查错误。
 
-# 定义简单泛型类
+## 定义简单泛型类
 
 泛型类就是含多个**类型变量**的类。下面是示例代码
 
@@ -126,7 +113,7 @@ String first=(String)pair.getFirst();
 
 
 
-# 泛型方法
+## 泛型方法
 
 定义一个带有**类型参数**的方法:
 
@@ -158,7 +145,7 @@ double middle=ArrayAlg.getMiddle(3.14,1729,0);
 
 错误消息将以晦涩的方式指出:解释这个代码有两种方式,且都是合法的。简单的说,编译器将参数自动装箱为1个Double类型对象和2个Integer对象,然后寻找共同的超类型。有两个,一个是Number,一个是Comparable接口。然后,编译器不知道选取哪种类型。解决方法是将所有的参数都写为double值。
 
-# 类型变量的限定
+## 类型变量的限定
 
 有时,类或方法需要对类型变量加以约束。下面的代码用来计算数组中的最小元素:
 
@@ -202,11 +189,11 @@ T extends Comparable & Serializable
 
 Java继承体系中,可以根据需要拥有多个接口超类型,但**最多有一个限定可以是类**，而且必须是第一个。
 
-# 泛型代码和虚拟机
+## 泛型代码和虚拟机
 
 **虚拟机中没有泛型类型对象-所有对象都属于普通类**。在泛型实现的早期版本中,甚至能够将使用泛型的程序编译为在1.0虚拟机上运行的类文件。
 
-## 类型擦除
+### 类型擦除
 
 ​	无论何时定义一个泛型类型,都会自动提供一个相应的**原始类型(raw type)**。这个原始类型的名字就是去掉类型参数后的泛型类型名。类型变量会被**擦除(erased)**,并替换为其**限定类型**(或者,对于无限定的变量则替换为Object)。
 
@@ -276,7 +263,7 @@ public static Interval implements Serializable{
 
 如果限定时将Serializable接口放在前面,那么原始类型就会用Serializable接口替换T,而编译器在必要时要向Comparable插入强制类型转换。为了提高效率,应该将**标签接口(即没有方法的接口)**放在限定列表的末尾。
 
-## 转换泛型表达式
+### 转换泛型表达式
 
 编写一个泛型方法调用时,如果擦除了返回类型,编译器会插入强制类型转换。例如:
 
@@ -299,7 +286,7 @@ Employee buddy=buddies.getFirst();
 
 也会在结果字节码中插入强制类型转换。
 
-## 转换泛型方法
+### 转换泛型方法
 
 类型擦除也会出现在泛型方法中。
 
@@ -397,7 +384,7 @@ java中不允许两个方法有相同的类型参数。但是,**会由参数类�
 
 4.为保持类型安全性,必要时会插入强制类型转换。
 
-## 调用遗留代码
+### 调用遗留代码
 
 可以使用**注解**(annotation)来让警告消失,如下:
 
@@ -406,15 +393,15 @@ java中不允许两个方法有相同的类型参数。但是,**会由参数类�
 Dictionary<Integer,Components> labelTable=slider.getLabelTable();
 ```
 
-# 限制与局限性
+## 限制与局限性
 
 大多数限制都是由类型擦除引起的。
 
-## 1.不能用基本类型
+### 1.不能用基本类型
 
 例如,没有Pair\<double>,因为擦除之后类型变量变为Oject类型,而Object不能存储double值。
 
-## 2.运行时类型查询只适用于原始类型
+### 2.运行时类型查询只适用于原始类型
 
 **虚拟机中的对象总有一个特定的非泛型类型**。因此,所有的类型查询只产生原始类型。例如,
 
@@ -436,7 +423,7 @@ if(stringPair.getClass()==employeePair.getClass())
 
 返回的结果是true,两次调用的结果都返回Pair.clss。
 
-## 3.不能创建参数类型的数组
+### 3.不能创建参数类型的数组
 
 不能实例化参数化类型的数组,例如:
 
@@ -454,7 +441,7 @@ Object[] objarray=table;
 
 objarray[0]="Hello"; //ERROR
 
-## 4.Varargs警告
+### 4.Varargs警告
 
 场景:向参数可变的方法传递一个泛型类型的实例。
 
@@ -479,7 +466,7 @@ addAll(table,pair1,pair2);
 
 为了调用这个方法,Java虚拟机必须建立一个Pair\<String>数组,这就违反了前面的规则。
 
-## 5.不能实例化类型变量
+### 5.不能实例化类型变量
 
 不能使用类似new T(...)的表达式。
 
@@ -526,27 +513,27 @@ Pair<String> p=Pair.makePair(String.class);
 
 String.class是一个Class\<String>的实例(事实上,它是唯一的实例)。因此,makePair方法能够推断出所建立的对组(pair)的实例。
 
-## 6.不能构造泛型数组
+### 6.不能构造泛型数组
 
 擦除之后可能在类型转换出现ClassCastException。
 
-## 7.泛型类的静态上下文中类型变量无效
+### 7.泛型类的静态上下文中类型变量无效
 
 不能在静态字段或方法中引用类型变量。
 
-## 8.不能抛出或捕获泛型类的实例
+### 8.不能抛出或捕获泛型类的实例
 
 既不能拼抛出也不能捕获泛型类的对象,泛型类扩展Throwable甚至都是不合法的。
 
-## 9.可以取消对检查型异常的检查
+### 9.可以取消对检查型异常的检查
 
 
 
-## 10.注意擦除后的冲突
+### 10.注意擦除后的冲突
 
 这里需要注意与Object类的方法发生冲突。
 
-# 泛型类型的继承规则
+## 泛型类型的继承规则
 
 下面的代码将不能编译:
 
@@ -582,9 +569,9 @@ rawBuddies.setFirst(new File("...")); //only a complie-time warning
 
 **泛型类可以扩展或者实现其他的泛型类**。例如,ArrayList\<T>类实现了List接口。这意味着,一个ArrayList\<Manager>可以转换为一个List\<Manager>。
 
-# 通配符
+## 通配符
 
-## 通配符概念
+### 通配符概念
 
 通配符类型中,允许参数发生变化。例如,通配符类型
 
@@ -633,7 +620,7 @@ void setFirst(? extends Employee)
 
 **这就是引入有限定的通配符的关键之处**。到这里,已经有了安全的访问器方法和不安全的更改器方法。
 
-## 通配符的超类限定
+### 通配符的超类限定
 
 通配符限定与类型变量限定十分类似,但是,还有一个附加的能力,即可以指定一个**类型限定**(supertype bound),如下:
 
@@ -698,7 +685,7 @@ int compareTo(? super T)
 
 作为库程序员,你有必要慢下来仔细理解其中的逻辑,但是工作中只需要了解即可。
 
-## 无限定通配符
+### 无限定通配符
 
 形如Pair<?>
 
@@ -708,7 +695,7 @@ void setFirst(?)
 
 getFirst的返回值只能赋给一个**Object**。setFirst方法不能被调用,**甚至不能用Object**调用。Pair<?>和Pair本质的不同在于:**可以用任意Object对象调用原始Piar类的setFirst方法**。
 
-## 通配符捕获
+### 通配符捕获
 
 我们来看一个例子,用一个方法来交换对组的元素:
 
@@ -744,7 +731,7 @@ swapHelper方法的参数T**捕获通配符**。它不知道通配符指示哪�
 
 反射允许你在运行时分析任意对象。
 
-## 泛型Class类
+### 泛型Class类
 
 现在,Class类是泛型的。例如,**String.class实际上是一个Class\<String>类的对象**(事实上,这是唯一的对象)。
 
@@ -767,39 +754,39 @@ newInstance方法返回这个类的一个实例,由无参数构造器获得。**
 
 getConstructor和getdeclaredConstructor方法返回一个Constructor\<T>对象。Constructor类也已经变成泛型,从而使newInstance方法有一个正确的返回类型。
 
-## 常用API
+### 常用API
 
-### java.lang.Class\<T>
+#### java.lang.Class\<T>
 
-#### T newInstance
+##### T newInstance
 
 返回无参数构造器构造的一个新实例。
 
-#### T cast(Object obj)
+##### T cast(Object obj)
 
 如果obj为null或有可能转换为类型T,则返回obj;否则抛出一个BadCastException异常。
 
-#### T[] getEnumConstants()
+##### T[] getEnumConstants()
 
 如果T是枚举类型,则返回所有数组值组成的数组,范泽返回null。
 
-#### Class\<? super T> getSuperClass()
+##### Class\<? super T> getSuperClass()
 
 返回这个类的超类。如果T是一个类或Object类,则返回null。
 
-#### Constructor\<T> getConstructor(Class paramaterTypes)
+##### Constructor\<T> getConstructor(Class paramaterTypes)
 
-#### Constructor\<T> getDeclaredConstructor(Class paramaterTypes)
+##### Constructor\<T> getDeclaredConstructor(Class paramaterTypes)
 
 获得公共构造器,或者有给定参数类型的构造器。
 
-### java.lang.reflect.Constructor\<T>
+#### java.lang.reflect.Constructor\<T>
 
-#### T newInstance(Object...paramaters)
+##### T newInstance(Object...paramaters)
 
 返回用指定参数构造的新实例。
 
-## 使用Class\<T>参数进行类型匹配
+### 使用Class\<T>参数进行类型匹配
 
 匹配泛型方法中Class\<T>参数的类型变量有时会很有用。
 
@@ -817,7 +804,7 @@ makePair(Employee.class)
 
 Employee.class将是一个Class\<Employee>类型的对象。makePair方法的类型参数T同Employee匹配,编译器可以推断出这个方法返回一个Pair\<Employee>。
 
-## 虚拟机中的泛型类型参数
+### 虚拟机中的泛型类型参数
 
 Java泛型的突出特性之一就是在**虚拟机中擦除泛型类型**。但是,擦除的类好像仍然会保存原先泛型的微弱记忆。例如,原始的Pair类知道它源于泛型类Pair\<T>,尽管一个Pair类型的对象无法区分它是构造为Pair\<String>还是Pair\<Employee>.
 
@@ -907,7 +894,7 @@ public class GenericReflectionTest{
 }
 ```
 
-## 类型字面量
+### 类型字面量
 
 先来看例子,在一种持久存储机制中,你可能希望用户指定一种方法来保存某个特定类的对象。但是,既然ArrayList\<Integer>和ArrayList\<Double>都会被擦除为同一个原始类类型ArrayList,如何让它们具有不同的动作呢?
 
@@ -938,67 +925,67 @@ class TypeLiteral{
 
 **CDI和Guice等注入框架(Injection framework)**就是使用类型字面量来控制泛型类型的注入。
 
-### 常用API
+#### 常用API
 
-#### java.lang.Class\<T>
+##### java.lang.Class\<T>
 
-##### TypeVarialbe[] getTypeParameters()
+###### TypeVarialbe[] getTypeParameters()
 
 如果这个类型被声明为泛型类型,则获得泛型类型变量,否则获得一个长度为0的数组。
 
-##### Type getGenericSuperClass()
+###### Type getGenericSuperClass()
 
 获得这个类型所声明超类的泛型类型;如果这个类型是Object或者不是类类型(class type),则返回null。
 
-##### Type[] getGenericInterfaces()
+###### Type[] getGenericInterfaces()
 
 获得这个类型所声明接口的泛型类型(按照声明的次序),否则,如果这个类型没有实现接口,则返回长度为0的数组。
 
-#### java.lang.reflect.Method
+##### java.lang.reflect.Method
 
-##### TypeVariable[] getTypeParameters
+###### TypeVariable[] getTypeParameters
 
 如果这个方法被声明为一个泛型方法,则获得泛型类型变量,否则返回长度为0数组。
 
-##### Type getGenericReturnType()
+###### Type getGenericReturnType()
 
 获得这个方法声明的泛型返回类型。
 
-##### Type[] getGenericParameterTypes()
+###### Type[] getGenericParameterTypes()
 
 获得这个方法声明的泛型参数类型。如果这个方法没有参数,返回长度为0的数组。
 
-#### java.lang.reflect.TypeVariable
+##### java.lang.reflect.TypeVariable
 
-##### String getName()
+###### String getName()
 
 获得这个类型变量的名字。
 
-##### Type[] getBounds()
+###### Type[] getBounds()
 
 获得这个类型变量的子类限定,否则,如果该变量无限定,则返回长度为0的数组。
 
-#### java.lang.reflect.WildcardType
+##### java.lang.reflect.WildcardType
 
-##### Type[] getUpperBounds()
+###### Type[] getUpperBounds()
 
 获得这个变量的子类(extends)限定,否则,如果没有子类限定,则返回长度为0的数组。
 
-##### Type[] getLowerBounds()
+###### Type[] getLowerBounds()
 
 获得这个类的超类限定(super),如果没有则返回长度为0的数组。
 
-#### java.lang.reflect.ParameterizedType
+##### java.lang.reflect.ParameterizedType
 
-##### Type getRawType()
+###### Type getRawType()
 
 获得这个参数话类型的原始类型。
 
-##### Type[] getActualTypeArguments()
+###### Type[] getActualTypeArguments()
 
 获得这个参数话类型声明的类型参数。
 
-##### Type getOwnerType()
+###### Type getOwnerType()
 
 如果是内部类型,则返回其外部类类型;如果是一个顶级类型,则返回null。
 
@@ -1006,8 +993,8 @@ Type getOwnerType()
 
 如果是内部类型,则返回其外部类型;如果是一个顶级类型,则返回null。
 
-#### java.lang.reflect.GenericArrayType
+##### java.lang.reflect.GenericArrayType
 
-##### Type getGenericComponent()
+###### Type getGenericComponent()
 
 获得这个数组类型声明的泛型元素类型。

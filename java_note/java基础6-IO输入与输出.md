@@ -1,7 +1,7 @@
-# 输入/输出流
+## 输入/输出流
 可以从**其中**(输入/输出流)读入一个字节序列的对象称为输入流,而可以向其中写入一个字节序列的称为输出流。这些字节序列的来源和目的地可以是文件、网络连接甚至是内存块。**抽象类InputStream和OutputStream**流构成了输入/输出的基础。  
 因为面向字节的流不好处理以Unicode(每个字符使用了多个字节来表示)为单位的存储形式，所以Java体系中专门有来处理Unicode字符的类层次结构,即**从Reader和Writer抽象类继承而来**。这些类的读入和写出操作都是基于**两字节的Char值**(即Unicode码元)。  
-## 读写字节
+### 读写字节
 InputStream类中有一个抽象方法
 ```java
 abstract int read()
@@ -20,44 +20,44 @@ if(readAvailable>0){
 ```
 完成输入/输出之后,**应当关闭流(通过close方法),避免占用有限的系统资源。同时输出流在关闭时会刷新缓冲区:**所有临时被置于缓冲区以便后面用更大的包来传递的字节会在关闭输出流时被送出**。特别是**不关闭文件的话,那么写出字节的最后一个包可能永远也得不到输出**。当然还可以用flush方法来人为地冲刷这些输出。  
 原生的read和write方法很少用,因为程序员对于数字、字符串和对象更加感兴趣(用的多)。  
-## 常用API
-#### system.getProperty()
+### 常用API
+##### system.getProperty()
 获得当前路径。
-### java.io.InputStream
-#### abstract int read()
+#### java.io.InputStream
+##### abstract int read()
 上面解释过
-#### int read(byte[] b)
+##### int read(byte[] b)
 读入一个字节数组,并返回实际读入的字节数,或者在碰到输入流的结尾时返回-1。  
 int read(byte[] b,int off,int len)  
-#### int readNBytes(byte[] b,int off,int len)
+##### int readNBytes(byte[] b,int off,int len)
 如果未阻塞(read)的话,则读入由len指定数量的字节,或者阻塞至所有的值都被读入。读入的值将于b中off开始的位置,返回实际读入的字节数,结尾返回-1。  
-#### byte[] readAllBytes()  
+##### byte[] readAllBytes()  
 产生一个数组,包含可以从当前流中读入的所有字节。
-#### long transferTo(OutputStream out)  
+##### long transferTo(OutputStream out)  
 将当前输入流中的所有字节传送到给定的输出流,返回传递的字节数。这两个流都不应处于关闭状态。 
-#### long skip(long n)
+##### long skip(long n)
 在输入流中跳过n个字节,返回实际跳过的字节数(遇到文件末尾可能小于n)
-#### int avialable()   
+##### int avialable()   
 返回不阻塞情况下可获取的字节数。
-#### void close()  
+##### void close()  
 关闭流
-#### void mark(int readlimit)  
+##### void mark(int readlimit)  
 在输入流的**当前位置**打一个标记(并非所有的流都支持打标记)。如果从输入流中已经读入的字节多于readlimit个,则允许忽略这个标记。  
-#### void reset()  
+##### void reset()  
 返回到最后一个标记,随后重新调用read读入这些字节。如果没有标记则不重置。   
-#### boolean markSupported()  
+##### boolean markSupported()  
 如果这个流支持标记,则返回true。
-### java.io.OutputStream 
-#### abstract void write(int n)  
+#### java.io.OutputStream 
+##### abstract void write(int n)  
 写出一个字节的数据  
 void write(byte[] b)  
-#### void write(byte[] b,int off,int len)
+##### void write(byte[] b,int off,int len)
 写出所有字节或者某个范围的字节到数组b中
-#### void close()
+##### void close()
 冲刷并关闭输出流
-#### void flush()
+##### void flush()
 冲刷输出流,也就是将所有缓冲的数据发送到目的地
-## 完整的流家族
+### 完整的流家族
 C语言中只有单一类型File*包打天下,Java拥有一个家族。  
 1. 按照处理字节和字符分为两个单独的层次结构。一方面,InputStream和OutputStream类可以读写单个字节或者数组,这些类构成了字节的层次结构的基础。要想读写字符串和数字,就需要功能更加强大的子类。例如,DataInputStream和DataOutputStream可以以**二进制格式**读写所有的**基本Java类型**。最后,还包含了多个有用的输入/输出流,例如,ZipInputStream和ZipOutputStream可以以我们常见的**ZIP压缩格式**读写文件。  
 ![InputStream&OutputStream](https://github.com/aryangzhu/blogImage/raw/master/java/InputStream%26OutputStream.jpg)  
@@ -91,35 +91,35 @@ Appendable append(char c)
 Appehdable append(CharSequence s)
 ```
 CharSequence接口描述了一个**char值序列的基本属性**,String、CharBuffer、StringBuilder和StringBuffer都实现了它。  
-### 常用API
-#### java.io.Closeable
-##### void close()
+#### 常用API
+##### java.io.Closeable
+###### void close()
 关闭这个Closeable,这个方法可能会抛出IOException  
-#### java.io.Flushable
-##### void flush()
+##### java.io.Flushable
+###### void flush()
 冲刷这个Flushable。  
-#### java.lang.Readable
-##### int read(CharBuffer cb)  
+##### java.lang.Readable
+###### int read(CharBuffer cb)  
 尝试着向cb读入其可持有数量的char值。返回可读入的char值的数量,或者从这个Readable中无法再获得更多的值时返回-1。  
-#### java.lang.Appendable
+##### java.lang.Appendable
 Appendable append(char c)  
 #####　Appendable append(CharSequence cs)
 向这个Appendable中追加给定的码元或者给定序列的码元,返回this。
-#### java.lang.CharSequnece
-##### char charAt(int index)
+##### java.lang.CharSequnece
+###### char charAt(int index)
 返回给定索引处的码元。  
-##### int length()
+###### int length()
 返回在这个序列中的码元的数量。
-##### CharSequence subSequnce(int startIndex,int Index)
+###### CharSequence subSequnce(int startIndex,int Index)
 返回由存储在startIndex到endIndex-1处的所有码元构成的CharSequnce。
-##### String toString()
+###### String toString()
 返回这个序列中所有码元构成的字符串。
-## 组合输入/输出流过滤器
+### 组合输入/输出流过滤器
 FileInputStream和FileOutputStream可以提供一个附着在磁盘文件上的流,你可以通过构造器来指定文件位置。  
 ```java
 FileInputStream in=new FileInputStream("meployee.dat");
 ```
-### 两个注意的点：
+#### 两个注意的点：
 1.**所有在java.io中的类都将相对路径解释为用户工作目录开始**,你可以调用**System.getProperty("user.dir")**来获得这个信息。  
 2.java中的"\\"为转义字符,所以在Windows风格的路径中应当使用"\\\\"。例如D:\\\\Windows\\\\win.ini。但是,更好的方法是使用常量字符串**java.io.File.separator**获得它。  
 同字节流一样,FileInputStream和FileOutputStream也只能处理字节。  
@@ -153,30 +153,30 @@ if(b!='<')pbin.unread();
 ```
 如果不是自己期望的字符,那么我们可以将其推回至流中。  
 其他语言的输入/输出流类库中,缓冲机制和预览都是自动处理的。Java更加麻烦,但也更加灵活。
-### 常用API
-#### java.io.FileInputStream
+#### 常用API
+##### java.io.FileInputStream
 FileInputStream(String name)
-##### FileInputStream(File file)
+###### FileInputStream(File file)
 由name字符串或file对象指定路径名的文件创建一个新的输入流。
-#### java.io.FileOutputStream
+##### java.io.FileOutputStream
 FileOutpuStream(String name)  
 FileOutputStream(String name,boolean append)  
 FileOutputStream(File file)  
-##### FileOutputStream(File file,boolean append)
+###### FileOutputStream(File file,boolean append)
 由name字符串或file对象指定路径名穿啊关键一个新的文件输出流。如果append为true,那么已存在的文件不会被删除而会直接添加导师文件末尾;如果为false,那么则会删除素有同名文件。  
-#### java.io.BufferedInputStream
-##### BufferedInputStream(InputStream in)
+##### java.io.BufferedInputStream
+###### BufferedInputStream(InputStream in)
 创建一个带缓冲区的输入流。带缓冲区的输入流在从流中读取字符时,不会每次都访问设备。当缓冲区为空时,会向缓冲区中读入一个新的数据块。  
-#### java.io.BufferedOutputStream
-##### BufferedOutputStream(OutputStream out)
+##### java.io.BufferedOutputStream
+###### BufferedOutputStream(OutputStream out)
 创建一个带缓冲区的输出流。带缓冲区的输出流在收集要写出的字符时,也不会每次都访问设备。当缓冲区填满或这被冲刷时,数据就被写出。  
-#### java.io.PushbackInputStream
+##### java.io.PushbackInputStream
 PushbackInputStream(InputStream in)
-##### PushbackInputStream(InputStream in,int size)
+###### PushbackInputStream(InputStream in,int size)
 构建一个可以预览一个字节或者具有指定尺寸的回退缓冲区的输入流。
-##### void unread()
+###### void unread()
 回推一个字节,它可以在下次调用read时再次被获取。
-## 文本输入与输出
+### 文本输入与输出
 在保存数据时,可以选择二进制形式或者文本形式。例如,1234在二进制数表示为000004D2构成的序列(十六进制表示法),而文本格式存储为**字符串**"1234"。虽然二进制格式的I/O高速且高效,但是不适合人类阅读。  
 在存储文本字符串时,我们必须考虑**字符编码**。Java内部使用的UTF-16编码方式,许多其他程序希望按照其他方式编码。
 **OutputStreamWriter类将使用选定的字符编码方式**,把Unicode码元的输出流转换为字节流。
@@ -184,7 +184,7 @@ PushbackInputStream(InputStream in)
 ```java
 var in=new InputStreamReader(new FileInputStream("data.txt"),StandardCharsets.UTF-8);
 ```  
-## 如何写出文本输出
+### 如何写出文本输出
 
 对于**文本输出**(以文本格式输出???),可以使用**PrintWriter**。这个类拥有以**文本格式打印字符串和数字的方法**,**需要用文件名和字符编码方式构建一个PrintStream对象**:
 
@@ -210,39 +210,39 @@ Harry Hacker 7500.0
 
 如果写出器设置为**自动冲刷模式**,那么只要println被调用,缓冲区中的所有字符都会发送到他们的目的地(打印写出器总是带缓冲区的)。                  	
 
-### 常用API
+#### 常用API
 
-#### java.io.PrintWriter
+##### java.io.PrintWriter
 
 PrintWriter(Writer out)
 
-##### PrintWriter(Writer writer)
+###### PrintWriter(Writer writer)
 
 创建一个向给定的写出器写出的新的PrintWriter。
 
 PrintWriter(String fileName,String encoding)
 
-##### Printer(File file,String encoding)
+###### Printer(File file,String encoding)
 
 创建一个使用给定的编码方式向给定的文件写出的新的PrintWriter。
 
-##### void print(Object obj)
+###### void print(Object obj)
 
 通过打印从toString产生的字符串来打印一个对象。
 
-##### void print(String s)
+###### void print(String s)
 
 打印一个包含Unicode码元的字符串。
 
-##### void println(String s)
+###### void println(String s)
 
 打印一个字符串,带有终止符。如果处于自动冲刷模式,那么将冲刷这个流。
 
-##### void print(char[] s)
+###### void print(char[] s)
 
 打印在给定的字符串中的所有的Unicode码元。
 
-##### void print(char c)
+###### void print(char c)
 
 打印一个Unicode码元。
 
@@ -258,15 +258,15 @@ void print(boolean b)
 
 以文本格式打印给定的值。
 
-##### void printf(String format,Object...args)
+###### void printf(String format,Object...args)
 
 按照格式字符串指定的方式打印给定的值。
 
-##### boolean checkError()
+###### boolean checkError()
 
 如果产生格式化或输出错误,则返回true。一旦这个流碰到了错误,它就收到了污染,并且所有对checkError的调用都将返回true。
 
-## 如何读入文本输入
+### 如何读入文本输入
 
 我们应用最广泛的就是**Scanner**类。
 
@@ -319,7 +319,7 @@ try(BufferedReader in=new BufferedReader(new InputStreamReader(inputStream,chars
 
 与Scanner不同的是,BufferedReader没有用于任何读入数字的方法。
 
-## 以文本格式存储对象
+### 以文本格式存储对象
 
 由于要写出文本文件中,所以使用PrintWriter类。
 
@@ -327,7 +327,7 @@ split方法的参数是一个描述分隔符的正则表达式。
 
 注:竖线在正则表达式中具有特殊的含义,因此需要用\字符来表示转义,而这个\又需要使用另一个\来转义,所有就有了"\\\\\|"表达式。
 
-## 字符编码方式
+### 字符编码方式
 
 输入和输出流都是用于字节序列的,但在许多情况下,**我们希望操作的是文本,即字符序列**,那么字符如何编码成字节就是问题。
 
@@ -341,9 +341,9 @@ StandardCharsets类具有类型为Charset的静态变量,用于表示每中Java�
 
 StandardCharsets.UTF_8;
 
-# 读写二进制数据
+## 读写二进制数据
 
-## DataInput和DataOutput接口
+### DataInput和DataOutput接口
 
 DataOutput接口定义了用于以二进制格式读写数组、字符、boolean值和字符串的方法。
 
@@ -359,25 +359,25 @@ DataInputStream in=new DataInputStream(new FileInputStream("employee.dat"));
 
 而DataOutputStream实现了DataOutput接口。
 
-### 常用API
+#### 常用API
 
-#### java.io.DataInput
+##### java.io.DataInput
 
-##### int readInt()
+###### int readInt()
 
 读取一个给定类型的值。
 
-##### void readFully(byte[] b)
+###### void readFully(byte[] b)
 
 将字节读入数组b中,其间阻塞直至所有字节被读入。
 
-##### void readFully(byte[] b,int off,int len)
+###### void readFully(byte[] b,int off,int len)
 
 len指定数量,放置在数组中从off开始的位置。
 
-#### java.io.DataOutput
+##### java.io.DataOutput
 
-##### void writeInt(int i)
+###### void writeInt(int i)
 
 写出一个定类型的值。
 
@@ -385,7 +385,7 @@ void writeChars(String s)
 
 写出字符串中的所有字符。
 
-## 随机访问文件
+### 随机访问文件
 
 **RandomAccessFile类可以在文件的任何位置查找或写入数据**。你可以打开一个随机访问文件,只用于读入或者同时用于读写,你可以通过使用字符串"r"(读)或"rw"(用于读写访问)作为构造器的第二个参数来指定这个选项。
 
@@ -444,7 +444,7 @@ public static String readFixedString(int size,DataInput in) throws IOException{
 }
 ```
 
- ## ZIP文档
+ ### ZIP文档
 
 每个ZIP文档中都有一个头,包含诸如每个文件名字和所使用的压缩方法等信息。你有可能需要浏览文档中的每一项,所以你可以使用getNextEntry方法来获取一个ZipEntry类型的对象。该方法会读入数据至这一项的末尾。然后调用closeEntry来读入下一项。在读入最后一项之前,不要关闭zin。下面是典型的**通读ZIP文件的序列代码**:
 
@@ -475,26 +475,26 @@ zout.close();
 
 **JAR文件是一个特殊性的ZIP文件**。
 
-### 常用API
+#### 常用API
 
-#### java.io.ZipInputStream
+##### java.io.ZipInputStream
 
-#### java.io.ZipOutputStream
+##### java.io.ZipOutputStream
 
-#### java.util.zip.ZipEntry
+##### java.util.zip.ZipEntry
 
-##### ZipEntry(String name)
+###### ZipEntry(String name)
 
 用给定的名字构建一个ZIP项。
 
-#### java.io.zip.ZipFile
+##### java.io.zip.ZipFile
 
-# 对象输入/输出序列化
+## 对象输入/输出序列化
 ​	我们希望使用固定长度的格式保存记录,但是Java中的数据类型的长度又不一样。例如,一个Employee数组,有可能存储的是Manager类型的记录。  
 ​	Java语言支持一种称之为**对象序列化**(object serialization)的非常通用的机制。可以将任何写出到输出流,并在之后将其读回。  
 ​	我觉得Java编程思想中为什么使用序列化更为透彻:
 ​	当创建对象时，在程序运行期间可以获取，但是程序终止时，所有的对象都会被清除，我们是无法再获取的。当然，你可以通过将信息写入文件或者数据库来达到目的。但是为了更方便，Java 为我们提供了序列化机制，并且屏蔽了大部分细节。 ——Bruce Eckel  
-## 保存和加载序列化对象
+### 保存和加载序列化对象
 
 为了保存对象数据,首先需要打开一个ObjectOutputStream对象:
 
@@ -551,29 +551,29 @@ tony.setSecretary(tony);
 
 2.遇到"与之前保存过的序列号为x的对象相同时"这一标记,则获取与这个序列号相关联的对象引用。
 
-### 常用API
+#### 常用API
 
-#### java.io.ObjectOutputStream
+##### java.io.ObjectOutputStream
 
-##### ObjectOutputStream(OutputStream out)
+###### ObjectOutputStream(OutputStream out)
 
 创建一个ObjectOutputStream使得你可以将对象写出到指定的OutputStream。
 
-##### void writeObject(Object obj)
+###### void writeObject(Object obj)
 
 写出指定的对象到ObjectOutputStream,这个方法将存储指定对象的类、类的签名以及这个类及其超类中所有非静态和非瞬时的域的值。
 
-#### java.io.ObjectInputStream
+##### java.io.ObjectInputStream
 
-##### ObjectInputStream(InputStream in)
+###### ObjectInputStream(InputStream in)
 
 创建一个ObjectInputStream用于从指定的InputStream中读回对象信息。
 
-##### Object readObject()
+###### Object readObject()
 
 从ObjectInputStream中读入一个**对象**。特别是,这个方法会读回对象的类、类的签名和这个类以及超类中所有非静态和飞瞬时的域的值。它执行的反序列化允许恢复多个对象引用。
 
-## 理解对象序列化的文件格式
+### 理解对象序列化的文件格式
 
 这一章书上的内容很顶,建议多看几遍。
 
@@ -710,7 +710,7 @@ D 00 06 salary
 
 75 类描述符 4字节长的数组项的数量 数组项
 
-### 几个注意的点:
+#### 几个注意的点:
 
 1.对象流输出中包含素有对象的类型和数据域(像上面的形式???)。
 
@@ -718,7 +718,7 @@ D 00 06 salary
 
 3.相同对象的重复出现将被存储为对这个对象的序列号的引用。
 
-## 修改默认的序列化机制
+### 修改默认的序列化机制
 
 **某些数据域是不可以序列化的**,例如,只对本地方法有意义的存储文件句柄或者窗口句柄的整数值，这种信息在稍后重新加载对象或将其传送到其他机器上时都是没有用处的。甚至如果这种域的值处理不恰当,还会引起本地方法的崩溃。Java中拥有一种很简单的机制来防止这种域被序列化,那就是将它们标记成transient的。**如果这些域属于不可序列化的类,也需要将它们标记成transient的**。瞬时的域在对象被序列化时总是被跳过的。
 
@@ -749,7 +749,7 @@ Calendar对象是冗余的,因此不需要重复存储。
 
 readObject和writeObject方法只需要加载和保存数据域,而不关心超类和其他类的信息。
 
-### 类定义自己的机制来保存和加载对象
+#### 类定义自己的机制来保存和加载对象
 
 这个类必须实现Externalizable接口,这需要它定义两个方法:
 
@@ -777,7 +777,7 @@ public void writeExternal(ObectOutput out) throws IOException{
 
 readObject和writeObject方法是是私有的,并且只能被序列化机制调用。榆次不同的是,readExternal和writeExternal方法是公共的。特别的是,readExternal还潜在的允许修改现有对象的状态。
 
-## 序列化单例和类型安全的枚举
+### 序列化单例和类型安全的枚举
 
 在序列化和反序列化时,如果目标对象是**唯一**的,你必须加倍小心,这通常会在实现单例和类型安全的枚举时发生。
 
@@ -832,7 +832,7 @@ protected Object readResolve()throws ObjectStreamException{
 }
 ```
 
-## 版本管理
+### 版本管理
 
 之前学习过,无论类发生了什么变化,它和SHA指纹也会发生对应的变化,而我们都知道对象输入流将拒绝读入具有不同指纹的对象。但是,**类可以表明它对之前的早期版本兼容**,要想这样做,就必须首先获得这个类的早期版本的指纹。
 
@@ -865,15 +865,15 @@ class Employee implements Serialbizable{
 
 ​	这种处理安全吗？视情况而定。丢掉数据域看起来是无害的,因为接收者仍旧知道如何处理的所有数据,但是将数据域设置为null却有可能不是那么安全。
 
-## 为克隆使用序列化
+### 为克隆使用序列化
 
 ​	序列化机制提供了克隆的快捷方式,将对象序列化到输出流中,然后将其读回。这样产生的对象是"深拷贝"的对象。同时不必将对象序列化到文件中,而使用ByteArrayOutputStream将数据保存到字节数组中。	
 
-# 操作文件
+## 操作文件
 
 ​	文件管理的内涵远比读写要广,Path和Files类封装了在用户机上处理文件系统所需的所有功能。例如,Files类可以用来移除或重命名文件,或者查询文件最后被修改的时间。
 
-## Path
+### Path
 
 Path(路径)表示的是一个**目录名序列**,其后还可以跟着一个文件名。路径中的第一个部件可以是**根部件**,例如/或C:\,而允许访问的根部件取决于**文件系统**。以根部件开始的路径是**绝对路径**;否则,就是**相对路径**。
 
@@ -918,57 +918,57 @@ Path workPath=basePath.resolve("work");//字符串而不是对象
 
 relativize方法会调用p.relativize(r)将产生路径q,而对q进行解析的结果正是r。例如,以"/home/harry"为目标对"/home/fred/input.txt"进行相对化操作,会产生"../fred/input.txt",其中我们假设..表示文件系统中的父目录(也就是说两个路径都是/home开头，所以可以使用../作为相对路径)。
 
-### 常用API
+#### 常用API
 
-#### java.nio.file.Paths
+##### java.nio.file.Paths
 
-##### static Path ge(String first,String ..more)
+###### static Path ge(String first,String ..more)
 
 通过连接给定的字符串创建一个路径。
 
-#### java.nio.file.Path
+##### java.nio.file.Path
 
 Path resolve(Path other)
 
-##### Path resovle(String other)
+###### Path resovle(String other)
 
 如果other是绝对路径,那么就返回other;否则将通过链接this的父路径和other产生路径。
 
-##### Path relativize(Path other)
+###### Path relativize(Path other)
 
 返回用this进行解析,相对于other的相对路径。
 
-##### Path normalize()
+###### Path normalize()
 
 移除诸如.和..等冗余的路径元素。
 
-##### Path toAbsolutePath()
+###### Path toAbsolutePath()
 
 返回与该路径等价的绝对路径。
 
-##### Path getParent()
+###### Path getParent()
 
 返回父路径,或者在该路径没有父路径时,返回null。
 
-##### Path getFileName()
+###### Path getFileName()
 
 返回该路径的最后一个部件,或者在该路径上没有任何部件时,返回null。
 
-##### Path getRoot()
+###### Path getRoot()
 
 返回该路径的根部件,或者在该路径没有任何部件时,返回null。
 
-##### toFile()
+###### toFile()
 
 从该路径中创建一个File对象。
 
-#### java.io.File
+##### java.io.File
 
-##### Path toPath()
+###### Path toPath()
 
 从该文件中创建一个Path对象(利用文件的路径属性来完成创建)。
 
-## 读写文件
+### 读写文件
 
 利用下面的代码很容易读取文件的所有内容:
 
@@ -997,17 +997,17 @@ Files.write(path,content.getBytes(charset),StandardOpenOption.APPEND);
 Files.write(path,lines,charset);
 ```
 虽然上面的代码很方便,还是推荐使用输入/输出流(因为更加专业)。
-### 常用API
-#### java.nio.file.Files
-##### static List\<String> readAllLines(Path path,Charset charset)
+#### 常用API
+##### java.nio.file.Files
+###### static List\<String> readAllLines(Path path,Charset charset)
 
 读入文件的内容。
 
-##### staic Path write(Path path,Iterable<? extends CharSequence> contents,OpenOption options)
+###### staic Path write(Path path,Iterable<? extends CharSequence> contents,OpenOption options)
 将给定内容写出到文件中,并返回path。
-##### static BufferedWriter newBufferedWriter(Path path,Charset charset,OpenOption... options)
+###### static BufferedWriter newBufferedWriter(Path path,Charset charset,OpenOption... options)
 打开一个文件,用于读入或这写出。
-## 创建文件和目录
+### 创建文件和目录
 **创建新目录**可以调用
 
 ```java
@@ -1033,17 +1033,17 @@ Fiels.creatFile(path);
 
 在创建文件或者目录时,可以指定属性例如文件的拥有者和权限。
 
-### 常用API
+#### 常用API
 
-#### java.nio.file.Files
+##### java.nio.file.Files
 
-##### static Path createDirectories(Path path,FileAtrribute<?>...attrs)
+###### static Path createDirectories(Path path,FileAtrribute<?>...attrs)
 
 创建一个文件或者目录,createDirectories方法还会创建路径中所有的中间
 
 目录。
 
-## 复制、移动和删除文件
+### 复制、移动和删除文件
 
 将文件复制到另一个位置
 
@@ -1072,20 +1072,20 @@ Files.copy(inputStream,toPath);
 Files.delete(path);
 ```
 用于文件操作的标准选项可以看书上的表格,非常的详细。
-### 常用API
-#### java.nio.file.Files
-##### static Path move(Path from,Path to,CopyOption...options)
-##### static long copy(Path from,OutputStream to,CopyOption ...options)
+#### 常用API
+##### java.nio.file.Files
+###### static Path move(Path from,Path to,CopyOption...options)
+###### static long copy(Path from,OutputStream to,CopyOption ...options)
 
 从文件复制到输入流中,返回复的字节数。
 
 static void delete(Path path)
 
-##### static boolean deleteIfExists(Path path)
+###### static boolean deleteIfExists(Path path)
 
 删除给定文件或空目录。第一个方法在文件或目录不存在的情况下抛出异常,而第二种方法会在情况下返回false。
 
-## 获取文件信息
+### 获取文件信息
 
 下面的静态方法都将返回一个boolean值,表示**检查路径的某个属性**的结果:
 
@@ -1121,23 +1121,23 @@ getOwner方法将**文件的拥有者**作为java.nio.file.attribute.UserPrincip
 BasicFileAtrributes attributes=Files.readAttributes(path,BasicFileAttributes.class);
 ```
 
-### 常用API
+#### 常用API
 
-#### java.nio.file.Files
+##### java.nio.file.Files
 
-##### static boolean isSymbolicLink(Path path)
+###### static boolean isSymbolicLink(Path path)
 
 检查由路径指定的文件的给定属性。
 
-###### static long size(Path path)
+####### static long size(Path path)
 
 获取文件按字节数度量的尺寸。
 
-##### A readAttributes(Path path,Class\<A> type,LinkOption...options)
+###### A readAttributes(Path path,Class\<A> type,LinkOption...options)
 
 读取类型为A的文件属性。
 
-#### java.nio.file.attribute.BasicFileAttributes
+##### java.nio.file.attribute.BasicFileAttributes
 
 FileTime creationTime()
 
@@ -1153,7 +1153,7 @@ Object fileKey()
 
 获取所请求的属性
 
-## 访问目录中的项
+### 访问目录中的项
 
 **静态的Files.list**方法会返回一个可以读取目录中各个项的**Stream\<Path>对象**。目录是被惰性(使用时才会进行调用或某些操作)读取的,这使得处理具有大量项目的目录可以变得更加高效。
 
@@ -1177,7 +1177,7 @@ try(Stream<Path> entries=Files.walk(pathRoot)){
 
 **两种walk方法都有可变长的参数FileVisitOption...,但是你只能提供一种选项-FOLLOW_LINKS,即跟踪符号链接**。
 
-## 使用目录流
+### 使用目录流
 
 上面我们学习了使用Files.walk方法会产生一个可以遍历目录中所有子孙的Stream\<Path>对象。有时,需要对遍历过程进行更加细粒度的控制。在这种情况下,应该使用Files.newDirectoryStream对象,它会产生一个DirectoryStream。它不是java.util.stream.Stream的子接口,而是专门用于目录遍历的接口。它是Iterable的子接口,因此可以在增强的for循环中使用目录流。示例如下:
 
@@ -1244,21 +1244,21 @@ Files.walkTree(root,new SimpleFileVisitor<Path>()
 });
 ```
 
-### 常用API
+#### 常用API
 
-#### java.nio.file.Files
+##### java.nio.file.Files
 
-##### static DirectoryStream\<Path> newDirectoryStream(Path path,String glob)
+###### static DirectoryStream\<Path> newDirectoryStream(Path path,String glob)
 
 获取给定目录中可以遍历所有文件和目录的迭代器。glob模式筛选匹配的项。
 
-##### static Path walkFileTree(Path start,FileVisitor<? super Path> visiotr)
+###### static Path walkFileTree(Path start,FileVisitor<? super Path> visiotr)
 
 遍历给定路径上的所有子孙,并将访问器应用于这些子孙之上。
 
-#### java.nio.SimpleFIleVisitor\<T>
+##### java.nio.SimpleFIleVisitor\<T>
 
-##### static FileVisitResult visitFile(T path,BasicFileAttributes attrs)
+###### static FileVisitResult visitFile(T path,BasicFileAttributes attrs)
 
 在访问文件或目录时被调用,返回CONTINUE、SKIP_SUBTREE、SKIP_SIBLINGS和TERMINATE之一,默认实现是不做任何操作而继续访问。
 
@@ -1289,12 +1289,12 @@ Files.walkTree(fs.getPath("/"),new SimpleFileVisitor<Path>()
    });
 ```
 
-### 常用API
-#### java.nio.file.FileSystems
+#### 常用API
+##### java.nio.file.FileSystems
 对所安装到的文件系统提供者进行迭代,并且如果loader不为null,那么就还会迭代给定的类加载器能够加载加载的文件系统,返回由第一个可以接受给定路径的文件系统提供者创建的文件系统。  
-# 内存映射文件
+## 内存映射文件
 大多数操作系统都可以利用**虚拟内存** 实现来将**一个文件或者文件的一部分**"映射"到内存中。然后,**这个文件就可以被当做内存数组一样地访问**,这比传统的文件操作还要快的多。
-## 内存映射文件的性能
+### 内存映射文件的性能
 书上的例子比较了JDK下的jre/lib目录中的37MB的rt.jar文件用不同的方式来计算校验和。  
 在特定的机器上,内存映射比使用带缓冲的顺序输入还要稍微快一点,但是比使用RandomAccessFile快很多。
 
@@ -1335,89 +1335,89 @@ get(byte[] ,int offset,int length);
 
 向缓冲区写入也是一样的。
 
-### 常用API
+#### 常用API
 
-#### java.io.FileInputStream
+##### java.io.FileInputStream
 
-##### FileChannel getChannel()
+###### FileChannel getChannel()
 
 返回用于访问这个输入流的通道。
 
-#### java.io.FileOutputStream
+##### java.io.FileOutputStream
 
-##### FileChannel getChannel()
+###### FileChannel getChannel()
 
 返回用于访问这个输出流的通道。
 
-#### java.io.RandomAccessFile
+##### java.io.RandomAccessFile
 
-##### FileChannel getChannel()
+###### FileChannel getChannel()
 
 返回用于访问这个文件的通道。
 
-#### java.nio.channels.FileChannel
+##### java.nio.channels.FileChannel
 
-##### staic FileChannel open(Path path,OpenOption...options)
+###### staic FileChannel open(Path path,OpenOption...options)
 
 打开指定路径的文件通道,默认情况下,通道打开时用于读入。参数options是Standard-OpenOption枚举中的WRITE、APPEND、TRUNCATE_EXISING、GREATE值。
 
-##### MappedByteBuffer(FileChannel.MapMode mode,long position,long size)
+###### MappedByteBuffer(FileChannel.MapMode mode,long position,long size)
 
 将文件的一个区域映射到内存中。参数mode是FileChannel.MapMode类中的常量READ_ONLY、READ_WRITE或PRIVATE之一。
 
-#### java.io.Buffer
+##### java.io.Buffer
 
-#### boolean hasRemaing()
+##### boolean hasRemaing()
 
 如果当前的缓冲区位置没有达到这个缓冲区的界限位置,则返回true。
 
-##### int limit()
+###### int limit()
 
 返回这个缓冲区的界限位置,即没有任何值可用的第一个位置。
 
-#### java.io.ByteBuffer
+##### java.io.ByteBuffer
 
-##### byte get()
+###### byte get()
 
 从当前位置获得一个字节,并将当前位置移动到下一个字节。
 
-##### byte get(int index)
+###### byte get(int index)
 
 从指定索引处获得一个字节。
 
-##### ByteBuffer put(byte b)
+###### ByteBuffer put(byte b)
 
 向缓冲区写入一个字节,并返回缓冲区的引用。
 
-##### ByteBuffer put(int index,byte b)
+###### ByteBuffer put(int index,byte b)
 
 向指定索引处推入一个字节。返回对这个缓冲区的引用。
 
-##### ByteBuffer get(byte[] destination,int offset,int length)
+###### ByteBuffer get(byte[] destination,int offset,int length)
 
 用缓冲区中的字节来填充字节数组,或者字节数组的某个区域,并将当前位置向前移动数个位置。
 
 ByteBuffer put(byte[] source)
 
-##### ByBuffer put(byte[] source,int offset,int length)
+###### ByBuffer put(byte[] source,int offset,int length)
 
 将字节数组中的所有字节或者给定区域的字节都推入缓冲区中,并将当前位置向前移动写出的字节数个位置。
 
 Xxx getXXX(int index)
 
-##### ByteBuffer putXXX(int index,Xxx value)
+###### ByteBuffer putXXX(int index,Xxx value)
 
 获得或放置一个二进制数。Xxx是Int、Long、Short、Char、Float或Double中的而一个。
 
-##### ByteOrder order()
+###### ByteOrder order()
 
 设置或获得字节顺序,order的值是ByteOrder类的常量BIG_ENDIAN或LITTTLE_ENDIAN中的一个。
 
-##### static ByteBuffer allocate(int capacity)
+###### static ByteBuffer allocate(int capacity)
 
 构建具有给定容量的缓冲区。
 
-##### static ByteBuffer wrap(byte[] values)
+###### static ByteBuffer wrap(byte[] values)
 
 构建具有指定容量的缓冲区,该缓冲区是对给定数组的包装。
 
@@ -1425,17 +1425,17 @@ Xxx getXXX(int index)
 
 构建字符缓冲区,它是对这个缓冲区的包装。对该字符缓冲区的变更将在这个缓冲区中反映出来,但**该字符缓冲区有自己的位置、界限和标记**。
 
-#### java.nio.CharBuffer
+##### java.nio.CharBuffer
 
-##### CharBuffer get(char[] destination,int offsets,int length)
+###### CharBuffer get(char[] destination,int offsets,int length)
 
 从这个缓冲区的当前位置开始,获取一个char值,或者一个范围内的所有char值,然后将位置向前移动以越过所有读入字符。最后两个方法返回this。
 
-##### CharBuffer put(CharBuffer source)
+###### CharBuffer put(CharBuffer source)
 
 从这个缓冲区的当前位置开始,放置一个char值,或者一个范围内的所有char值,然后将位置向前移动越过所有被写出的字符。当放置的值是从CharBuffer读入时,将读入所有剩余字符。所有的方法返回this。
 
-## 缓冲区的数据结构
+### 缓冲区的数据结构
 
 在使用内存映射时,我们创建了一个缓冲区来横跨感兴趣的文件区域。我们可以使用更多的缓冲区来读写大小适度的信息快。
 
@@ -1469,47 +1469,47 @@ channel.position(newpos);
 channel.write(buffer);
 ```
 
-### 常用API
+#### 常用API
 
-#### java.nio.Buffer
+##### java.nio.Buffer
 
-##### Buffer clear()
+###### Buffer clear()
 
 通过将位置复位到0,并将界限设置到容量,使这个缓冲区做好写准备。返回this。
 
-##### Buffer filp()
+###### Buffer filp()
 
 通过将界限设置到位置,并将位置复位到0,使这个缓冲区为读入做好准备。返回this。
 
-##### Buffer rewind()
+###### Buffer rewind()
 
 通过将读写位置复位到0,并保持界限不变,使这个缓冲区为重新读入相同的值做准备。
 
-##### Buffer mark()
+###### Buffer mark()
 
 将这个缓冲区的标记(之前有专门提过)设置到读写位置,返回this。
 
-##### Buffer reset()
+###### Buffer reset()
 
 将这个缓冲区的位置设置到标记,从而允许被标记的部分再次被读入或写出,返回this。
 
-##### int remaing()
+###### int remaing()
 
 返回剩余可读入或写出的值的数量,即**界限**与**位置**之间的差异。
 
 int position()
 
-##### void position(int newValue)
+###### void position(int newValue)
 
 返回这个缓冲区的位置。
 
-##### int capacity()
+###### int capacity()
 
 返回这个缓冲区的容量。
 
 
 
-# 文件加锁机制
+## 文件加锁机制
 
 现实中的场景:**多个同时执行的程序需要修改同一个文件**的情形,很明显,**这些程序需要以某种方式进行通信,不然这个文件很容易被损坏(由此引出了进程间的通信)**。文件锁可以解决这个问题,它可以**控制对文件或文件中某个范围的字节的访问**。  
 ​	假设你的应用程序将用户的偏好存储在一个配置文件中,当用户调用这个应用的两个实例时,这两个实例就有可能会同时希望写配置文件。在这种情况下,第一个实例应该锁定文件,当第二个实例发现文件被锁定时,**它必须决策是等待直至文件解锁,还是直接跳过这个写操作过程**。
@@ -1563,41 +1563,41 @@ try(FileLock lock=channel.lock()){
 
 5.在网络文件系统上锁定文件是**高度依赖于系统**的,因此应该尽量避免。
 
-### 常用API
+#### 常用API
 
-#### java.nio.channels.FileChannel
+##### java.nio.channels.FileChannel
 
-##### FileLock lock()
+###### FileLock lock()
 
 在整个文件上获得一个独占的锁,这个方法将阻塞至获得锁。
 
-##### FileLock tryLock()
+###### FileLock tryLock()
 
 在整个文件上获得一个独占的锁,或者在无法获得锁的情况下返回null。
 
-##### FileLock tryLock(long position,long size,boolean shared)
+###### FileLock tryLock(long position,long size,boolean shared)
 
 上面解释过
 
-#### java.nio.channels.FileLock
+##### java.nio.channels.FileLock
 
-##### void close()
+###### void close()
 
 释放这个锁。
 
 
 
-# 正则表达式
+## 正则表达式
 
 **正则表达式(regular expression)**用于指定字符串的模式,可以在任何需要定位匹配某种特定模式的字符串的情况下使用正则表达式。
 
-## 正则表达式语法
+### 正则表达式语法
 
 1.字符类(character class)是一个括在括号中的可选择的字符集,例如,[Jj]、[0-9]、[A-Za-z]或\[^0-9]。**这里"-"表示是一个范围(所有的Unicode值落在两个边界范围之内的字符)**,而^表示补集(除了指定字符之外的所有字符)。
 
 2.如果字符类包含"-",那么它必须是第一项或最后一项;如果包含"[",那么它必须是第一项;如果要包含"^",那么它可以是除开始位置之外的任何位置。其中,你只需要转义"["和"\\"。
 
-## 匹配字符串
+### 匹配字符串
 
 ```java
 Pattern pattern=Pattern.complile(patternString);
@@ -1611,7 +1611,7 @@ if(matcher.matches()) ...
 Pattern pattern=Pattern.complile(expression,Pattern.CASE_INSENSITIVE+Pattern.UNICODE_CASE);
 ```
 
-## 找出多个匹配
+### 找出多个匹配
 
 如果想要找出输入中一个或多个匹配的字符串。可以用Matcher类的find方法来查找匹配内容,如果返回true,再使用start和end方法来查找匹配的内容,或使用不带引元的group方法来获取匹配的字符串。
 
@@ -1640,7 +1640,7 @@ Stream<String> words=in.findAll("\\pL+")
     .map(MathchResult::group);
 ```
 
-## 用分隔符来分割
+### 用分隔符来分割
 
 Pattern.split方法可以按照匹配的分隔符断开:
 
@@ -1650,7 +1650,7 @@ Pattern commas=Pattern.complile("\\s*,\\s*");
 String[] tokens=commas.split(input);
 ```
 
-## 替换匹配
+### 替换匹配
 
 Matcher类的replaceAll方法将正则表达式出现的所有地方都用替换字符串来替换。
 
@@ -1659,9 +1659,9 @@ Pattern pattern=Pattern.complile("[0-9]+");
 Matcher matcher=pattern.matcher(input);
 String output=matcher.replaceAll("#");
 ```
-# NIO
+## NIO
 之前只是将书上的知识摘抄了一遍而已,NIO的知识在好几个部分散落开来
-## 5种I/O模型
+### 5种I/O模型
 阻塞
 非阻塞(轮询)
 I/O复用(事件驱动模型)
@@ -1672,7 +1672,7 @@ epoll
 和I/O复用模型的区别就是委托黄牛变成了电话
 异步I/O
 和上面的区别是操作系统会完成数据拷贝到用户内核空间这一步的操作
-## JDK中3个重要的类
+### JDK中3个重要的类
 其实上面的nio包的api基本上就是介绍的这3个类
 Buffer、Channel和Selector  
 Buffer与Channel不必多说  

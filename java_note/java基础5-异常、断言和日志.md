@@ -1,4 +1,4 @@
-# 处理错误
+## 处理错误
 对于异常情况，例如，可能造成程序崩溃的错误输入，Java使用了一种称为**异常处理**(exception handing)。  
 假设程序运行期间出现了一个用户并不想见到的错误。用户希望程序能够合理地处理这个错误。如果某些操作没有完成，程序应该:  
 1.返回到一种安全状态，并能够让用户执行其他的命令;
@@ -11,7 +11,7 @@
 4.代码错误。**程序或者方法可能没有正确的完成工作**。例如，方法返回一个错误答案，或者错误地调用了其他方法。计算一个无效的数组索引，在散列表中查找一个不存在的记录，或者让空栈执行一个弹出操作。  
 传统的错误处理方法是在方法执行错误之后返回一个值，通过这个值来匹配一种错误。例如，-1代表返回的是错误结果。但是，不是任何时候都能返回一个值。  
 在Java中，如果方法不能正常地完成任务那么也可以通过另一个路径退出程序。在这种情况下，程序会抛出(throw)一个封装异常信息的对象。这个时候，方法会立刻退出，并不返回任何值。此外，也不会调用这个方法的代码继续执行，取而代之的是，异常处理机制开始搜索能够处理这种异常状况的**异常处理器(exception handler)**。
-## 异常分类
+### 异常分类
 在Java程序设计语言中，异常对象都是派生于Throwablele类的实例对象。 
 ![](https://gitee.com/aryangzhu/picture/raw/master/java/%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB.png)  
 Error类层次结构描述了java运行时系统的内部错误或资源耗尽等情况。你不应该抛出这种错误。出现这种错误，除了通知用户并尽力妥善地终止程序几乎无能为力。所幸的是，这种情况很少见。 
@@ -35,7 +35,7 @@ Exception层次结构是我们关注的重点。它又分为了两个分支:
 
 **java中将派生于Error和RuntimeException类的所有异常称为-非检查型异常**。其他异常称为检查型异常。
 
-## 声明检查型异常
+### 声明检查型异常
 
 **方法不仅仅需要告诉编译器将要返回什么值，还要告诉编译器有可能出现什么错误**。例如，一段读取文件内容的代码知道**有可能读取的文件不存在，或者文件内容为空**，因此，试图处理文件信息的代码需要通知编译器可能会抛出IOException类的异常。
 
@@ -78,13 +78,13 @@ class MyAnimation{
 
 总之，一个方法必须声明所有可能抛出的检查型异常。
 
-### 需要注意的点
+#### 需要注意的点
 
 1.如果超类中声明了检查型异常，**子类覆盖超类的方法时不能声明超过父类的声明异常类型**(子类可以抛出更加特定的异常或者不抛出异常)；如果超类没有声明，子类也不能声明。
 
 2.**如果一个方法抛出一个异常，而这个异常是某个特定类的实例，那么这个异常可能属于这个类，也可能属于这个类的任意一个子类**。
 
-## 如何抛出异常
+### 如何抛出异常
 
 如果已有的异常类能够满足你的要求，可以查阅JavaAPI文档，在这种情况下:
 
@@ -120,11 +120,11 @@ String readData(Scanner in)throws EOFException{
 
 
 
-## 创建异常类
+### 创建异常类
 
 如果我们遇到任何标准异常类都无法描述的问题，则需要自己创建异常类。
 
-### 如何自定义异常类?
+#### 如何自定义异常类?
 
 1.定义的类需要**派生于Exception类或者Exception类的子类**(IOException等);
 
@@ -141,16 +141,16 @@ class FileFormatException extends IOException{
 
 
 
-### 常用API
-#### java.lang.Throwable
-##### Throwable()
+#### 常用API
+##### java.lang.Throwable
+###### Throwable()
 构造一个新的Throwable对象，**但没有详细的描述信息**
-##### Throwable(String message)
+###### Throwable(String message)
 **同上，但是带有指定的详细信息描述**。
-##### String getMessage()
+###### String getMessage()
 获得Throwable对象的详细描述信息。
-# 捕获异常
 ## 捕获异常
+### 捕获异常
 如果发生了某个异常，但没有在任何地方捕获这个异常，程序就会终止，并在控制台上打印一个消息，包括这个异常的类型和一个堆栈轨迹。使用try/catch语句块来捕获异常。  
 读取文件的例子:
 
@@ -190,7 +190,7 @@ public void read(String fileName) throws IOException{
 
 如果超类方法没有抛出异常，而子类进行方法覆盖，就需要捕获方法代码中的每一个检查型异常。
 
-## 捕获多个异常
+### 捕获多个异常
 
 如下
 
@@ -215,7 +215,7 @@ catch(FileNotFoundException | UnknownHostException e){
 }
 ```
 
-## 再次抛出异常与异常链
+### 再次抛出异常与异常链
 通常catch语句块用来处理异常，但是也可以在catch中再次抛出一个异常。书上的场景是:有个子系统供其他程序员来调用，**可以使用一个指示子系统故障的异常类型**。  
 将原始异常设置为新异常的“原因”:  
 ```java
@@ -233,7 +233,7 @@ try{
 Throwable original=caughtException.getCause();
 ```
 强烈建议使用这种包装技术。这样可以在子系统中抛出高层异常，而不会丢失原始异常的细节。  
-## finally子句
+### finally子句
 不管异常是否被捕获,finally中的代码都会被执行。
 ```java
 try{
@@ -261,7 +261,7 @@ try{
 4.如果代码部分抛出异常，但是没有catch块能够捕获异常。程序将跳过try语句块中的剩余代码，最后执行finally中的代码，并将异常抛回给这个方法的调用者。
 
 
-## try-with-Resource子句
+### try-with-Resource子句
 
 假设资源属于一个实现了AutoCloseable接口的类，Java7为这种代码模式提供了一个很有用的快捷方式。AutoCloseable接口有个方法:
 
@@ -288,7 +288,7 @@ PrintWriter out=new PrintWriter("out.txt",StandardCharsets.UTF_8)){
 
 无论这个块如何退出,in和out都会关闭。 
 
-## 分析堆栈轨迹元素
+### 分析堆栈轨迹元素
 
 **堆栈轨迹**是程序执行过程中某个特定点上所有挂起的方法调用的一个列表。
 
@@ -318,99 +318,99 @@ walker.walk(stream->process stream);
 
 利用StackWalker.StackFrame类的一些方法可以得到所执行代码行的文件名和行号，以及类对象和方法名。
 
-### 常用API
+#### 常用API
 
-#### java.lang.Throwable
+##### java.lang.Throwable
 
 Throwable(Throwable cause)
 
-##### Throwable(String message,Throwable cause)
+###### Throwable(String message,Throwable cause)
 
 用给定的cause(原因)构造一个Throwable对象。
 
-##### Throwable initCase(Throwable cause)
+###### Throwable initCase(Throwable cause)
 
 为这个对象设置原因，如果这个对象已经有原因，则抛出一个异常。返回this。
 
-##### Throwable getCause()
+###### Throwable getCause()
 
 获得设置的原因对象。
 
-##### StackTraceElement[] getStackTrace()
+###### StackTraceElement[] getStackTrace()
 
 获得构造这个对象时调用堆栈的轨迹。
 
-##### void addSuppressed(Throwable t)
+###### void addSuppressed(Throwable t)
 
 为这个异常增加一个“抑制的”异常。这出现在try-with-Resource语句中,其中t是close方法中抛出的一个异常。
 
-##### Throwable[] getSuppressed()
+###### Throwable[] getSuppressed()
 
 得到被抑制的异常。
 
-#### java.lang.Exception
+##### java.lang.Exception
 
 Exception(Throwable cause)
 
-##### Exception(String message,Throwable cause)
+###### Exception(String message,Throwable cause)
 
 用给定的cause构造一个Exception对象。
 
-#### java.lang.RuntimeException
+##### java.lang.RuntimeException
 
 RuntimeException(Throwable cause)
 
 RuntimeException(String message,Throwable cause)
 
-#### java.lang.StackWalker
+##### java.lang.StackWalker
 
 static StackWalker getInstance()
 
 static StackWalker getInstance(StackWalker.Option option)
 
-##### static StackWalker getInstance(Set\<StackWalker.Option> options)
+###### static StackWalker getInstance(Set\<StackWalker.Option> options)
 
 得到一个StackWalker实例。
 
-##### forEach(Consumer<? super StackWalker.StackFrame> action)
+###### forEach(Consumer<? super StackWalker.StackFrame> action)
 
 在每个栈帧上完成给定的动作，从最近调用的方法开始。
 
-##### walk(Function<? super Stream\<StackWalker.StackFrame>,? extends T> function)
+###### walk(Function<? super Stream\<StackWalker.StackFrame>,? extends T> function)
 
 对一个栈帧流应用给定的函数，返回这个函数的结果。
 
-#### java.lang.StackWalker.StackFrame
+##### java.lang.StackWalker.StackFrame
 
-##### String getFileName()
+###### String getFileName()
 
 得到包括该元素执行点的源文件的文件名,如果这个信息不可用则返回null。
 
-##### int getLineNumber()
+###### int getLineNumber()
 
 得到包含该元素执行点的源文件的行号,如果这个信息不可用则返回-1。
 
-##### String getClassName()
+###### String getClassName()
 
 得到方法包含该元素执行点的类的完全限定名。
 
-##### String getDeclaringClass()
+###### String getDeclaringClass()
 
 得到方法包含该元素执行点的类的Class对象。
 
-##### String getMethodName()
+###### String getMethodName()
 
 得到包含该元素执行点的方法的方法名。构造器方法名为\<init>。静态初始化器的方法名为\<clinit>。无法区分同名的重载方法。
 
-##### boolean isNativeMethod()
+###### boolean isNativeMethod()
 
 如果这个元素的执行点在一个原声方法中,则返回true。
 
-##### String toString()
+###### String toString()
 
 返回一个格式化字符串,包含类和方法名、文件名以及行号。
 
-#### java.lang.StackTraceElement
+##### java.lang.StackTraceElement
 
 String getFileName()
 
@@ -426,17 +426,17 @@ boolean isNativeMethod()
 
 String toString()
 
-# 使用异常的技巧
+## 使用异常的技巧
 
-## 1.使用异常不能代替简单的测试
+### 1.使用异常不能代替简单的测试
 
 理由很简单，捕获异常所用的时间比简单测试所花费的时间多得多。
 
-## 2.不要过分细化异常
+### 2.不要过分细化异常
 
 
 
-## 3.充分利用异常的层次结构
+### 3.充分利用异常的层次结构
 
 不要只抛出RuntimeException异常。应该寻找一个适合的子类或创建自己的异常类。
 
@@ -444,7 +444,7 @@ String toString()
 
 如果能够将一种异常转换成另一种更加适合的异常,那么不要犹豫。
 
-## 4. 不要压制异常
+### 4. 不要压制异常
 
 如果编写的方法调用了另一个方法，那个方法很久才会抛出一个异常，这时不使用throws列表中声明异常的话，编译器就会报错。
 
@@ -462,21 +462,21 @@ public Image loadImage(String s){
 
 我们可以看到catch语句块中什么也没干,一旦出现异常，这个异常就会被悄无声息地忽略。
 
-## 5.在检测异常时，“苛刻”更好
+### 5.在检测异常时，“苛刻”更好
 
 例如，使用无效的参数调用一个方法时，返回一个虚拟值是不是比抛出一个异常好?
 
 我们认为:最好在出错的地方抛出一个EmptyStackException异常，这要好于以后抛出一个NullPointerException异常。
 
-## 6.不要羞于传递异常
+### 6.不要羞于传递异常
 
 如果调用了一个抛出异常的方法,例如,FileInputStream构造器或readLine方法,它们就会本能地捕获这些可能产生的异常。其实,最好继续传递这个异常,而不是自己捕获
 
 **5和6可以归纳为"早抛出,晚捕获"**。
 
-# 使用断言
+## 使用断言
 
-## 断言的概念
+### 断言的概念
 
 断言机制是**允许在代码测试期间加入一些检查**,而在生产代码中会自动删除这些检查。
 
@@ -495,7 +495,7 @@ assert x>=0;
 assert x>=0:x;
 ```
 
-## 启用和禁用断言
+### 启用和禁用断言
 
 需要注意的是，**不必重新编译程序来启用或禁用断言**。启用或禁用断言是**类加载器**的功能。
 
@@ -515,9 +515,9 @@ java -ea:... -da:MyClass MyApp
 
 有些类不是由类加载器加载,**而是直接由虚拟机加载的**。可以使用这些开关有选择地启用或禁用那些类中的断言。
 
-## 使用断言完成参数检查
+### 使用断言完成参数检查
 
-### 什么时候使用断言
+#### 什么时候使用断言
 
 1.断言失败是不可恢复的;
 
@@ -525,11 +525,11 @@ java -ea:... -da:MyClass MyApp
 
 因此，不应该使用断言向程序的其他部分通知发生了可恢复性的错误,不应该利用断言程序与程序用户沟通问题。
 
-## 使用断言提供假设文档
+### 使用断言提供假设文档
 
-### 常用API
+#### 常用API
 
-#### java.lang.ClassLoader
+##### java.lang.ClassLoader
 
 void setDefaultAssertionStatus(boolean b)
 
@@ -547,7 +547,7 @@ void clearAssertionStatus()
 
 删除所有显式的类和包断言状态设置，并禁用通过这个类加载器加载的所有类的断言。
 
-# 日志
+## 日志
 
 **日志是一种在程序整个生命周期都可以使用的战略性工具**。
 
@@ -569,7 +569,7 @@ void clearAssertionStatus()
 
 7.日志系统的配置由配置文件控制。
 
-## 基本日志
+### 基本日志
 
 生成简单的日志记录,可以使用全局日志记录器(global logger)并调用其info方法:
 Logger.getGlobal().info("File->Open menu item selected");
@@ -578,7 +578,7 @@ Logger.getGlobal().info("File->Open menu item selected");
 
 Logger.getGlobal().setLevel(Level.OFF);
 
-## 高级日志
+### 高级日志
 
 在一个专业的应用程序中肯定不能将所有的日志都记录到一个全局日志记录器中。 
 
@@ -596,7 +596,7 @@ private static final Logger myLogger=Logger.getLogger("com.mycompany.myapp");
 
 通常,日志有
 
-### 7个级别:
+#### 7个级别:
 
 SEVERE(严重)
 
@@ -634,7 +634,7 @@ logger.log(Level.FINE,message);
 
 void logp(Level l,String className,String methodName,String messge);
 
-### 有一些用来跟踪执行流的方法:
+#### 有一些用来跟踪执行流的方法:
 
 void entering(String className,String methodName)
 void entering(String className,String methodName,Object param)
@@ -660,11 +660,11 @@ int read(String file,String pattern){
 
 记录日志的常见用途是记录预料之外的异常。**可以使用下面两个便利方法在日志记录集中包含异常的描述**:
 
-#### void throwing(String className,String methodName,Throwable t)
+##### void throwing(String className,String methodName,Throwable t)
 
-#### void log(Level l,String message,Throwable t)
+##### void log(Level l,String message,Throwable t)
 
-## 修改日志配置
+### 修改日志配置
 
 可以通过编辑配置文件来修改日志系统的各个属性。在默认情况下,配置文件位于:
 
@@ -720,7 +720,7 @@ key->key.startWith("com.company")
 
 也可以使用jconsole程序改变一个正在运行的程序级别。
 
-## 本地化
+### 本地化
 
 本地化的应用程序包含**资源包**中的本地特定信息。
 
@@ -747,7 +747,7 @@ logger.info("readingFile");
 
 
 
-## 处理器
+### 处理器
 
 在默认情况下,**日志记录器将记录发送到ConsoleHandler(控制台处理器),并由它输出到System.err流(输出流)**。具体地,**日志记录器会把记录发送到父处理器,而最终的祖先处理器(名为"")有一个ConsoleHandler**。
 
@@ -797,7 +797,7 @@ java.util.logging.FileHandler.pattern->日志文件名的模式(描述)->%h/java
 
 由于接触的比较少,所以我们在这里描述一下
 
-### 日志记录文件模式变量
+#### 日志记录文件模式变量
 
 %h->系统属性user.home的值
 
@@ -843,7 +843,7 @@ class WindowHandler extends StreamHandler{
 }
 ```
 
-## 过滤器
+### 过滤器
 
 默认情况下,会根据日志记录级别进行过滤。每个日志记录器和处理器都有一个可选的过滤器来完成附加的过滤。要定义一个过滤器,需要实现Filter接口并实现以下方法:
 
@@ -853,7 +853,7 @@ boolean isLoggable(LogRecord record)
 
 例如,某个过滤器可能只对entering方法和exiting方法生成的消息感兴趣,这个过滤器就可以调用record.getMessage()方法,并检查消息是否以ENTYR和RETURN开头。要想将一个过滤器安装到一个日志记录器或处理器中,**只需调用setFilter方法**就可以了。                                              
 
-## 格式化器
+### 格式化器
 
 ConsoleHandler类和FileHandler类可以生成文本和XML格式的日志记录。你也可以扩展Formatter类并覆盖下面的这个方法:
 
@@ -876,7 +876,7 @@ String getHead(Handler h)
 String getTail(Handler h)
 ```
 
-## 日志技巧
+### 日志技巧
 
 1.对于一个简单的应用,选择一个日志记录器。可以把日志记录器命名为与主应用包一样的名字,例如,com.mycompany.myprog。
 
@@ -925,193 +925,193 @@ try{
 }
 ```
 
-### 常用API
+#### 常用API
 
-#### java.util.logging.Logger
+##### java.util.logging.Logger
 
-##### Logger getLogger(String loggerName)
+###### Logger getLogger(String loggerName)
 
-##### Logger getLogger(String loggerName,String bundleName)
+###### Logger getLogger(String loggerName,String bundleName)
 
 获得给定名字的日志记录器。如果这个日志记录器不存在,则创建一个日志记录器。本地化消息位于名为bundleName的资源包中。
 
-##### void exiting(String className,String methodName,Object result)
+###### void exiting(String className,String methodName,Object result)
 
 记录一个描述进入/退出方法(有给定的参数和返回值)的日志记录。
 
-##### void throwing(String className,String methodName,Throwable t)
+###### void throwing(String className,String methodName,Throwable t)
 
 记录一个描述抛出给定异常对象的日志记录。
 
-##### void log(Level level,String message,Throwable t)
+###### void log(Level level,String message,Throwable t)
 
 记录一个有给定级别和消息的日志记录,其中可以包括对象或者可抛出对象。要包括对象,消息中必须包含格式化占位符{0}、{1}等。
 
 void logp(Level level,String className,String methodName,String message,Object[] objs)
 
-##### void logp(Level level,String className,String methodName,String message,Throwable t)
+###### void logp(Level level,String className,String methodName,String message,Throwable t)
 
 记录一个有给定级别、准确的调用者信息和消息的日志记录,其中可以包括对象或可抛出对象。
 
 void logrb(Level level,String className,String methodName,ResourceBundle bundle,String message,Object params)
 
-##### void logrb(Level level,String className,String methodName,ResourceBundle bundle,String message,Throwable thrown)
+###### void logrb(Level level,String className,String methodName,ResourceBundle bundle,String message,Throwable thrown)
 
 记录一个有给定级别、准确的调用者信息、资源包和消息的日志记录,其中可以包括对象或可抛出对象。
 
-##### void setLevel(Level l)
+###### void setLevel(Level l)
 
 获得和设置这个日志记录器的级别。
 
-##### void setParent(Logger l)
+###### void setParent(Logger l)
 
 获得和设置这个日志记录器的父日志记录器。
 
-##### Handler[] getHandlers()
+###### Handler[] getHandlers()
 
 获得这个日志记录器的所有处理器。
 
 void addHandler(Handler h)
 
-##### void removeHandler(Handler h)
+###### void removeHandler(Handler h)
 
 增加/删除这个日志记录其中的一个处理器。
 
 boolean getUseParentHandlers()
 
-##### void setUseParentHandlers(boolean b)
+###### void setUseParentHandlers(boolean b)
 
 获得和设置“使用父处理器”属性。如果这个属性是true，日志记录器会将全部的日志记录转发给他的父处理器。
 
 void getFilter()
 
-##### void setFilter(Filter f)
+###### void setFilter(Filter f)
 
-#### java.util.logging.Handler
+##### java.util.logging.Handler
 
-##### abstract void publish(LogRecord record)
+###### abstract void publish(LogRecord record)
 
 将日志记录发送到希望的目的地。
 
-##### abstract void flush()
+###### abstract void flush()
 
 刷新输出所有已缓冲的数据。
 
-##### abstract void close()
+###### abstract void close()
 
 刷新输出所有的已缓冲数据,并释放所有相关的资源。
 
 Filter getFilter()
 
-##### void setFilter(Filter f)
+###### void setFilter(Filter f)
 
 获得和设置这个处理器的过滤器。
 
 Formatter getFormatter()
 
-##### void setFormatter(Formatter f)
+###### void setFormatter(Formatter f)
 
 获得和设置这个处理器的格式化器。
 
 void getLevel()
 
-##### void setLevel(Level l)
+###### void setLevel(Level l)
 
 获得和设置处理器级别。
 
-#### java.logging.ConsoleHandler
+##### java.logging.ConsoleHandler
 
-##### ConsoleHandler()
+###### ConsoleHandler()
 
 构造一个新的控制台处理器。
 
-#### java.util.logging.FileHandler
+##### java.util.logging.FileHandler
 
-##### FileHandler(String pattern,long limit,int count,boolean append)
+###### FileHandler(String pattern,long limit,int count,boolean append)
 
 构造一个文件处理器。limit是日志文件可以包含的最大字节数,count是循环文件的数量。
 
-#### Java.util.logging.LogRecord
+##### Java.util.logging.LogRecord
 
-##### Level getLevel()
+###### Level getLevel()
 
 获得这个日志记录的日志级别。
 
-##### String getResourceName()
+###### String getResourceName()
 
 获得正在记录这个日志记录的日志记录器的名字。
 
 ResourceBundle getResourceBundle()
 
-##### String getResourceBundleName()
+###### String getResourceBundleName()
 
 获得用于本地化消息的资源或资源包名。
 
-##### String getMessage()
+###### String getMessage()
 
 获得本地化或格式化之前的"原始"消息。
 
-##### Object[] getParameters()
+###### Object[] getParameters()
 
 获得对象参数。
 
-##### Throwable getThrown()
+###### Throwable getThrown()
 
 获得所抛出的对象。
 
 String getResourceClassName()
 
-##### String getResourceMethodName()
+###### String getResourceMethodName()
 
 获得记录这个日志记录的代码区域。**这个信息有可能是由日志记录代码提供的,也有可能是自动从运行时堆栈推测出来的**。
 
-##### long getMillis()
+###### long getMillis()
 
 获得创建时间。
 
-##### Instant getInstant()
+###### Instant getInstant()
 
 获得创建时间,作为java.time.Instant返回。
 
-##### long getSequenceNumber()
+###### long getSequenceNumber()
 
 获得这个日志记录的唯一序号。
 
-##### int getThreadID()
+###### int getThreadID()
 
 获得创建这个日志记录的线程的唯一ID。这些ID是由LogRecord类分配的,与其他线程的ID无关。
 
-#### java.util.logging.LogManager
+##### java.util.logging.LogManager
 
-##### static LogManager getLogManager()
+###### static LogManager getLogManager()
 
 获得全局LogManager实例。
 
 void readConfiguration()
 
-##### void readConfiguration(InputStream in)
+###### void readConfiguration(InputStream in)
 
 从系统属性java.util.logging.config.file指定的文件或者给定的输入流读取日志配置。
 
 void updateConfiguration(InputStream in,Function\<String,BiFunction\<String,String,String>> mapper)
 
-##### void updateConfiguration(Function\<String,BiFuntion\<String,String,String>> mapper)
+###### void updateConfiguration(Function\<String,BiFuntion\<String,String,String>> mapper)
 
 将日志配置与系统属性java.util.logging.configl.file指定的文件或给定的输入流合并。
 
-#### java.util.logging.Filter
+##### java.util.logging.Filter
 
-##### boolean isLoggable(LogRecord record)
+###### boolean isLoggable(LogRecord record)
 
 如果给定日志记录需要记录,则返回true。
 
-#### java.util.logging.Formatter
+##### java.util.logging.Formatter
 
-##### abstract String format(LogRecord record)
+###### abstract String format(LogRecord record)
 
 返回格式化给定日志记录后得到的字符串。
 
-## 调试技巧
+### 调试技巧
 
 1.用下面的方法打印或记录任意变量的值。
 

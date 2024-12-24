@@ -1,10 +1,10 @@
 基本思想是可以**基于已有的类创建新的类，因为这样做的话(继承)就可以复用已创建的类的方法，而且可以增加一些新的方法和字段，使新类能够适应新的情况**
 **反射，反射是指在程序运行期间更多地了解类及其属性的能力**，反射是一个功能强大的特性，也是成为高阶程序员的必经之路
-# 类、超类和子类
+## 类、超类和子类
 Employee只需要领薪水，而Manager完成业绩之后还可以领取奖金，所以我们需要拓展程序功能，但是又要复用原来的类。
 关键字**extends**相当于C++的**:**(冒号)
 
-## 定义子类
+### 定义子类
 
 超类和子类的概念来自于计算机科学与数学理论中集合语言的术语。
 
@@ -18,7 +18,7 @@ public class Manager extends Employee{
 }
 ```
 可以看到Manager中有自己独有的方法setBonus()，这就是在基类上进行拓展，但是子类中也可使用getName和getHireDay等方法，类似的，从超类中还继承了name、salary和hireDay这几个字段，再加上的自己的bonus。
-## 覆盖方法
+### 覆盖方法
 超类中的方法不一定适用，需要自己修改
 比如，Manager返回薪水和工资的总和
 
@@ -47,17 +47,17 @@ public double getSalary(){
 有些人认为super与this引用是类似的概念，实际上，这样并不恰当。因为super不是一个对象的引用，例如，不能将值super赋给另一个对象变量，他只是一个**指示编译器调用超类方法**的特殊关键字。
 Java中使用super,而C++中使用::
 
-### 方法重写和方法重载的区别
+#### 方法重写和方法重载的区别
 
 首先我们来看一个方法都有什么要素:
 
 权限修饰、静态/动态修饰、返回值类型、方法名、参数列表
 
-重写是在子类中去重新实现父类,所以他需要相同的**返回值类型、方法名和参数列表**，但是允许子类的权限不超过父类。
+重写是在子类中去重新实现父类,所以他需要相同的**返回值类型、方法名和参数列表**，但是**允许子类的权限不超过父类**。
 
 重载是在一个类中，方法名相同但是参数列表不同。
 
-#### 为什么重写的子类方法的权限要大于父类方法
+##### 为什么重写的子类方法的权限要大于父类方法
 
 因为加入父类是public而子类是private的话,那么后面使用多态
 
@@ -65,7 +65,7 @@ Employee e=new Mannager();
 
 就无法准确调用它的方法。
 
-## 子类构造器
+### 子类构造器
 ```java
 public Manager(String name,double salary,int year,int month,itn day){
 	super(name,salary,year,month,day);
@@ -73,21 +73,21 @@ public Manager(String name,double salary,int year,int month,itn day){
 }
 ```
 super构造器必须是子类构造器的第一条语句或者说**调用构造器的语句只能作为另一个构造器的第一句语句出现**。**构造器的参数可以传给当前类(this) 的其他构造器,也可以传给超类(super)的构造器**。
-**如果子类的构造器没有显式地调用超类的构造器，将自动地调用超类的无参构造器**，如果超类没有无参构造器，并且在子类构造器中又没有显示地调用超类的其他构造器，Java编译器就会报错
+**重点:如果子类的构造器没有显式地调用超类的构造器，将自动地调用超类的无参构造器**，如果超类没有无参构造器，并且在子类构造器中又没有显示地调用超类的其他构造器，Java编译器就会报错
 也就是说，子类在初始化时会自动调用超类的构造器。如果我没有记错的话，应该是静态块先初始化，然后才会执行超类的构造函数。
-**this关键字的作用**
-1.指示隐式参数的引用
-2.调用该类的其他构造器
-**super关键字的作用**
-1.调用超类方法
-2.调用超类的构造器
+#### this关键字的作用
+1. 指示隐式参数的引用
+2. 调用该类的其他构造器
+#### super关键字的作用
+1. 调用超类方法
+2. 调用超类的构造器  
 对象变量e可以引用Employee对象，也可以引用Manager对象
 **虚拟机知道e实际引用的对象类型，因此能够正确地调用相应的方法**
 一个对象变量(例如，变量e)可以指示多种实际类型的现象被称为多态，在**运行时能够自动地选择**适当的方法，称为**动态绑定**。
 
-## 继承层次
+### 继承层次
 意思就是继承不只是单层的，类似与树一样，在每一层有多个节点，而在继承体系中，某个特定的的类到其祖先的距离称为继承链。
-## 多态
+### 多态
 多态是**针对对象变量**来说的，我们只能说java中某个对象变量是多态的。
 我们可以使用"is-a"来设计类是否能够继承父类，例如每个经理其实都是一名员工，反之不成立；另一个方面，“is-a"也有替换的一位，什么意思呢，父类型变量引用可以被子类型变量替换掉。
 **不能将超类的引用赋给子类变量。例如,Manager m=staff[i]**,原因很清楚：不是所有员工都是经理。如果赋值成功，m可能引用了一个不是经理的Employee对象，而在后面有可能会调用m.setBonus(...),这就会发生运行时的错误。
@@ -98,7 +98,7 @@ Employee[] staff=managers;   // 超类数组指向子类数组引用,多态的�
 staff[0]=new Employee("Harry Hacker..."); //编译器居然也没有识别出问题，如果这里的引用对象进行了修改，那么原对象变量指向的引用也就发生了改变。
 managers[0].setBonus(1000);将会试图调用一个不存在的实例字段，进而会扰乱相邻存储空间的内容，会引发ArraysStoreException异常。
 ```
-## 理解方法调用
+### 理解方法调用
 假设要调用x.f(args),隐式参数x声明为类C的一个对象。联想到了this关键字。
 1.编译器查看对象的声明类型和方法名。有可能存在多个名字为f但参数类型不一样的方法。例如，f(int)和f(String),**编译器将会一一列举类中所有名为f的方法和超类中所有名为f的方法而且可访问的方法(超类的私有方法不可访问)**
 如此一来，编译器就已经知道了所有可能被调用的方的候选方法。
@@ -133,13 +133,13 @@ public class Test{
 
 动态绑定还有一个重要的特性是：无须对现有的代码进行修改就可以对程序进行扩展。假设增加一个新类Executive,并且变量e引用了这个新类，比如说是getSalary()方法，那么就无须重新编译e.getSalay()的代码，而是直接调用Excutive.getSalary()方法。
 
-## 阻止继承:final类和方法
+### 阻止继承:final类和方法
 **final修饰的类不能继承，方法不能覆盖**。
 例如，Calendar的getTime和setTime就不允许别的子类来实现，只有Calendar这个类的设计者来实现，大佬果然是大佬。
 String没有子类我们都知道，String类型的变量也不允许指向别的引用。
 早期Java程序员甚至会使用final修饰方法来减少开销，因为**一个方法很短且不能被覆盖的话那么CPU就能对其进行优化处理**，这个过程称为**内联**。e.getName->e.name,所幸，现在的虚拟机的即时编译器都很强，它能准确的知道类之间的继承关系，如果方法很短且没有被覆盖，那么**即时编译器**就会将这个方法进行内联处理。如果有子类的话，那么虚拟机将取消内联。又是虚拟机，可见虚拟机在Java体系中的重要意义。
 
-## 强制类型转换
+### 强制类型转换
 例如
 ```java
 double x=3.405;
@@ -162,7 +162,7 @@ staff[1]=new Employee(500);
 Employee[] staff=new Employee[3];
 
 for(int i=0;i<staff.length;i++){
-if(i为经理) staff[i]=new Employee(5000);
+if(i为经理) staff[i]=new Manager(5000);
 else staff[i]=new Employee(500);
 }
 staff[0]=(Manager)staff[0];
@@ -179,7 +179,7 @@ if(staff[1] instanceof Manager){
 boss=(Manager)staff[1];
 }
 ```
-## 抽象类
+### 抽象类
 自下而上的看，位于上层的类更具有一般性，可能更加抽象。从某种角度看，**祖先类更加具有一般性，人们只将它作为派生其他类的基类**，而不是来构造你想使用的实例。
 tip:通用的方法应该放在超类中。
 **抽象方法充当着占位方法的角色**，在子类中进行实现：
@@ -198,17 +198,14 @@ for(...){
 }
 ```
 p为什么能调用getDescription呢，这是因为由于不能构造抽象类Person的对象，所以变量p永远不会引用person对象，而是引用诸如Employee或Student这样的具体子类的对象，而这些对象中都定义了getDescription方法。
-## 受保护访问
-
+### 受保护访问
 子类的权限需要比父类更高,因为多态的存在，如果父类为public而子类为private那么当类型声明为父类，就无法体现多态。
-
-# Object:所有类的超类
-
-## Oject类型变量
+## Object:所有类的超类
+### Oject类型变量
 在Java中，**只有基本类型不是对象，例如数值、字符和布尔类型的值都不是对象**。
 **所有的数组类型，不管是对象数组还是基本类型的数组都扩展了Object类**。
 
-## equals方法
+### equals方法
 Object中实现的equals方法用于确定两个对象引用是否相等。
 覆盖equals方法的基本套路
 
@@ -243,7 +240,7 @@ getClass将返回一个对象所属的类。
 
 如果有子类的话，那么子类中直接调用超类的方法，如果相等再进行属性比较。
 
-## 相等测试与继承
+### 相等测试与继承
 if(!(otherObject instance of Employee))return false;
 允许其他类为Object的一个子类
 Java规范:
@@ -257,7 +254,7 @@ Java规范:
 2.如果由超类决定相等的概念，那么就可以使用instance of检测，这样可以再不同子类的对象中进行相等行比较
 说人话就是如果Emeployee和Manager进行比较，那么只用比较对应字段；如果两个Manager进行比较，则需要各个字段都相等，比如说奖金不相等就false,因此，需要使用getClass检测????
 
-## hashcode方法
+### hashcode方法
 由对象导出的hash值。
 **字符串相同的话有相同散列值**。
 String s="OK";
@@ -267,9 +264,9 @@ StringBuilder tb=new StringBuilder(t);
 
 s和t的hash值是一样的，而sb和tb的hash值却不相同，Object 类的默认hashCode方法会从对象的存储地址得出散列码。
 
-### 常用API
+#### 常用API
 
-#### java.lang.Object
+##### java.lang.Object
 
 int hashCode 
 
@@ -291,28 +288,28 @@ static int hashCode(xxxValue)
 java.util.Arrays
 static int hashCode(xxx[] a)
 计算数组a的散列码。
-## toString方法
+### toString方法
 随处可见toString()方法的主要原因是:只要对象与一个字符串通过字符串"+"连接起来。Java编译器就会自动地调用toString方法来获得这个对象的字符串描述。
 tip:在代码编写的过程中我们常常需要打印数组，但是原始的数组toString()的话会打印许I@a46e30这种前缀(这是由于历史原因造成的)，所以我们可以使用Arrays.toString(int[] nums),toString()在我们的日常调试中经常会用，熟练应用百利而无一害。
 
-### 常用API
+#### 常用API
 
-#### java.lang.Object
+##### java.lang.Object
 
 ​	Class getClass() 返回包含对象信息的类对象。
 ​	boolean equals(Object otherObject) 比较两个对象是否相等，如果两个对象指向同一块存储区域，方法返回true;
 ​	String toString() 返回表示该对象值的字符串。
 
-# 泛型数组列表
+## 泛型数组列表
 C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以理解成一个**带有类型参数**的泛型，<>指定了列表保存的元素对象的类型。泛型是由编译器来检测我们的集合对象中存放的对象是否符合我们之前的承诺，也就是说，如果定义了List<某种类型对象>，那么编译器就会帮助我们检查我们集合中添加的对象是否符合规范，如果不符合那么就会报错。 
 
-## 声明数组列表
+### 声明数组列表
 
 编译器会检查这个变量、参数或方法的泛型类型，然后将这个类型放在<>中。
 
-### 常用API
+#### 常用API
 
-#### java.util.ArrayList\<E>
+##### java.util.ArrayList\<E>
 
 ​	ArrayList\<E>() 构造一个空数组列表
 ​	ArrayList\<E>(int initialCapacity) 构造一个定长的数组
@@ -321,7 +318,7 @@ C/C++中，运行之前就必须规定数组的大小，ArrayList\<Object>可以
 ​	void ensureCapacity(int capacity) 不进行扩容的情况下确保给定的capacity个元素能够被分配在数组中
 ​	void trimToSize() 将数组列表的存储容量削减到当前大小
 
-## 访问数组列表元素
+### 访问数组列表元素
 自动扩容有利有弊，数组列表自动扩容的便利也增加了访问元素语法的复杂程度,其原因是ArrayList并不是Java程序设计语言的一部分；它只是由某个人编写并在标准库中提供的一个实用工具类。
 []不能使用，而要使用get和set方法
 例如，staff.set(i,harry);
@@ -342,18 +339,18 @@ int n=staff.size()/2;
 staff.add(n,e);
 ```
 
-### 常用API
+#### 常用API
 
-#### java.util.ArrayList\<E>
+##### java.util.ArrayList\<E>
 
 ​	E set(int index,E obj) 将值obj放置在数组列表的指定索引位置，返回之前的索引
 ​	E get(int index)　得到指定索引为值的内容
 ​	void add(itn index,E obj)　后移元素从而将obj插入到指定索引位置
 ​	E remove(int index)　删除指定索引位置的元素，并将后面的所有元素前移
 
-## 类型化与原始数组的兼容性
+### 类型化与原始数组的兼容性
 处于兼容性的考虑，编译器检查到**没有发现违反规则**的现象之后，就将所有的类型化数组列表转换为原始的ArrayList对象。在程序运行时，所有的数组列表都是一样的，即虚拟机中没有类型参数。
-# 对象包装器和自动装箱
+## 对象包装器和自动装箱
 有时，需要将int这样的基本类型转换为对象。所有基本类型都有对应包装器类型，包装器是**不可改变的，即一旦构造了包装器，就不允许更改包装在其中的值**。
 
 ```java
@@ -366,23 +363,23 @@ list.add(Integer.ValueOf(3));
 **注意**自动装箱规范要求boolean、byte、char<=127,介于-128和127之间,我们也称作缓冲区，short和int相同的值被包装到固定的对象中。我们可以和String类型的常量池进行一个比较，其实他们的作用是一样的。
 另外，如果在一个表达式中混合使用Integer和Double类型,Integer值就会拆箱，提升为double,在装箱为Double。同时,我们需要清楚**装箱和拆箱是编译器要做的工作**,而不是虚拟机。
 
-### 常用API
-#### java.lang.Integer
-##### int intValue()
+#### 常用API
+##### java.lang.Integer
+###### int intValue()
 
 将这个Integer对象的值作为一个int值返回。(覆盖Number类中的intValue方法。
-​##### static String toString()
+​###### static String toString()
 ​返回一个新的String对象，表示指定的数值i的十进制表示
-​##### static String toString(int i,int radix)
+​###### static String toString(int i,int radix)
 ​返回数值i基于radix参数指定进制的表示
-​##### static int parseInt(String s)
-​##### static int parseInt(String s,int radix)
+​###### static int parseInt(String s)
+​###### static int parseInt(String s,int radix)
 ​返回字符串s表示的整数，指定字符串必须表示一个十进制整数(第一种方法),或者采用radix参数指定的进制(第二种方法)
-​##### static Integer valueOf(String s)
-​##### static Integer valueOf(String s,int radix)
+​###### static Integer valueOf(String s)
+​###### static Integer valueOf(String s,int radix)
 ​返回一个新的Integer对象，用字符串s表示的整数初始化，默认十进制，或者采用radix参数指定的进制
-# 参数数量和可变的方法
-# 枚举类
+## 参数数量和可变的方法
+## 枚举类
 ```java
 public enum Size{SMALL,MEDIUM,LARGE,EXTA_LARGE}
 ```
@@ -400,13 +397,13 @@ java.lang.Enum\<E>
 	返回枚举常量在enum声明中的位置,位置从0开始计数。  
 	int compareTo(E other)  
 	如果枚举常量出现在other之前，返回一个负整数;如果this==other，则返回0;否则,返回一个正整数。枚举常量的出现次序在enum声明中给出。  
-# 反射
+## 反射
 **反射库(reflection library)提供了一个丰富且精巧的工具集，可以用来编写能够动态操作Java代码的程序。  
 **能够分析类能力的程序称为反射**  
 在运行时分析类的能力,在运行时检查对象，例如，编写一个适用于所有类的toString方法 实现泛型数组操作代码  
 利用Method对象，**这个对象很像C++中的函数指针**   
 总结来说反射是一种功能强大且复杂的机制。  
-## Class类
+### Class类
 Java运行时系统为每个对象维护**一个运行时类标识**，这个信息会跟踪对象所属的类，虚拟机利用运行时类型信息选择要执行的正确方法。  
 
 Java中有一个特殊的类访问这些信息，要保存这些信息的类名为Class，这个名字可能让然有些困惑。
@@ -444,22 +441,22 @@ Class cl=Class.forName(className);
 Object obj=cl.getConstructor().newInstance();
 ```
 
-### 常用API
-#### java.lang.Class
+#### 常用API
+##### java.lang.Class
 ​	static Class forName(String className)
 ​	返回一个Class对象，表示名为className的类
 ​	Constructor getConstructor(class..parameter Types)
 ​	生成一个对象,描述有指定参数类型的构造器。
 
-#### java.lang.reflect.Constructor
+##### java.lang.reflect.Constructor
 ​	Ojbect newInstance(Object..params)
 ​	将params传递到构造器，来构造这个构造器声明类的一个新实例
 
-#### java.lang.Throwable
+##### java.lang.Throwable
 ​	void printStackTrace()
 ​	将Throwable对象和堆栈轨迹打印到标准流程错误
 
-## 声明异常入门
+### 声明异常入门
 
 程序运行错误时就会抛出一个异常，因为有一个**处理器**能够“捕获”并处理这个异常。
 
@@ -476,7 +473,7 @@ public static void doSomethingWithClass(String name) throws ReflectOperationExce
 
 调用这个方法的任何方法也都需要一个throws声明，这也包括main方法。
 
-## 资源
+### 资源
 
 Class类中提供了查找资源文件的，但是得遵循以下步骤:
 1.获得拥有资源的类的Class对象，ResourceTest.Class
@@ -489,7 +486,7 @@ URL getResource(String name)
 InputStream getResourceAsStream(String name)
 找到与类位于同一位置的资源，返回一个可以用来加载资源的URL或者输入流。如果没有找到，则返回null。
 
-## 利用反射分析类的能力
+### 利用反射分析类的能力
 在java.lang.relect包下有三个类Field、Method和Constrcutor,这里在Spring容器中运用的非常多，所以我们需要认真学。
 这三个类都有**getName()**的方法，分别用来返回**字段、方法或者构造器的名称**。
 Field类下比较重要的是getType方法，用来返回**某个字段的类型对象，类肯定就是Class**。
@@ -530,9 +527,9 @@ Class类中的getDeclaredFields、getDeclaredMethods和geteclaredConstructors方
 
 
 
-### 常用API
+#### 常用API
 
-#### java.lang.Class
+##### java.lang.Class
 Field[] getFilelds()
 
 Field[] getDeclaredFields()
@@ -549,7 +546,7 @@ Constructor[] geteclaredConstructors()
 ​	返回包含Constructor对象的数组
 String getPackageName() 得到包名。
 
-#### java.lang.reflect.Constructor
+##### java.lang.reflect.Constructor
 
 Class getDeclaringClass()
 
@@ -570,13 +567,13 @@ Class getReturnType()(在Method类中)
 
 返回一个用于表示返回类型的Class对象
 
-#### java.lang.reflect.Modifer
+##### java.lang.reflect.Modifer
 
 static String toString(int modifiers)
 
 返回一个字符串，包含对应modifiers中设置的修饰符。
 
-## 使用反射在运行时分析对象
+### 使用反射在运行时分析对象
 
 **在运行时获得任意对象数据字段字段的名字和类型**
 1.获得对应的Class对象
@@ -597,11 +594,11 @@ Object v=f.get(harry);//harry是obj,v的值应该是“Harry Hacker“
 
 **注意**:Java安全机制允许查看一个对象有哪些字段，但是除非是访问权限，否则不允许进行读写。但是可以使用f.setAccessible(true)；覆盖Java的访问控制。
 
-## 使用反射编写泛型数组代码
+### 使用反射编写泛型数组代码
 
 java.lang.reflect包中的Array类允许动态地创建数组。例如，Array类中的copyOf方法实现就使用了这个类。
 
-## 调用任意方法和构造器
+### 调用任意方法和构造器
 
 回想一下，可以用Field类的get方法查看一个对象的字段。与之类似，**Method**类中的 Object **invoke**(Object obj,Object args)作用是**用来调用包装在当前Method对象中的方法**。
 第一个参数是隐式参数，其余的则提供了显式参数,**对于静态方法来说，第一个参数可以忽略**。
@@ -622,7 +619,7 @@ double salary=(Double)m2.getSalary();
 
 建议在绝对有必要的时候才在你自己的程序中使用Method对象。
 
-# 继承设计的技巧
+## 继承设计的技巧
 
 1. 将公共操作放在超类中。
 2. 不要使用受保护的字段

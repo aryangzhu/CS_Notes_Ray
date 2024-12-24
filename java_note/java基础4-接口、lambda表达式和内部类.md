@@ -1,6 +1,6 @@
-# 接口
+## 接口
 接口是一种技术，用来描述类应该做什么，但是不指定如何做。**一个类可以实现一个或者多个接口。**然后介绍lambda表达式，再讨论内部类(定义在其他类的内部，可以访问外部类的字段)，最后学习反射机制。
-## 接口的概念
+### 接口的概念
 接口不是类，而是希望实现它的所要完成的一组需求。
 例如Comparable接口的代码
 ```java
@@ -23,7 +23,7 @@ class Employee implents Comparable<Employee>{
 ```
 实现接口时使用public，否则编译器会视为包权限。  
 注:正常情况下x.equals()y时x.compareTo(y)就应当为0，有一个类例外，BigDecimal,在比较1.0和1.00时comparable就会出现负值。  
-#### 常用API
+##### 常用API
 java.lang.Comparable\<T>  
 ​	int comparableTo(T other) 将**这个对象与other进行比较**  
 java.util.Arrays  
@@ -42,7 +42,7 @@ class Manager extends Employtee{
 	}
 }
 ```
-## 接口的属性
+### 接口的属性
 接口不能被实例化  
 **可以使用instanceof来检验一个对象是否实现了某个接口**,如下  
 ```java
@@ -56,22 +56,22 @@ public interface Powered extends Mobeable{
 }
 ```  
 接口中的字段总是public static final
-## 接口与抽象类 
+### 接口与抽象类 
 在这里，我们提出了一个问题，既然抽行类也有定义需求的功能，为什么还要这么麻烦地引入接口呢？  
 这是因为类在设计时就只允许只能一个一个类，而一个类却可以实现多个接口。  
 注：C++设计者允许一个类有多个超类，但是Java不支持多重继承。  
-### 共同点 
+#### 共同点 
 1.都不能被实例化  
 2.都可以包含抽象方法  
 3.都可以有默认实现的方法  
-### 区别
+#### 区别
 1.接口规范行为,抽象类强调的是所属关系  
 2.一个类只能继承一个类,但是可以实现多个接口  
 3.抽象类的成员变量默认default,可在子类中被重新定义,也可以被重新赋值。  
-## 静态和私有方法
+### 静态和私有方法
 java8中允许在接口中增加静态方法，只是一般将静态方法放在伴随类中，所以我们**经常会在标准库中见到成对出现的接口和实用工具类**。  
 Java9中接口中方法可以是private，**private可以是静态或者实例方法，但是只能在接口本身中使用，用法有限，一般作其他方法的辅助方法**。  
-## 默认方法
+### 默认方法
 可以为接口中的方法提供一个默认实现，使用default修饰。例如
 ```java
 public interface Comparable<E>{
@@ -99,7 +99,7 @@ public class Bag implements Collection
 后来接口中增加了一个stream的方法，**由于Bag类没有实现stream方法，那么Bag类将无法编译(无法保证“源代码兼容”)**。    
 假设不编译这个类，而是**只使用原来的一个包含这个类的jar文件,这个类可以正常加载**，尽管没有新方法。程序仍然可以正常构造Bag实例，但是如果调用实例方法sream()，那么就会出现AbstactMethodError。      
 如果来使用了default的话，那么Bag类就能通过编译，另外，**如果重新编译而直接加载这个类的话并且在一个实力上使用sream方法，实际上调用的的是Collection.stream()**。  
-## 默认方法解决冲突  
+### 默认方法解决冲突  
 如果两个接口定义了形同的方法，或者一个超类和一个接口定义了相同的方法。  
 1.超类优先。  
 2.如果两个接口相互冲突，那么就要覆盖这个方法来解决冲突(二者择其一)。  
@@ -127,7 +127,7 @@ class Student implements Person,Named{
 }
 ```
 
-## 接口与回调
+### 接口与回调
 
 **回调(callback)是一种常见的程序设计模式**。在这种模式中，你可以指定某个特定事件发生后执行的操作。例如，点击菜单选项之后完成的某个特定动作。
 
@@ -166,7 +166,7 @@ Timer timer = new Timer(1000 ,listener);
 timer.start();
 ```
 通过start()来启动定时器
-## Comparator接口
+### Comparator接口
 ​之前我们已经了解了如何对一个对象数组进行排序，前提是对象数组中的元素(对象)需要实现Comparable接口，这样才可以将两个对象进行比较。例如，String.compareTo方法可以按字典顺序比较字符串，这是由于String类实现了Comparable\<String>。  
 ​	现在，我们希望能够按字符串长度进行排序，显然我们无法对String类进行修改。  
 ​	如何处理这种情况呢，在Arrays.sort方法中还有第二个版本，有一个数组和一个**比较器**(comparator)作为参数，比较器是实现了Comparator接口的类的实例。  
@@ -196,7 +196,7 @@ String friends=new String("Peter","Mary","Paul");
 Arrays.sort(friends,new LengthComparator());
 ````
 **理解了这个例子我们学习lamda表达式才能更加容易**
-## 对象克隆Cloneable
+### 对象克隆Cloneable
 Cloneable接口，用的比较少，但是这里的技术性很强。  
 为了解决什么问题，首先我们所学过创建一个包含对象引用的变量的副本，原对象和副本都是同一个对象的引用。如下  
 ```java
@@ -225,13 +225,13 @@ copy.raiseSalary(10);
 **注意：**
 1.**protected限制是同一个包下的类可以访问超类的字段**，所以，Date类型的hireDay肯定无法直接由Employee来clone()，引用对象需要单独复制。  
 2.Cloneable是一个标记接口，不包含任何方法，但是可以使用instanceof关键字来检查。
-# lamda表达式
-## 为什么引入lamba表达式
+## lamda表达式
+### 为什么引入lamba表达式
 **<font color="blue">lamba表达式是一个可传递的代码块</font>**  
 例如之前的TimerPrinter，可以构造一个实例提交到Timer对象。  
 再或者想要自己定制一个比较器，可以向数组传递一个Comparator对象  
 上面两者的共同特征是将一个代码块传递到到某个对象(定时器，Arrays的sort方法)
-## lamba表达式的语法  
+### lamba表达式的语法  
 用排序来说明，first.length()-second.length()使我们的主要任务。
 
 ```java
@@ -240,7 +240,7 @@ copy.raiseSalary(10);
 ```  
 为什么被称为lamba，来源也很有趣  
 **表达形式**:参数、箭头(->)以及一个表达式  
-### 几种常见的用法  
+#### 几种常见的用法  
 1.在{}中编写程序,如果需要运行的程序无法通过一个表达式完成，则应该放在{}中  
 ```java
 (String first,String second)->{
@@ -276,7 +276,7 @@ Action listener=event->{
 }
 ```
 
-### 函数式接口
+#### 函数式接口
 
 Java中有许多接口中都有封装代码块，和lamba表达式兼容，接口中必须有且仅有一个**抽象方法**，并且在使用时可转换为lamba表达式的接口被称为函数式接口(Comparator和ActionListener)。
 
@@ -319,9 +319,9 @@ var Timer =new Timer(1000,event->{
 
 **lambda表达式最大的用途就是函数式接口,而且lambda表达式是一个函数而不是一个对象**
 
-####  Java API在java.util.function包中定义的通用的函数式接口
+#####  Java API在java.util.function包中定义的通用的函数式接口
 
-##### Predicate接口
+###### Predicate接口
 
 ```java
 public interface Predicate{
@@ -335,7 +335,7 @@ ArrayList类有一个removeIf方法，它的参数就是一个Predicate。这个
 list.removeIf(e->e==null);
 ```
 
-## 方法引用
+### 方法引用
 
 来看之前的一个例子
 
@@ -369,15 +369,15 @@ void run()
 
 这里会选择无参数的prinlnt()方法，调用task.run()方法会向System.out打印一个空行。
 
-### 使用::运算符的三种情况
-#### 1.object::instanceMethod
+#### 使用::运算符的三种情况
+##### 1.object::instanceMethod
 对象::实例方法，相当于向方法传递参数的lambda表达式，对于System.out:println,对象是System.out,等价于x->System.out.println(x)  
-#### 2.Class::instanceMethod
+##### 2.Class::instanceMethod
 类::实例方法，::之前的参数会成为方法的隐式参数。例如，String::compareToIgnoreCase等同于(x,y)->x.compareToIgnoreCase(y)  
-#### 3.Class:StaticMethod
+##### 3.Class:StaticMethod
 所有参数都传递到静态方法，例如Math::pow等价于(x,y)->Math.pow(x,y)  
-## 引用构造
-## 变量的作用域
+### 引用构造
+### 变量的作用域
 通过代码更加直观  
 ```java
 public static void repeatMessage(String text,int delay){
@@ -431,7 +431,7 @@ public static void repeatMessage(String text,int delay){
 
 
 
-## 处理lambda表达式
+### 处理lambda表达式
 
 使用lambda表达式的重点是**延迟执行(deferred execution)**
 
@@ -485,7 +485,7 @@ public static  void repeat(int n,intConsumer action){
 repeat(10,i->System.out.println("CountDown"+(9-i)));
 ```
 
-## 再谈Comparator
+### 再谈Comparator
 
 Comparator接口中包含许多**静态方法**来创建比较器。这些方法可以用lambda表达式或方法引用。
 
@@ -526,7 +526,7 @@ Arrays.sort(people,comparing(Person::getMiddleName,nullFirst(naturlOrder())));
 
 尝试理解一下，如果中名为空,那么getMiddleName()返回的就是null,这时我们使用nullFirst()适配器来增加条件使用比较器不会抛出异常。nullFirst()方法需要一个字符串比较器，而naturalOrder()可以为任何实现了Comparator的类建立一个比较器。注意:naturalOrder()的类型可以导出，即Compator\<String>naturalOrder()。
 
-# 内部类
+## 内部类
 
 内部类就是定义在其他类中的类。为什么使用内部类？
 
@@ -534,7 +534,7 @@ Arrays.sort(people,comparing(Person::getMiddleName,nullFirst(naturlOrder())));
 
 2.内部类方法可以访问定义在这个类的作用域中的类，包括原有的私有方法。
 
-## 使用内部类访问对象状态
+### 使用内部类访问对象状态
 
 与C++相比，Java内部类的对象会有一个隐式的引用，指向实例化这个对象的外部类对象。通过这个指针，它可以访问外部类的全部状态。
 
@@ -594,9 +594,9 @@ outer并不是Java中的关键字，只是为了方便我们理解。
 
 在start方法中构造TimerPrinter之后，由于之前生成了内部类的构造器，这时会将当前与语音时钟的this引用传入TimerPrinter的构造器中。
 
-## 内部类的特殊语法规则
+### 内部类的特殊语法规则
 
-### 1.OuterClass.this
+#### 1.OuterClass.this
 
 这是正规语法，例如
 
@@ -605,7 +605,7 @@ outer并不是Java中的关键字，只是为了方便我们理解。
 if(Talking.this.beep)...
 ```
 
-### 2.outerObject.new innerClass(construction parameters)
+#### 2.outerObject.new innerClass(construction parameters)
 
 ```java
 ActionListener listener=this.new TimePrinter();
@@ -618,13 +618,13 @@ TalkingClock jabber=new TalkingClock(1000,true);
 TalkingClock.TimePrinter timer=jabber.new TimerPrinter();
 ```
 
-### 3.几个注意的点
+#### 3.几个注意的点
 
-#### 1.外围类的作用域之外调用内部类
+##### 1.外围类的作用域之外调用内部类
 
 outerClass.innerClass
 
-#### 2.内部类中的静态字段都必须是final,并初始化为一个编译时常量
+##### 2.内部类中的静态字段都必须是final,并初始化为一个编译时常量
 
 编译时常量指的是程序在**编译时就能确定常量的具体指与之对应的是运行时常量**，运行时常量是程序运行时才能确定的值，例如
 
@@ -636,9 +636,9 @@ public final static String str4 = "static str";  //编译时常量
 public final double e = Math.random(); //运行时常量
 ```
 
-#### 3.内部类中不允许有static方法
+##### 3.内部类中不允许有static方法
 
-## 内部类是否有用、必要和安全
+### 内部类是否有用、必要和安全
 
 内部类是一个**编译器现象**,与虚拟机无关。编译器将会把内部类转换为常规的类文件，用$分隔外部类名与内部类名，而虚拟机则对此一无所知。
 
@@ -692,7 +692,7 @@ var listener=new TimePrinter();
 new TalkingClock$TimePrinter(this,null);
 ```
 
-## 内部局部类
+### 内部局部类
 
 局部常见的就是在方法中定义，TimePrinter只在start()方法中出现了一次，所以遇到这种情况时，可以在一个方法中**局部地定义这个类**。
 
@@ -716,7 +716,7 @@ public void start(){
 
 优势:完全对外隐藏，除了start方法之外没有任何方法知道TimePrinter类的存在。
 
-## 由外部方法访问变量
+### 由外部方法访问变量
 
 与其他内部类相比，局部类不但能够访问外部类的字段，还可以访问局部变量！不过，那些局部变量必须是**事实最终变量**(effectively final),就是说一旦赋值就不能更改。个人理解和final是有区别的，final是不能指向别的引用，对象本身是可以进行修改。
 
@@ -762,7 +762,7 @@ TalkingClock类**不再需要存储实例变量beep**(这句话很重要)。局�
 
 请注意构造器的boolean参数和var$beep实例变量。当创建一个对象时，beep值就会传递给构造器，并存储在var$beep字段中(也就是说对象中会有形如var$beep的字段)。**编译器检测对局部变量的访问(就是说在编译时已经注意到了对于beep局部变量的访问)，为每一个变量建立相应的实例字段，并将局部变量复制到构造器(内部类的构造器)，从而能够初始化这些字段**(个人理解是编译器会生成一个构造器里面有这个参数，图上的结果中确实也有)。
 
-## 匿名内部类
+### 匿名内部类
 
 使用局部内部类时如果还想更进一步，**只想创建对象**，那么就不需要指定类的名字。这样的一个类被称为**匿名内部类**。
 
@@ -828,7 +828,7 @@ if(getClass()! =other.class){
 
 对于匿名子类做这个测试会失败。
 
-## 静态内部类
+### 静态内部类
 
 如果使用内部类只是为了把一个类隐藏在另外一个类的内部，并不需要内部类有外部类对象的一个引用。为此，**可以将内部类声明为static,这样就不会生成那个引用**(外围类对象)。
 
@@ -905,7 +905,7 @@ class ArrayAlg{
 
 如果没有将Pair声明为static,那么编译器将会报错，指出没有可用的隐式ArrayAlg类型对象来初始化内部类对象。
 
-### 注意
+#### 注意
 
 1.凡是不需要访问外围类对象的内部类就应该是静态内部类。
 
@@ -913,7 +913,7 @@ class ArrayAlg{
 
 3.在接口中声明的内部类自动是public和static。
 
-# 服务加载器
+## 服务加载器
 通常提供一个服务时，程序希望服务设计者能有一些自由，能够确定如何实现服务的特性。另外还希望有多个实现以供选择。**利用ServiceLoader类可以很容易地加载符合一个公共接口的服务**。  
 假设有一个接口，其中包含服务的各个实例应当提供的方法。
 
@@ -962,8 +962,8 @@ public static Optional<Cipher> getCipher2(int minStrength){
 
 最后，如果想要得到任何服务实例，只是需要调用findFirst。  
 Optional\<Cipher> cipher=cipherLoader.findFirst();  
-### 常用API  
-#### java.util.ServiceLoader\<S>  
+#### 常用API  
+##### java.util.ServiceLoader\<S>  
 static \<S> ServiceLoader\<S> load(Class\<S> service)  
 创建一个服务加载器来加载实现给定服务接口的类。  
 Iterator\<S> iterator()  
@@ -972,13 +972,13 @@ Stream\<ServiceLoader.Provider\<S>> stream()
 返回提供者描述的一个流，从而可以采用懒方式加载所要的类的提供者。  
 Optional\<S> findFirst()  
 查找第一个可用的服务提供者(如果有)。  
-#### java.util.ServiceLoader.Provider\<S>
+##### java.util.ServiceLoader.Provider\<S>
 Class\<? extends S> type()
 获得这个提供者的类型。
 S get()
 获得这个提供者的实例。
-# JDK动态代理
-## 从静态代理开始
+## JDK动态代理
+### 从静态代理开始
 首先必须知道什么是静态代理,一般的场景是一个接口、一个接口的实现类,我们须手动编写这个实现类的代理类,示例代码如下
 ```java
 public interface Product{
@@ -1005,7 +1005,7 @@ public class Square implements Product{
 2. 针对每个实现类都需要写一个代理类
 利用动态代理(proxy)在运行时**创建了一组给定接口的新类**。只有在编译时无法确定需要实现哪个接口才需要使用代理。  
 相比于静态代理来说，动态代理更加灵活。我们不需要针对每个目标类都**单独创建一个代理类**，并且也**不需要我们必须实现接口，我们可以直接代理实现类**( CGLIB 动态代理机制)
-## 何时使用代理
+### 何时使用代理
 假设我们需要创建一个类的对象，这个类可能实现了一个或者多个接口，但是在编译时不知道这些接口是什么。回想一下之前，如果是想要构造具体的类的话，那么我们可以里用newInstance或者反射来创建一个类的对象实例(通过找到构造器)。但是，**不能实例化接口**，需要在运行的程序中定义一个新类。  
 为了解决这个问题，有些程序会生成代码，将这些代码放在一个文件中，调用编译器，然后再加载得到类文件。但是，这样做的速度很慢，而且需要**将编译器连同程序一起部署**。 
 而代理机制是更好的解决方案，代理类可以在**运行**的时候由**JVM**创建全新的类。这样的代理类能够实现你指定的接口。具体的，代理类包含以下方法:  
@@ -1020,7 +1020,7 @@ https://xie.infoq.cn/article/9a9387805a496e1485dc8430f
 2.接口的真正实现者是**RealSubject，但是它不与用户直接接触**，而是通过代理。
 3.代理就是上图中的Proxy，由于它实现了Subject,所以它可以和用户直接接触。
 4.用户调用Proxy时，Proxy内部调用了RealSubject的方法,是对RealSubject的方法的增强。
-## InvocationHandler接口
+### InvocationHandler接口
 不能在运行时为这些方法提供新代码，必须提供一个**调用处理器**(invocation handler)。调用处理器是实现了**InvocationHandler**接口的类的对象。这个接口只有一个方法:  
 ```java
 Object invoke(Object proxy,Method method,Object[] args)
@@ -1030,7 +1030,7 @@ Object invoke(Object proxy,Method method,Object[] args)
 调用方法 method  
 方法参数 args  
 无论何时调用代理对象的方法(proxy)，**调用处理器的invoke方法都会被调用，并向其传递Method对象和原调用的参数**。之后调用处理器必须确定如何处理这个调用。
-## 创建代理对象
+### 创建代理对象
 创建代理对象需要使用**Proxy**类的**newProxyInstance**(之前见过的类似的工厂方法)。**这个方法有三个参数**:
 ```java
 public static Object newProxyInstance(ClassLoader loader,
@@ -1064,13 +1064,13 @@ Class<?> cl = getProxyClass0(loader, intfs);
 1.**一个类加载器**(class loader)。作为Java安全模型的一部分，可以对平台和应用类、从因特网上下载的类等使用的加载器。  
 2.一个**Class对象数组，每个元素对应需要实现的各个接口**。  
 3.一个**调用处理器(invocation handler)**。  
-## JDK动态代理的使用步骤
+### JDK动态代理的使用步骤
 1. **自定义接口和实现类,这一步在静态代理里面也得有**  
 2. 定义InvocationHandler接口并重写invoke方法,**自己实现InvocaitonHandler接口的类中需要有是实现类**
 3. 使用Proxy.newProxyInstance(...)方法调用  
-### 两个需要解决的问题:
-#### 如何定义处理器？
-#### 对于得到的代理对象能够做些什么？
+#### 两个需要解决的问题:
+##### 如何定义处理器？
+##### 对于得到的代理对象能够做些什么？
 这两个问题取决于我们想要通过代理机制解决什么问题，可能会有如下目的:  
 1. 将方法调用路由到远程服务器(说实话不明白什么意思)。  
 2. 为了调试，跟踪方法调用  
@@ -1124,26 +1124,26 @@ if(result>0){
 }
 ```
 Integer类实现了Comparable接口。代理对象属于运行时定义的一个类，**它也实现了Comparable接口**。不过，它的compareTo调用了代理对象处理器的invoke方法。  
-## 代理类的特性
+### 代理类的特性
 1.代理类总是在程序的运行过程中动态创建的。**一旦被创建之后，他们就变成了常规类，与虚拟机中的任何其他类没有区别**。  
 2.所有代理类都扩展了Proxy类。**一个代理类只有一个实例字段-即调用处理器，它在Proxy超类中定义**。完成代理对象任务所需要的任何额外数据都必须存储在调用处理器中。例如，代理Comparable对象时，TraceHandler就包装了任务苏需要的实际对象(Object target)。  
 3.如果没有定义代理类的名字，Oracle虚拟机中的Proxy类将生成一个以字符串$Proxy开头的类名。  
 4.**对于特定的类加载器和预设的一组接口来说，只能有一个代理类**。也就是说，如果使用同一个类加载器和接口数组调用了两次newProxyInstance方法，将得到同一个类的两个对象。也可以利用Class ProxyClass=Proxy.getProxyClass(null,interfaces)来获取这个类。  
 5.**代理类总是public和final**。因为如果代理类实现的所有接口都是public,这个代理类就不属于任何特定的包；否则，所有非公共的接口都必须属于同一个包，而代理类也必须属于这个包。  
 6.可以通过调用Proxy类的isProxyClass方法检测一个特定的Class对象是否代表一个代理类。  
-### 常用API
-#### java.lang.refelt.InvocationHandler
+#### 常用API
+##### java.lang.refelt.InvocationHandler
 Object invoke(Object proxy,Method method,Object[] args)  
 定以这个方法完成一个动作(增强过程)，你希望只要在代理对象上调用一个方法就完成这个动作。  
-#### java.lang.refelt.Proxy
+##### java.lang.refelt.Proxy
 static Class\<?> getProxyClass(ClassLoader loader,Class<?>interfaces)  
 返回实现指定接口的代理类  
 static Object newProxyInstance(ClassLoader loader,Class\<?> interfaces,InvocationHandler handler)  
 构造实现指定接口的代理类对象实例。所有方法都调用给定处理器的invoke方法。  
 static boolean isProxyClass(Class<?> cl)  
 如果cl是一个代理类则返回true。  
-# CGLIB动态代理机制
-## 介绍
+## CGLIB动态代理机制
+### 介绍
 JDK动态代理有一个最的问题就是**只能代理实现了接口的方法**
 cglib动态代理中重要的是
 **MethodInterceptor接口**和**Enhacer类**
@@ -1160,12 +1160,12 @@ obj:要被代理的对象
 method:被代理方法
 args:方法参数
 proxy:代理类
-## 使用步骤
+### 使用步骤
 1. 导入依赖  
 2. 定义一个类
 3. **自定义MethodInterceptor**并重写intercept方法,intercept方法用于拦截被代理方法，与JDK动态代中的invoke方法类似
 4. **通过Enhancer类的create()创建代理类**
-## JavaGuide示例
+### JavaGuide示例
 1.定义发送短信的类
 ```java
 public class MessageService{
@@ -1209,5 +1209,5 @@ public class CglibProxyFactory{
 MessageService service=(MessageService)new CglibProxyFactory().getProxy(MessageService.class);
 service.send("hello");
 ```
-## JDK动态代理和CGLIB动态代理的区别
+### JDK动态代理和CGLIB动态代理的区别
 1. JDK只能代理接口或者接口的实现类,cglib可以代理普通类
