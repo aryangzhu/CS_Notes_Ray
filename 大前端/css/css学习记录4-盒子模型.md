@@ -2,6 +2,7 @@
 ![选区_120.png](https://i.loli.net/2021/02/23/xKMAP3wUrHjkFuE.png)
 
 ### 1.什么是盒子模型
+
 ![选区_119.png](https://i.loli.net/2021/02/23/cXHmESvKBxRgjtr.png)
 margin:外边距
 
@@ -16,6 +17,7 @@ border:边框
 实际长度=width+左右border+padding
 
 ### 2.边框
+
 1.边框的粗细
 2.边框的样式
 3.边框的颜色
@@ -23,24 +25,25 @@ border:边框
 
 ### 3.内外边距
 
-```html
+```css
 #box{
             width: 300px;
             border: 1px solid red;
             选择auto
             margin: auto;
-        }
+}
 form{
             background-color: darkcyan;
-        }
+}
 input{
             border:1px solid black;
-        }
+}
 div:nth-of-type(1){
         	padding:上下边距 左右边距
             padding: 10px 2px;
-        }
+}
 ```
+
 ### 4.圆角边框
 
 ```html
@@ -55,6 +58,7 @@ div:nth-of-type(1){
 			border-radius:50%;/*也可以使用百分之多少来确定*/
         }
 ```
+
 ### 5.阴影
 
 ```
