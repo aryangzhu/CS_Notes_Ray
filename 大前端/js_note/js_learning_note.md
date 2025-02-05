@@ -95,3 +95,119 @@
 #### Chaining
 
 ## Nodejs
+
+Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行时环境，类似于Java的jre
+
+### 环境搭建
+
+比较重要的事就是npm，也就是类似于Java项目中maven，用来管理你所需要的依赖
+
+### 使用模块
+
+#### 导出
+
+写在js文件文件后面就可以
+
+##### 两种方式
+
+```
+function hello() {
+     console.log('Hello, world!'); 
+}
+```
+
+1. module.export
+
+```javascript
+module.exports={
+     hello:hello
+}
+```
+
+2. exports
+
+<!-- mindmap-ignore -->
+
+```
+exports.hello=hello;
+```
+
+#### 导入
+
+1. import
+2. require
+
+```javascript
+'use strict';
+
+// 引入hello模块:
+const greet = require('./hello');
+
+let s = 'Michael';
+
+greet(s); // Hello, Michael!
+```
+
+### 使用ESM(es modules)模块
+
+Javascript在遵循ECMAScript标准之后，推出的模块化支持
+
+#### 导出
+
+```javascript
+
+let s='Hello';
+
+function out(prompt,name){
+  console.log(`${prompt},${name}`);
+}
+
+export function greet(name){
+  out(s,name);
+}
+
+export function hi(name){
+  out('Hi',name);
+}
+```
+
+注意：文件要保存为.mjs
+
+#### 导入
+
+```javascript
+import {greet,hi} from './hello.mjs';
+let name = 'Bob';
+greet(name);
+hi(name);
+```
+
+### Node.js基本模板
+
+Node.js内置的常用模块就是为了实现基本的服务器功能
+
+#### 一些常见对象
+
+1. global
+   和Javascript中的window一样
+2. process
+   代表当前Node.js进程
+3. 判断执行环境
+
+```javascript
+  if(typeof(window)==='undefined'){
+     console.log('node.js');
+  }else{
+     console.log('browser');
+  }
+```
+
+#### 文件处理fs
+
+#### 流处理stream
+
+#### 网络编程http
+
+#### 加密crypto
+
+### Web开发
