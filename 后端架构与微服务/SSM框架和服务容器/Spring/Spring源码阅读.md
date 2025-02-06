@@ -82,17 +82,17 @@ return eventClass.isAssignableFrom(event.getClass());
 ## Aop的实现
 越是到了难啃的骨头的地方,反复的思考与实践就尤为重要,小傅哥的文章讲的非常的好,但是对于基础知识薄弱的同学,在没有了解一些概念之前,即使我们知道Spring做了大量的指责分离的工作来保证框架的扩展性,但是还是有一层似透非透的感觉
 首先来看一下Aop的公民  
-1. JoinPoint
+### JoinPoint
 切点
-2. PointCut
+### PointCut
 根据这个来确定切点
-3. Advice
+### Advice
 针对切点的逻辑
-4. Aspect
+### Aspect
 切面,多个切点和逻辑的封装
-5. Wave和织入器
+### Wave和织入器
 有可能是类加载器来完成class的动态修改,也可能是别的工具
-6. 目标对象target
+### 目标对象target
 要切的目标
 上面的这些是逻辑概念,但是在具体的实现上根据环境的不同也有所差异(有种梦回数据结构和算法的感觉)   
 文章会持续更新...
