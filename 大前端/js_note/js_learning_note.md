@@ -685,7 +685,11 @@ Node.js 是一个基于 Chrome V8 引擎的 JavaScript 运行时环境，类似�
 
 ### 环境搭建
 
-比较重要的事就是npm，也就是类似于Java项目中maven，用来管理你所需要的依赖
+mac下推荐使用Homebrew进行安装，并使用版本管理工具进行管理
+
+比较重要的事就是npm，也就是类似于Java项目中maven，用来管理项目中你所需要的依赖
+
+开发的IDE推荐使用VSCode，可以安装插件
 
 ### 使用模块
 
