@@ -14,7 +14,6 @@ $()将括号里的对象包装成一个可以被jquery识别的对象
 `$(function(){})`
 3.将JavaScript对象包装为jQuery对象
 **this和$(this)的区别**
-this只是
 了解过基本的html、css和js之后，我们就可以去尝试去看官方文档
 css中的选择器它都能用
 jQuery官方文档
