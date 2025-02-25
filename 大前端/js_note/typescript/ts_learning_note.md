@@ -1,12 +1,14 @@
 ## 简介
 
 TypeScript就是添加类型系统的JavaScirpt，适用于任何规模的项目。完全兼容了JavaScript，它不会修改JavaScript运行时的特性。
+### 为什么要需要
+wo的理解是引入了类型系统，js过于灵活导致问题在运行时才出现，所以ts提前进行了类型检查，对于后端来说，这样无疑更加符合强类型语言的开发习惯。
 
 ## 基础
 
 ### 基本数据类型
 
-#### 数值
+#### 数值number
 
 typescript中任何变量都要携带类型，如果不携带并且与类型推论的不一致的话，无法通过编译，除了any类型
 
@@ -28,7 +30,7 @@ letnotANumber:number=NaN;
 letinfinityNumber:number=Infinity;
 ```
 
-#### 字符串
+#### 字符串 string
 
 也是有模板字符串的
 
@@ -54,7 +56,7 @@ function alertName(){
 let unusable: void =undefined;
 ```
 
-#### 布尔类型
+#### 布尔类型 boolean
 
 ```typescript
 let isDone:boolean=false;
