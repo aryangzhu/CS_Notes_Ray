@@ -168,7 +168,7 @@ mapping(address => address) public swapPair; // 币对的映射，地址到地�
 
 1. _KeyType只能选择Solidity内置的值类型，比如uint，address等。
 2. 映射的存储位置必须是storage,因此用于合约的状态变量(这个存储位置后面我们会提到)
-3. 如果映射声明位public，那么Solidity会自动给你创建一个getter函数，可以通过Key来查询对应的Value。
+3. 如果映射声明为public，那么Solidity会自动给你创建一个getter函数，可以通过Key来查询对应的Value。
 4. 给新映射的键值对赋值的语法位_Var[\_Key]=_Value;
 
 ### 常数
